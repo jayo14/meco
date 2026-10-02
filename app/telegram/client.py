@@ -40,6 +40,11 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         settings.telegram_channel_ids
         and event.chat_id not in settings.telegram_channel_ids
     ):
+        logger.info(
+            "IGNORED MESSAGE | chat_id=%s | message_id=%s",
+            event.chat_id,
+            message.id,
+        )
         return
 
     chat = await event.get_chat()
