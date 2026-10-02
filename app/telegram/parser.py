@@ -84,7 +84,7 @@ def extract_token_signal(
     *,
     chat_id: int,
     message_id: int,
-    message_created_at: datetime
+    message_created_at: datetime,
     received_at: datetime,
 ) -> TokenSignal | None:
     token_address = extract_token_address(text)
