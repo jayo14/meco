@@ -105,6 +105,20 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         primary_pair,
     )
 
+    async with SessionLocal() as session:
+        saved_signal = await save_signal(
+            session=session,
+            signal=signal,
+            mint_info=mint_info,
+            snapshot=snapshot,
+        )
+
+    logger.info(
+        "💾 SIGNAL SAVED | id=%s | mint=%s",
+        saved_signal.id,
+        saved_signal.token_address,
+    )
+
     logger.info(
         "📊 MARKET SNAPSHOT | price=$%s | liquidity=$%s | "
         "5m_volume=$%s | buys=%s | sells=%s | dex=%s",
