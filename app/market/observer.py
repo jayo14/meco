@@ -62,12 +62,14 @@ async def capture_observation(signal: Signal, target_seconds: int) -> None:
 
     logger.info(
         "📈 OBSERVATION | signal_id=%s | target=%ss | actual=%ss | "
-        "price=$%s | liquidity=$%s",
-        signal.id,
+        "price=$%s | liquidity=$%s | dex=%s | pair=%s",
+        observation.signal_id,
         observation.target_seconds,
         observation.seconds_since_signal,
         observation.price_usd,
         observation.liquidity_usd,
+        observation.dex_id,
+        observation.pair_address,
     )
 
 

@@ -91,6 +91,14 @@ class MarketObservation(Base):
         index=True,
     )
 
+    pair_address: Mapped[str | None] = mapped_column(
+        String(128),
+    )
+
+    dex_id: Mapped[str | None] = mapped_column(
+        String(64),
+    )
+
     observed_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         index=True,
