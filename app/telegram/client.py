@@ -72,6 +72,7 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
 
 
     logger.info(
+        "📡 SIGNAL CONTEXT | chat_id=%s | message_id=%s | detected_at=%s",
 
 async def main() -> None:
     logger.info("Starting Meco Telegram listener...")
