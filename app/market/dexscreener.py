@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 import httpx
 
-
 DEXSCREENER_BASE_URL = "https://api.dexscreener.com"
 
 

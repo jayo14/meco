@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from sqlalchemy import (
-    UniqueConstraint,
     BigInteger,
     DateTime,
     Float,
@@ -9,6 +8,7 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 

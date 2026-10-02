@@ -7,12 +7,11 @@ from telethon import TelegramClient, events
 from app.config.settings import get_settings
 from app.database.repository import save_signal, update_signal_market
 from app.database.session import SessionLocal
-from app.market.observer import observe_signal
 from app.market.dexscreener import get_token_pairs
+from app.market.observer import observe_signal
 from app.market.snapshot import create_market_snapshot, select_primary_pair
 from app.solana.validator import get_mint_info
 from app.telegram.parser import extract_token_signal
-
 
 logging.basicConfig(
     format="[%(levelname)s %(asctime)s] %(name)s: %(message)s",

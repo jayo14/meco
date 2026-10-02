@@ -2,7 +2,6 @@ import re
 from dataclasses import dataclass
 from datetime import datetime
 
-
 SOLANA_ADDRESS_PATTERN = re.compile(
     r"[1-9A-HJ-NP-Za-km-z]{32,44}"
 )
