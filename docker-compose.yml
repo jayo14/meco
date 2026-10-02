@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: meco_app
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/meco
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./:/app
+      # Keep local venv separated from container environment
+      - /app/.venv
+      # Ignore the local telethon session inside the container, we might need a separate volume for it
+      - telethon_session:/app/data
+
+  db:
+    image: postgres:15-alpine
+    container_name: meco_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=meco
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d meco"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  telethon_session:
