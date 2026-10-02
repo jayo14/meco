@@ -4,16 +4,16 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_name: str = "memescout"
+    app_name: str = "meco"
     app_env: str = "development"
     log_level: str = "INFO"
 
     telegram_api_id: int
     telegram_api_hash: str
-    telegram_session_name: str = "memescout"
+    telegram_session_name: str = "meco"
 
     database_url: str = (
-        "postgresql+asyncpg://postgres:postgres@localhost:5432/memescout"
+        "postgresql+asyncpg://postgres:postgres@localhost:5432/meco"
     )
 
     solana_rpc_url: str = "https://api.mainnet-beta.solana.com"
