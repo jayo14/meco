@@ -8,7 +8,6 @@ from solders.pubkey import Pubkey
 
 from app.config.settings import get_settings
 
-
 logger = logging.getLogger("meco.solana")
 
 

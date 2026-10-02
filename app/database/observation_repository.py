@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.models import MarketObservation, Signal
@@ -79,7 +81,24 @@ async def save_market_observation(
 
     session.add(observation)
 
-    await session.commit()
-    await session.refresh(observation)
+    try:
+        await session.commit()
+        await session.refresh(observation)
+        return observation
 
-    return observation
+    except IntegrityError:
+        await session.rollback()
+
+        result = await session.execute(
+            select(MarketObservation).where(
+                MarketObservation.signal_id == signal.id,
+                MarketObservation.target_seconds == target_seconds,
+            )
+        )
+
+        existing = result.scalar_one_or_none()
+
+        if existing is None:
+            raise
+
+        return existing
