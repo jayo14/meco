@@ -140,3 +140,86 @@ class MarketObservation(Base):
     sells_5m: Mapped[int | None] = mapped_column(Integer)
 
     price_change_5m: Mapped[float | None] = mapped_column(Float)
+
+class MarketPairObservation(Base):
+    __tablename__ = "market_pair_observations"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    signal_id: Mapped[int] = mapped_column(
+        ForeignKey("signals.id"),
+        index=True,
+    )
+
+    token_address: Mapped[str] = mapped_column(
+        String(64),
+        index=True,
+    )
+
+    observed_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        index=True,
+    )
+
+    target_seconds: Mapped[int] = mapped_column(
+        Integer,
+        index=True,
+    )
+
+    seconds_since_signal: Mapped[int] = mapped_column(Integer)
+
+    pair_address: Mapped[str] = mapped_column(
+        String(128),
+        index=True,
+    )
+
+    dex_id: Mapped[str] = mapped_column(String(64))
+
+    url: Mapped[str | None] = mapped_column(Text)
+
+    base_token_address: Mapped[str | None] = mapped_column(
+        String(64),
+    )
+
+    base_token_name: Mapped[str | None] = mapped_column(
+        String(255),
+    )
+
+    base_token_symbol: Mapped[str | None] = mapped_column(
+        String(64),
+    )
+
+    quote_token_address: Mapped[str | None] = mapped_column(
+        String(64),
+    )
+
+    quote_token_name: Mapped[str | None] = mapped_column(
+        String(255),
+    )
+
+    quote_token_symbol: Mapped[str | None] = mapped_column(
+        String(64),
+    )
+
+    price_native: Mapped[float | None] = mapped_column(Float)
+    price_usd: Mapped[float | None] = mapped_column(Float)
+
+    liquidity_usd: Mapped[float | None] = mapped_column(Float)
+
+    volume_5m: Mapped[float | None] = mapped_column(Float)
+    volume_1h: Mapped[float | None] = mapped_column(Float)
+    volume_6h: Mapped[float | None] = mapped_column(Float)
+    volume_24h: Mapped[float | None] = mapped_column(Float)
+
+    buys_5m: Mapped[int | None] = mapped_column(Integer)
+    sells_5m: Mapped[int | None] = mapped_column(Integer)
+
+    price_change_5m: Mapped[float | None] = mapped_column(Float)
+    price_change_1h: Mapped[float | None] = mapped_column(Float)
+    price_change_6h: Mapped[float | None] = mapped_column(Float)
+    price_change_24h: Mapped[float | None] = mapped_column(Float)
+
+    market_cap: Mapped[float | None] = mapped_column(Float)
+    fdv: Mapped[float | None] = mapped_column(Float)
+
+    pair_created_at: Mapped[int | None] = mapped_column(BigInteger)

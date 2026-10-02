@@ -15,9 +15,13 @@ logger = logging.getLogger("meco.observer")
 
 
 OBSERVATION_INTERVALS = (
+    10,
     30,
     60,
+    120,
+    180,
     300,
+    600,
     900,
     1800,
     3600,
