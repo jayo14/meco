@@ -1,6 +1,5 @@
 import asyncio
 from dataclasses import dataclass
-from datetime import datetime
 
 from sqlalchemy import select
 
@@ -10,19 +9,17 @@ from app.database.session import SessionLocal
 
 SOURCE = "Bullish Calls - Solana"
 
-TARGETS = (30, 60, 300, 900)
+OUTCOME_TARGET = 900
+
+WINNER_THRESHOLD = 20.0
+LOSER_THRESHOLD = -20.0
 
 
 @dataclass
-class ReturnStats:
-    target_seconds: int
-    samples: int
-    positive: int
-    negative: int
-    unchanged: int
-    average_return_pct: float | None
-    median_return_pct: float | None
-    average_liquidity_change_pct: float | None
+class SignalOutcome:
+    signal: Signal
+    observation: MarketObservation
+    return_pct: float
 
 
 def percent_change(
@@ -38,6 +35,19 @@ def percent_change(
     return ((current - initial) / initial) * 100
 
 
+def safe_ratio(
+    numerator: float | None,
+    denominator: float | None,
+) -> float | None:
+    if numerator is None or denominator is None:
+        return None
+
+    if denominator <= 0:
+        return None
+
+    return numerator / denominator
+
+
 def median(values: list[float]) -> float | None:
     if not values:
         return None
@@ -49,6 +59,13 @@ def median(values: list[float]) -> float | None:
         return values[middle]
 
     return (values[middle - 1] + values[middle]) / 2
+
+
+def average(values: list[float]) -> float | None:
+    if not values:
+        return None
+
+    return sum(values) / len(values)
 
 
 async def load_data() -> tuple[
@@ -64,10 +81,10 @@ async def load_data() -> tuple[
 
         observations_result = await session.execute(
             select(MarketObservation)
-            .order_by(
-                MarketObservation.signal_id,
-                MarketObservation.target_seconds,
+            .where(
+                MarketObservation.target_seconds == OUTCOME_TARGET
             )
+            .order_by(MarketObservation.signal_id)
         )
 
         signals = list(signals_result.scalars().all())
@@ -76,39 +93,21 @@ async def load_data() -> tuple[
     return signals, observations
 
 
-def build_observation_map(
+def build_outcomes(
+    signals: list[Signal],
     observations: list[MarketObservation],
-) -> dict[tuple[int, int], MarketObservation]:
-    return {
-        (
-            observation.signal_id,
-            observation.target_seconds,
-        ): observation
-        for observation in observations
+) -> list[SignalOutcome]:
+    signals_by_id = {
+        signal.id: signal
+        for signal in signals
     }
 
+    outcomes: list[SignalOutcome] = []
 
-def calculate_stats(
-    signals: list[Signal],
-    observation_map: dict[tuple[int, int], MarketObservation],
-    target_seconds: int,
-) -> ReturnStats:
-    returns: list[float] = []
-    liquidity_changes: list[float] = []
+    for observation in observations:
+        signal = signals_by_id.get(observation.signal_id)
 
-    positive = 0
-    negative = 0
-    unchanged = 0
-
-    for signal in signals:
-        if signal.price_usd is None:
-            continue
-
-        observation = observation_map.get(
-            (signal.id, target_seconds)
-        )
-
-        if observation is None:
+        if signal is None:
             continue
 
         if observation.observation_status != "success":
@@ -122,380 +121,313 @@ def calculate_stats(
         if return_pct is None:
             continue
 
-        returns.append(return_pct)
-
-        if return_pct > 0:
-            positive += 1
-        elif return_pct < 0:
-            negative += 1
-        else:
-            unchanged += 1
-
-        liquidity_change = percent_change(
-            signal.liquidity_usd,
-            observation.liquidity_usd,
+        outcomes.append(
+            SignalOutcome(
+                signal=signal,
+                observation=observation,
+                return_pct=return_pct,
+            )
         )
 
-        if liquidity_change is not None:
-            liquidity_changes.append(liquidity_change)
-
-    average_return = (
-        sum(returns) / len(returns)
-        if returns
-        else None
-    )
-
-    average_liquidity_change = (
-        sum(liquidity_changes) / len(liquidity_changes)
-        if liquidity_changes
-        else None
-    )
-
-    return ReturnStats(
-        target_seconds=target_seconds,
-        samples=len(returns),
-        positive=positive,
-        negative=negative,
-        unchanged=unchanged,
-        average_return_pct=average_return,
-        median_return_pct=median(returns),
-        average_liquidity_change_pct=average_liquidity_change,
-    )
+    return outcomes
 
 
-def format_pct(value: float | None) -> str:
-    if value is None:
-        return "n/a"
+def classify_outcome(
+    return_pct: float,
+) -> str:
+    if return_pct >= WINNER_THRESHOLD:
+        return "winner"
 
-    return f"{value:+.2f}%"
+    if return_pct <= LOSER_THRESHOLD:
+        return "loser"
 
-
-def format_duration(seconds: float | None) -> str:
-    if seconds is None:
-        return "n/a"
-
-    return f"{seconds:.2f}s"
+    return "middle"
 
 
-def print_overview(
-    signals: list[Signal],
-    observations: list[MarketObservation],
+def print_outcome_summary(
+    outcomes: list[SignalOutcome],
 ) -> None:
-    with_market = sum(
-        1
-        for signal in signals
-        if signal.price_usd is not None
-    )
+    winners = [
+        outcome
+        for outcome in outcomes
+        if classify_outcome(outcome.return_pct) == "winner"
+    ]
 
-    with_liquidity = sum(
-        1
-        for signal in signals
-        if signal.liquidity_usd is not None
-    )
+    losers = [
+        outcome
+        for outcome in outcomes
+        if classify_outcome(outcome.return_pct) == "loser"
+    ]
 
-    valid = sum(
-        1
-        for signal in signals
-        if signal.validation_status == "valid"
-    )
+    middle = [
+        outcome
+        for outcome in outcomes
+        if classify_outcome(outcome.return_pct) == "middle"
+    ]
 
     print("=" * 80)
-    print("MECO SIGNAL ANALYSIS")
+    print("MECO WINNER VS LOSER ANALYSIS")
     print("=" * 80)
     print()
-    print(f"Source:                    {SOURCE}")
-    print(f"Signals:                   {len(signals)}")
-    print(f"With market data:          {with_market}")
-    print(f"With liquidity data:       {with_liquidity}")
-    print(f"Explicitly valid mints:    {valid}")
+    print(f"Source:             {SOURCE}")
+    print(f"Outcome checkpoint: T+{OUTCOME_TARGET}")
+    print(f"Total outcomes:     {len(outcomes)}")
+    print()
     print(
-        f"Successful observations:   "
-        f"{sum(1 for o in observations if o.observation_status == 'success')}"
+        f"Winners >= +{WINNER_THRESHOLD:.0f}%: "
+        f"{len(winners)}"
+    )
+    print(
+        f"Losers <= {LOSER_THRESHOLD:.0f}%: "
+        f"{len(losers)}"
+    )
+    print(
+        f"Middle:             "
+        f"{len(middle)}"
     )
     print()
 
 
-def print_checkpoint_analysis(
-    signals: list[Signal],
-    observation_map: dict[
-        tuple[int, int],
-        MarketObservation,
-    ],
+def feature_values(
+    outcomes: list[SignalOutcome],
+    feature: str,
+) -> list[float]:
+    values: list[float] = []
+
+    for outcome in outcomes:
+        signal = outcome.signal
+
+        value = getattr(signal, feature, None)
+
+        if value is None:
+            continue
+
+        values.append(float(value))
+
+    return values
+
+
+def print_feature_comparison(
+    winners: list[SignalOutcome],
+    losers: list[SignalOutcome],
 ) -> None:
     print("-" * 80)
-    print("PRICE PATH")
+    print("INITIAL FEATURE COMPARISON")
     print("-" * 80)
 
     print(
-        f"{'Target':<10}"
-        f"{'Samples':>8}"
-        f"{'Positive':>10}"
-        f"{'Negative':>10}"
-        f"{'Avg':>12}"
-        f"{'Median':>12}"
-        f"{'Avg Liq':>12}"
+        f"{'Feature':<24}"
+        f"{'Winner Avg':>16}"
+        f"{'Winner Med':>16}"
+        f"{'Loser Avg':>16}"
+        f"{'Loser Med':>16}"
     )
 
-    for target in TARGETS:
-        stats = calculate_stats(
-            signals,
-            observation_map,
-            target,
+    features = [
+        ("Liquidity USD", "liquidity_usd"),
+        ("5m Volume USD", "volume_5m"),
+        ("Buys (5m)", "buys_5m"),
+        ("Sells (5m)", "sells_5m"),
+        ("Initial Price", "price_usd"),
+        ("Market Cap", "market_cap"),
+        ("FDV", "fdv"),
+    ]
+
+    for label, feature in features:
+        winner_values = feature_values(
+            winners,
+            feature,
+        )
+
+        loser_values = feature_values(
+            losers,
+            feature,
         )
 
         print(
-            f"T+{target:<7}"
-            f"{stats.samples:>8}"
-            f"{stats.positive:>10}"
-            f"{stats.negative:>10}"
-            f"{format_pct(stats.average_return_pct):>12}"
-            f"{format_pct(stats.median_return_pct):>12}"
-            f"{format_pct(stats.average_liquidity_change_pct):>12}"
+            f"{label:<24}"
+            f"{average(winner_values) or 0:>16.2f}"
+            f"{median(winner_values) or 0:>16.2f}"
+            f"{average(loser_values) or 0:>16.2f}"
+            f"{median(loser_values) or 0:>16.2f}"
         )
 
     print()
 
 
-def get_observed_extremes(
-    signals: list[Signal],
-    observations: list[MarketObservation],
-    observation_map: dict[
-        tuple[int, int],
-        MarketObservation,
-    ],
-) -> tuple[
-    list[tuple[float, Signal, MarketObservation]],
-    list[tuple[float, Signal, MarketObservation]],
-]:
-    upsides = []
-    drawdowns = []
+def get_buy_sell_ratio(
+    signal: Signal,
+) -> float | None:
+    return safe_ratio(
+        signal.buys_5m,
+        signal.sells_5m,
+    )
 
-    for signal in signals:
-        if signal.price_usd is None:
-            continue
 
-        for target in TARGETS:
-            observation = observation_map.get(
-                (signal.id, target)
-            )
+def print_trading_activity_comparison(
+    winners: list[SignalOutcome],
+    losers: list[SignalOutcome],
+) -> None:
+    winner_ratios = [
+        ratio
+        for outcome in winners
+        if (
+            ratio := get_buy_sell_ratio(outcome.signal)
+        ) is not None
+    ]
 
-            if observation is None:
-                continue
+    loser_ratios = [
+        ratio
+        for outcome in losers
+        if (
+            ratio := get_buy_sell_ratio(outcome.signal)
+        ) is not None
+    ]
 
-            if observation.observation_status != "success":
-                continue
+    winner_trades = [
+        float(
+            (outcome.signal.buys_5m or 0)
+            + (outcome.signal.sells_5m or 0)
+        )
+        for outcome in winners
+    ]
 
-            return_pct = percent_change(
-                signal.price_usd,
-                observation.price_usd,
-            )
+    loser_trades = [
+        float(
+            (outcome.signal.buys_5m or 0)
+            + (outcome.signal.sells_5m or 0)
+        )
+        for outcome in losers
+    ]
 
-            if return_pct is None:
-                continue
+    print("-" * 80)
+    print("INITIAL TRADING ACTIVITY")
+    print("-" * 80)
 
-            upsides.append(
-                (return_pct, signal, observation)
-            )
+    print(
+        f"{'Metric':<24}"
+        f"{'Winner Avg':>16}"
+        f"{'Winner Med':>16}"
+        f"{'Loser Avg':>16}"
+        f"{'Loser Med':>16}"
+    )
 
-            drawdowns.append(
-                (return_pct, signal, observation)
-            )
+    print(
+        f"{'Buy/Sell Ratio':<24}"
+        f"{average(winner_ratios) or 0:>16.2f}"
+        f"{median(winner_ratios) or 0:>16.2f}"
+        f"{average(loser_ratios) or 0:>16.2f}"
+        f"{median(loser_ratios) or 0:>16.2f}"
+    )
 
-    upsides.sort(
-        key=lambda item: item[0],
+    print(
+        f"{'Total Trades (5m)':<24}"
+        f"{average(winner_trades) or 0:>16.2f}"
+        f"{median(winner_trades) or 0:>16.2f}"
+        f"{average(loser_trades) or 0:>16.2f}"
+        f"{median(loser_trades) or 0:>16.2f}"
+    )
+
+    print()
+
+
+def get_latency(
+    outcome: SignalOutcome,
+) -> float | None:
+    signal = outcome.signal
+
+    if (
+        signal.message_created_at is None
+        or signal.received_at is None
+    ):
+        return None
+
+    latency = (
+        signal.received_at
+        - signal.message_created_at
+    ).total_seconds()
+
+    if latency < 0:
+        return None
+
+    return latency
+
+
+def print_latency_comparison(
+    winners: list[SignalOutcome],
+    losers: list[SignalOutcome],
+) -> None:
+    winner_latencies = [
+        latency
+        for outcome in winners
+        if (
+            latency := get_latency(outcome)
+        ) is not None
+    ]
+
+    loser_latencies = [
+        latency
+        for outcome in losers
+        if (
+            latency := get_latency(outcome)
+        ) is not None
+    ]
+
+    print("-" * 80)
+    print("TELEGRAM LATENCY")
+    print("-" * 80)
+
+    print(
+        f"{'Group':<24}"
+        f"{'Samples':>10}"
+        f"{'Average':>16}"
+        f"{'Median':>16}"
+    )
+
+    print(
+        f"{'Winners':<24}"
+        f"{len(winner_latencies):>10}"
+        f"{average(winner_latencies) or 0:>16.2f}s"
+        f"{median(winner_latencies) or 0:>16.2f}s"
+    )
+
+    print(
+        f"{'Losers':<24}"
+        f"{len(loser_latencies):>10}"
+        f"{average(loser_latencies) or 0:>16.2f}s"
+        f"{median(loser_latencies) or 0:>16.2f}s"
+    )
+
+    print()
+
+
+def print_individual_outcomes(
+    outcomes: list[SignalOutcome],
+) -> None:
+    print("-" * 80)
+    print("INDIVIDUAL OUTCOMES")
+    print("-" * 80)
+
+    sorted_outcomes = sorted(
+        outcomes,
+        key=lambda outcome: outcome.return_pct,
         reverse=True,
     )
 
-    drawdowns.sort(
-        key=lambda item: item[0]
-    )
+    for outcome in sorted_outcomes:
+        signal = outcome.signal
 
-    return upsides, drawdowns
+        ratio = get_buy_sell_ratio(signal)
 
-
-def print_extremes(
-    signals: list[Signal],
-    observations: list[MarketObservation],
-    observation_map: dict[
-        tuple[int, int],
-        MarketObservation,
-    ],
-) -> None:
-    upsides, drawdowns = get_observed_extremes(
-        signals,
-        observations,
-        observation_map,
-    )
-
-    print("-" * 80)
-    print("TOP OBSERVED UPSIDE")
-    print("-" * 80)
-
-    for rank, (return_pct, signal, observation) in enumerate(
-        upsides[:10],
-        start=1,
-    ):
         print(
-            f"{rank:>2}. "
             f"Signal #{signal.id:<4} "
-            f"T+{observation.target_seconds:<5} "
-            f"{format_pct(return_pct):>9} "
-            f"price={observation.price_usd}"
-        )
-
-    print()
-
-    print("-" * 80)
-    print("TOP OBSERVED DRAWDOWN")
-    print("-" * 80)
-
-    for rank, (return_pct, signal, observation) in enumerate(
-        drawdowns[:10],
-        start=1,
-    ):
-        print(
-            f"{rank:>2}. "
-            f"Signal #{signal.id:<4} "
-            f"T+{observation.target_seconds:<5} "
-            f"{format_pct(return_pct):>9} "
-            f"price={observation.price_usd}"
-        )
-
-    print()
-
-
-def print_latency_analysis(
-    signals: list[Signal],
-) -> None:
-    latencies: list[float] = []
-
-    for signal in signals:
-        if (
-            signal.message_created_at is None
-            or signal.received_at is None
-        ):
-            continue
-
-        latency = (
-            signal.received_at
-            - signal.message_created_at
-        ).total_seconds()
-
-        if latency >= 0:
-            latencies.append(latency)
-
-    print("-" * 80)
-    print("TELEGRAM DELIVERY LATENCY")
-    print("-" * 80)
-
-    if not latencies:
-        print("No latency data available.")
-        print()
-        return
-
-    print(f"Samples:     {len(latencies)}")
-    print(
-        f"Average:     "
-        f"{format_duration(sum(latencies) / len(latencies))}"
-    )
-    print(
-        f"Median:      "
-        f"{format_duration(median(latencies))}"
-    )
-    print(
-        f"Minimum:     "
-        f"{format_duration(min(latencies))}"
-    )
-    print(
-        f"Maximum:     "
-        f"{format_duration(max(latencies))}"
-    )
-    print()
-
-
-def print_latency_extremes(
-    signals: list[Signal],
-) -> None:
-    rows: list[tuple[float, Signal]] = []
-
-    for signal in signals:
-        if (
-            signal.message_created_at is None
-            or signal.received_at is None
-        ):
-            continue
-
-        latency = (
-            signal.received_at
-            - signal.message_created_at
-        ).total_seconds()
-
-        if latency >= 0:
-            rows.append((latency, signal))
-
-    rows.sort(key=lambda item: item[0], reverse=True)
-
-    print("-" * 80)
-    print("HIGHEST TELEGRAM LATENCIES")
-    print("-" * 80)
-
-    for rank, (latency, signal) in enumerate(
-        rows[:10],
-        start=1,
-    ):
-        print(
-            f"{rank:>2}. "
-            f"Signal #{signal.id:<4} "
-            f"{format_duration(latency):>9} "
-            f"mint={signal.token_address}"
-        )
-
-    print()
-
-
-def print_data_quality(
-    signals: list[Signal],
-    observation_map: dict[
-        tuple[int, int],
-        MarketObservation,
-    ],
-) -> None:
-    print("-" * 80)
-    print("OBSERVATION COVERAGE")
-    print("-" * 80)
-
-    for target in TARGETS:
-        total = 0
-        success = 0
-        failed = 0
-
-        for signal in signals:
-            observation = observation_map.get(
-                (signal.id, target)
-            )
-
-            if observation is None:
-                continue
-
-            total += 1
-
-            if observation.observation_status == "success":
-                success += 1
-            else:
-                failed += 1
-
-        coverage_pct = (
-            (success / total) * 100
-            if total
-            else 0
-        )
-
-        print(
-            f"T+{target:<5} "
-            f"total={total:<4} "
-            f"success={success:<4} "
-            f"failed={failed:<4} "
-            f"success_rate={coverage_pct:.1f}%"
+            f"{classify_outcome(outcome.return_pct):<7} "
+            f"return={outcome.return_pct:+8.2f}% "
+            f"liq=${signal.liquidity_usd or 0:,.0f} "
+            f"vol5m=${signal.volume_5m or 0:,.0f} "
+            f"buys={signal.buys_5m or 0} "
+            f"sells={signal.sells_5m or 0} "
+            f"ratio={ratio if ratio is not None else 'n/a'}"
         )
 
     print()
@@ -504,34 +436,41 @@ def print_data_quality(
 async def main() -> None:
     signals, observations = await load_data()
 
-    observation_map = build_observation_map(
-        observations
-    )
-
-    print_overview(
+    outcomes = build_outcomes(
         signals,
         observations,
     )
 
-    print_checkpoint_analysis(
-        signals,
-        observation_map,
+    print_outcome_summary(outcomes)
+
+    winners = [
+        outcome
+        for outcome in outcomes
+        if classify_outcome(outcome.return_pct) == "winner"
+    ]
+
+    losers = [
+        outcome
+        for outcome in outcomes
+        if classify_outcome(outcome.return_pct) == "loser"
+    ]
+
+    print_feature_comparison(
+        winners,
+        losers,
     )
 
-    print_extremes(
-        signals,
-        observations,
-        observation_map,
+    print_trading_activity_comparison(
+        winners,
+        losers,
     )
 
-    print_latency_analysis(signals)
-
-    print_latency_extremes(signals)
-
-    print_data_quality(
-        signals,
-        observation_map,
+    print_latency_comparison(
+        winners,
+        losers,
     )
+
+    print_individual_outcomes(outcomes)
 
     print("=" * 80)
     print("END")
