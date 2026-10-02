@@ -41,7 +41,7 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
 
     signal = extract_token_signal(
         message.text,
-    chat_id=event.chat_id,
+        chat_id=event.chat_id,
     message_id=message.id,
     detected_at=message.date,
     )
