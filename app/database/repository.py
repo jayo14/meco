@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -8,17 +8,13 @@ from app.solana.validator import MintInfo
 from app.telegram.parser import TokenSignal
 
 
-async def save_signal(
+async def create_signal(
     session: AsyncSession,
     *,
     signal: TokenSignal,
-    mint_info: MintInfo,
-    snapshot: MarketSnapshot | None,
-    market_status: str,
     source_name: str | None,
     source_username: str | None,
 ) -> Signal:
-
     saved_signal = Signal(
         chat_id=signal.chat_id,
         message_id=signal.message_id,
@@ -33,23 +29,7 @@ async def save_signal(
         token_address=signal.token_address,
         slippage=signal.slippage,
 
-        decimals=mint_info.decimals,
-        supply=mint_info.supply,
-
-        market_status=market_status,
-
-        pair_address=snapshot.pair_address if snapshot else None,
-        dex_id=snapshot.dex_id if snapshot else None,
-        price_usd=snapshot.price_usd if snapshot else None,
-        liquidity_usd=snapshot.liquidity_usd if snapshot else None,
-        volume_5m=snapshot.volume_5m if snapshot else None,
-        buys_5m=snapshot.buys_5m if snapshot else None,
-        sells_5m=snapshot.sells_5m if snapshot else None,
-        observed_at=(
-            datetime.now(signal.received_at.tzinfo)
-            if snapshot
-            else None
-        ),
+        market_status="pending",
     )
 
     session.add(saved_signal)
@@ -58,6 +38,27 @@ async def save_signal(
     await session.refresh(saved_signal)
 
     return saved_signal
+
+
+async def update_signal_validation(
+    session: AsyncSession,
+    *,
+    signal_id: int,
+    mint_info: MintInfo | None,
+    validation_status: str,
+) -> None:
+    signal = await session.get(Signal, signal_id)
+
+    if signal is None:
+        raise ValueError(f"Signal {signal_id} not found")
+
+    signal.validation_status = validation_status
+
+    if mint_info is not None:
+        signal.decimals = mint_info.decimals
+        signal.supply = mint_info.supply
+
+    await session.commit()
 
 
 async def update_signal_market(
@@ -80,10 +81,23 @@ async def update_signal_market(
     signal.volume_5m = snapshot.volume_5m
     signal.buys_5m = snapshot.buys_5m
     signal.sells_5m = snapshot.sells_5m
-    signal.observed_at = datetime.now(
-        signal.received_at.tzinfo
-        if signal.received_at
-        else None
-    )
+
+    signal.observed_at = datetime.now(timezone.utc)
+
+    await session.commit()
+
+
+async def update_signal_market_status(
+    session: AsyncSession,
+    *,
+    signal_id: int,
+    market_status: str,
+) -> None:
+    signal = await session.get(Signal, signal_id)
+
+    if signal is None:
+        raise ValueError(f"Signal {signal_id} not found")
+
+    signal.market_status = market_status
 
     await session.commit()

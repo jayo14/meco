@@ -1,7 +1,6 @@
+import logging
 from dataclasses import dataclass
 
-import asyncio
-import logging
 import httpx
 
 logger = logging.getLogger("meco.market.dexscreener")

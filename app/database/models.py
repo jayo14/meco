@@ -41,6 +41,11 @@ class Signal(Base):
         index=True,
     )
 
+    validation_status: Mapped[str | None] = mapped_column(
+        String(32),
+        index=True,
+    )
+
     source_name: Mapped[str | None] = mapped_column(String(255))
     source_username: Mapped[str | None] = mapped_column(String(255))
 

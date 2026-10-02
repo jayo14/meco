@@ -5,13 +5,19 @@ from datetime import datetime, timezone
 from telethon import TelegramClient, events
 
 from app.config.settings import get_settings
-from app.database.repository import save_signal, update_signal_market
+from app.database.repository import (
+    create_signal,
+    update_signal_market,
+    update_signal_market_status,
+    update_signal_validation,
+)
 from app.database.session import SessionLocal
 from app.market.dexscreener import get_token_pairs
 from app.market.observer import observe_signal
 from app.market.snapshot import create_market_snapshot, select_primary_pair
 from app.solana.validator import get_mint_info
 from app.telegram.parser import extract_token_signal
+
 
 logging.basicConfig(
     format="[%(levelname)s %(asctime)s] %(name)s: %(message)s",
@@ -31,6 +37,20 @@ client = TelegramClient(
 
 @client.on(events.NewMessage)
 async def handle_new_message(event: events.NewMessage.Event) -> None:
+    try:
+        await process_new_message(event)
+
+    except Exception:
+        logger.exception(
+            "UNHANDLED MESSAGE PROCESSING ERROR | chat_id=%s | message_id=%s",
+            event.chat_id,
+            getattr(event.message, "id", None),
+        )
+
+
+async def process_new_message(
+    event: events.NewMessage.Event,
+) -> None:
     message = event.message
 
     if not message.text:
@@ -45,6 +65,7 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         return
 
     chat = await event.get_chat()
+
     source_name = getattr(chat, "title", None)
     source_username = getattr(chat, "username", None)
 
@@ -68,6 +89,7 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         message_created_at=message.date,
         received_at=received_at,
     )
+
     if not signal:
         return
 
@@ -76,23 +98,6 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         signal.token_address,
         signal.slippage,
     )
-
-    mint_info = await get_mint_info(signal.token_address)
-
-    if mint_info is None:
-        logger.warning(
-            "❌ INVALID TOKEN MINT | mint=%s",
-            signal.token_address,
-        )
-        return
-
-    logger.info(
-        "✅ VALID TOKEN MINT | mint=%s | decimals=%s | supply=%s",
-        mint_info.address,
-        mint_info.decimals,
-        mint_info.supply,
-    )
-
 
     logger.info(
         "📡 SIGNAL TIMING | chat_id=%s | message_id=%s | "
@@ -107,13 +112,14 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         ).total_seconds(),
     )
 
+    # ---------------------------------------------------------
+    # STEP 1: DURABLE INGESTION
+    # ---------------------------------------------------------
+
     async with SessionLocal() as session:
-        saved_signal = await save_signal(
+        saved_signal = await create_signal(
             session=session,
             signal=signal,
-            mint_info=mint_info,
-            snapshot=None,
-            market_status="pending",
             source_name=source_name,
             source_username=source_username,
         )
@@ -124,7 +130,71 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         saved_signal.token_address,
     )
 
-    pairs = await get_token_pairs(signal.token_address)
+    # ---------------------------------------------------------
+    # STEP 2: SOLANA VALIDATION
+    # ---------------------------------------------------------
+
+    mint_info = await get_mint_info(
+        signal.token_address,
+    )
+
+    if mint_info is None:
+        logger.warning(
+            "❌ TOKEN VALIDATION FAILED | signal_id=%s | mint=%s",
+            saved_signal.id,
+            signal.token_address,
+        )
+
+        async with SessionLocal() as session:
+            await update_signal_validation(
+                session,
+                signal_id=saved_signal.id,
+                mint_info=None,
+                validation_status="failed",
+            )
+
+        return
+
+    logger.info(
+        "✅ VALID TOKEN MINT | signal_id=%s | mint=%s | "
+        "decimals=%s | supply=%s",
+        saved_signal.id,
+        mint_info.address,
+        mint_info.decimals,
+        mint_info.supply,
+    )
+
+    async with SessionLocal() as session:
+        await update_signal_validation(
+            session,
+            signal_id=saved_signal.id,
+            mint_info=mint_info,
+            validation_status="valid",
+        )
+
+    # ---------------------------------------------------------
+    # STEP 3: MARKET DATA
+    # ---------------------------------------------------------
+
+    try:
+        pairs = await get_token_pairs(
+            signal.token_address,
+        )
+    except Exception:
+        logger.exception(
+            "MARKET FETCH FAILED | signal_id=%s | mint=%s",
+            saved_signal.id,
+            signal.token_address,
+        )
+
+        async with SessionLocal() as session:
+            await update_signal_market_status(
+                session,
+                signal_id=saved_signal.id,
+                market_status="fetch_failed",
+            )
+
+        return
 
     if not pairs:
         logger.warning(
@@ -132,10 +202,14 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
             saved_signal.id,
             signal.token_address,
         )
+
         async with SessionLocal() as session:
-            saved_signal.market_status = "no_market_data"
-            session.add(saved_signal)
-            await session.commit()
+            await update_signal_market_status(
+                session,
+                signal_id=saved_signal.id,
+                market_status="no_market_data",
+            )
+
         return
 
     primary_pair = select_primary_pair(pairs)
@@ -146,10 +220,14 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
             saved_signal.id,
             signal.token_address,
         )
+
         async with SessionLocal() as session:
-            saved_signal.market_status = "no_liquid_pair"
-            session.add(saved_signal)
-            await session.commit()
+            await update_signal_market_status(
+                session,
+                signal_id=saved_signal.id,
+                market_status="no_liquid_pair",
+            )
+
         return
 
     snapshot = create_market_snapshot(
@@ -165,19 +243,28 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         )
 
     logger.info(
-        "📊 MARKET SNAPSHOT | price=$%s | liquidity=$%s | "
-        "5m_volume=$%s | buys=%s | sells=%s | dex=%s",
+        "📊 MARKET SNAPSHOT | signal_id=%s | "
+        "price=$%s | liquidity=$%s | "
+        "5m_volume=$%s | buys=%s | sells=%s | "
+        "dex=%s | pair=%s",
+        saved_signal.id,
         snapshot.price_usd,
         snapshot.liquidity_usd,
         snapshot.volume_5m,
         snapshot.buys_5m,
         snapshot.sells_5m,
         snapshot.dex_id,
+        snapshot.pair_address,
     )
+
+    # ---------------------------------------------------------
+    # STEP 4: SCHEDULE OBSERVATIONS
+    # ---------------------------------------------------------
 
     asyncio.create_task(
         observe_signal(saved_signal)
     )
+
 
 async def main() -> None:
     logger.info("Starting Meco Telegram listener...")
