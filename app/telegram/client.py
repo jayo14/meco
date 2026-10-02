@@ -4,6 +4,8 @@ import logging
 from telethon import TelegramClient, events
 
 from app.config.settings import get_settings
+from app.database.repository import save_signal
+from app.database.session import SessionLocal
 from app.market.dexscreener import get_token_pairs
 from app.market.snapshot import create_market_snapshot, select_primary_pair
 from app.solana.validator import get_mint_info
