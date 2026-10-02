@@ -4,6 +4,9 @@ from datetime import datetime, timezone
 
 from app.database.models import Signal
 from app.database.observation_repository import save_market_observation
+from app.database.pair_observation_repository import (
+    save_market_pair_observations,
+)
 from app.database.session import SessionLocal
 from app.market.dexscreener import get_token_pairs
 from app.market.snapshot import (
