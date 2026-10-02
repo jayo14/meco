@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from datetime import datetime, timezone
 
 from telethon import TelegramClient, events
 
@@ -59,11 +60,14 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
 
     logger.info("Message: %s", message.text)
 
+    received_at = datetime.now(timezone.utc)
+
     signal = extract_token_signal(
         message.text,
         chat_id=event.chat_id,
         message_id=message.id,
-        detected_at=message.date,
+        message_created_at=message.date,
+        received_at=received_at,
     )
     if not signal:
         return
