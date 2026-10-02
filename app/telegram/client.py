@@ -89,6 +89,31 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         )
         return
 
+    primary_pair = select_primary_pair(pairs)
+
+    if primary_pair is None:
+        logger.warning(
+            "⚠️ NO LIQUID MARKET PAIR | mint=%s",
+            signal.token_address,
+        )
+        return
+
+    snapshot = create_market_snapshot(
+        signal.token_address,
+        primary_pair,
+    )
+
+    logger.info(
+        "📊 MARKET SNAPSHOT | price=$%s | liquidity=$%s | "
+        "5m_volume=$%s | buys=%s | sells=%s | dex=%s",
+        snapshot.price_usd,
+        snapshot.liquidity_usd,
+        snapshot.volume_5m,
+        snapshot.buys_5m,
+        snapshot.sells_5m,
+        snapshot.dex_id,
+    )
+
 async def main() -> None:
     logger.info("Starting Meco Telegram listener...")
 
