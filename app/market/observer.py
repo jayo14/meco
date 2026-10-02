@@ -26,7 +26,7 @@ OBSERVATION_INTERVALS = (
 )
 
 
-async def capture_observation(signal: Signal) -> None:
+async def capture_observation(signal: Signal, target_seconds: int) -> None:
     pairs = await get_token_pairs(signal.token_address)
 
     if not pairs:
@@ -57,12 +57,14 @@ async def capture_observation(signal: Signal) -> None:
             session,
             signal=signal,
             snapshot=snapshot,
+            target_seconds=target_seconds,
         )
 
     logger.info(
-        "📈 OBSERVATION | signal_id=%s | elapsed=%ss | "
+        "📈 OBSERVATION | signal_id=%s | target=%ss | actual=%ss | "
         "price=$%s | liquidity=$%s",
         signal.id,
+        observation.target_seconds,
         observation.seconds_since_signal,
         observation.price_usd,
         observation.liquidity_usd,
@@ -86,7 +88,7 @@ async def wait_and_capture(
         await asyncio.sleep(delay)
 
     try:
-        await capture_observation(signal)
+        await capture_observation(signal, target_seconds)
     except Exception:
         logger.exception(
             "OBSERVATION FAILED | signal_id=%s | target=%ss",

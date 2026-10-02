@@ -11,6 +11,7 @@ async def save_market_observation(
     *,
     signal: Signal,
     snapshot: MarketSnapshot,
+    target_seconds: int,
 ) -> MarketObservation:
     observed_at = datetime.now(timezone.utc)
 
@@ -23,6 +24,7 @@ async def save_market_observation(
         signal_id=signal.id,
         token_address=signal.token_address,
         observed_at=observed_at,
+        target_seconds=target_seconds,
         seconds_since_signal=seconds_since_signal,
         price_usd=snapshot.price_usd,
         liquidity_usd=snapshot.liquidity_usd,

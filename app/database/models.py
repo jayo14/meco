@@ -64,8 +64,8 @@ class MarketObservation(Base):
     __table_args__ = (
         UniqueConstraint(
             "signal_id",
-            "seconds_since_signal",
-            name="uq_market_observation_signal_time",
+            "target_seconds",
+            name="uq_market_observation_signal_target",
         ),
     )
 
@@ -85,6 +85,8 @@ class MarketObservation(Base):
         DateTime(timezone=True),
         index=True,
     )
+
+    target_seconds: Mapped[int] = mapped_column(Integer)
 
     seconds_since_signal: Mapped[int] = mapped_column(Integer)
 
