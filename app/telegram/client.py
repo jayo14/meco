@@ -71,6 +71,7 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
     )
 
 
+
 async def main() -> None:
     logger.info("Starting Meco Telegram listener...")
 
