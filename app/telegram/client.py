@@ -4,6 +4,7 @@ import logging
 from telethon import TelegramClient, events
 
 from app.config.settings import get_settings
+from app.solana.validator import get_mint_info
 from app.telegram.parser import extract_token_signal
 
 
@@ -40,12 +41,30 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
 
     signal = extract_token_signal(message.text)
 
-    if signal:
-        logger.info(
-            "🚨 TOKEN DETECTED | mint=%s | slippage=%s%%",
+    if not signal:
+        return
+
+    logger.info(
+        "🚨 TOKEN DETECTED | mint=%s | slippage=%s%%",
+        signal.token_address,
+        signal.slippage,
+    )
+
+    mint_info = await get_mint_info(signal.token_address)
+
+    if mint_info is None:
+        logger.warning(
+            "❌ INVALID TOKEN MINT | mint=%s",
             signal.token_address,
-            signal.slippage,
         )
+        return
+
+    logger.info(
+        "✅ VALID TOKEN MINT | mint=%s | decimals=%s | supply=%s",
+        mint_info.address,
+        mint_info.decimals,
+        mint_info.supply,
+    )
 
 
 async def main() -> None:
