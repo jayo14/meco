@@ -31,6 +31,9 @@ class Signal(Base):
         index=True,
     )
 
+    source_name: Mapped[str | None] = mapped_column(String(255))
+    source_username: Mapped[str | None] = mapped_column(String(255))
+
     # Token
     token_address: Mapped[str] = mapped_column(
         String(64),
