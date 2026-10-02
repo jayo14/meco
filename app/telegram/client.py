@@ -96,10 +96,16 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
 
 
     logger.info(
-        "📡 SIGNAL CONTEXT | chat_id=%s | message_id=%s | detected_at=%s",
+        "📡 SIGNAL TIMING | chat_id=%s | message_id=%s | "
+        "message_created_at=%s | received_at=%s | "
+        "telegram_latency=%.3fs",
         signal.chat_id,
         signal.message_id,
-        signal.detected_at,
+        signal.message_created_at,
+        signal.received_at,
+        (
+            signal.received_at - signal.message_created_at
+        ).total_seconds(),
     )
 
     async with SessionLocal() as session:
