@@ -13,16 +13,25 @@ async def save_signal(
     signal: TokenSignal,
     mint_info: MintInfo,
     snapshot: MarketSnapshot,
+    *,
+    source_name: str | None,
+    source_username: str | None,
 ) -> Signal:
     record = Signal(
         chat_id=signal.chat_id,
         message_id=signal.message_id,
         message_text=signal.message_text,
         detected_at=signal.detected_at,
+
+        source_name=source_name,
+        source_username=source_username,
+
         token_address=signal.token_address,
         slippage=signal.slippage,
+
         decimals=mint_info.decimals,
         supply=mint_info.supply,
+
         pair_address=snapshot.pair_address,
         dex_id=snapshot.dex_id,
         price_usd=snapshot.price_usd,
@@ -30,6 +39,7 @@ async def save_signal(
         volume_5m=snapshot.volume_5m,
         buys_5m=snapshot.buys_5m,
         sells_5m=snapshot.sells_5m,
+
         observed_at=datetime.now(timezone.utc),
     )
 
