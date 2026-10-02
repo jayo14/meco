@@ -15,9 +15,14 @@ logger = logging.getLogger("meco.observer")
 
 
 OBSERVATION_INTERVALS = (
-    5,
-    10,
-    20,
+    30,
+    60,
+    300,
+    900,
+    1800,
+    3600,
+    21600,
+    86400,
 )
 
 
@@ -64,25 +69,41 @@ async def capture_observation(signal: Signal) -> None:
     )
 
 
-async def observe_signal(signal: Signal) -> None:
+async def wait_and_capture(
+    signal: Signal,
+    target_seconds: int,
+) -> None:
     now = datetime.now(timezone.utc)
 
-    signal_age = max(
+    elapsed = max(
         0,
-        int((now - signal.detected_at).total_seconds()),
+        (now - signal.detected_at).total_seconds(),
     )
 
-    for target_seconds in OBSERVATION_INTERVALS:
-        delay = target_seconds - signal_age
+    delay = target_seconds - elapsed
 
-        if delay > 0:
-            await asyncio.sleep(delay)
+    if delay > 0:
+        await asyncio.sleep(delay)
 
-        try:
-            await capture_observation(signal)
-        except Exception:
-            logger.exception(
-                "OBSERVATION FAILED | signal_id=%s | target=%ss",
-                signal.id,
+    try:
+        await capture_observation(signal)
+    except Exception:
+        logger.exception(
+            "OBSERVATION FAILED | signal_id=%s | target=%ss",
+            signal.id,
+            target_seconds,
+        )
+
+
+async def observe_signal(signal: Signal) -> None:
+    tasks = [
+        asyncio.create_task(
+            wait_and_capture(
+                signal,
                 target_seconds,
             )
+        )
+        for target_seconds in OBSERVATION_INTERVALS
+    ]
+
+    await asyncio.gather(*tasks)
