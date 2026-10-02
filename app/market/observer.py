@@ -85,6 +85,21 @@ async def capture_observation(
 
         return
 
+    async with SessionLocal() as session:
+        pair_observations = await save_market_pair_observations(
+            session,
+            signal=signal,
+            pairs=pairs,
+            target_seconds=target_seconds,
+        )
+
+    logger.info(
+        "🔎 PAIRS CAPTURED | signal_id=%s | target=%ss | pairs=%s",
+        signal.id,
+        target_seconds,
+        len(pair_observations),
+    )
+
     primary_pair = select_primary_pair(pairs)
 
     if primary_pair is None:
