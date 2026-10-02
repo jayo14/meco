@@ -4,7 +4,7 @@ from app.solana.validator import get_mint_info
 
 
 async def main() -> None:
-    address = "So11111111111111111111111111111111111111112"
+    address = "DefinitelyNotASolanaAddress"
 
     result = await get_mint_info(address)
 
