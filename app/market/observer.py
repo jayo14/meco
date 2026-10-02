@@ -26,25 +26,78 @@ OBSERVATION_INTERVALS = (
 )
 
 
-async def capture_observation(signal: Signal, target_seconds: int) -> None:
-    pairs = await get_token_pairs(signal.token_address)
+async def capture_observation(
+    signal: Signal,
+    target_seconds: int,
+) -> None:
+    try:
+        pairs = await get_token_pairs(signal.token_address)
+    except Exception:
+        logger.exception(
+            "MARKET FETCH FAILED | signal_id=%s | target=%ss",
+            signal.id,
+            target_seconds,
+        )
+
+        async with SessionLocal() as session:
+            observation = await save_market_observation(
+                session,
+                signal=signal,
+                snapshot=None,
+                target_seconds=target_seconds,
+                observation_status="fetch_failed",
+            )
+
+        logger.warning(
+            "⚠️ OBSERVATION | signal_id=%s | target=%ss | "
+            "status=fetch_failed | actual=%ss",
+            signal.id,
+            target_seconds,
+            observation.seconds_since_signal,
+        )
+
+        return
 
     if not pairs:
+        async with SessionLocal() as session:
+            observation = await save_market_observation(
+                session,
+                signal=signal,
+                snapshot=None,
+                target_seconds=target_seconds,
+                observation_status="no_market_data",
+            )
+
         logger.warning(
-            "NO MARKET DATA | signal_id=%s | mint=%s",
+            "⚠️ OBSERVATION | signal_id=%s | target=%ss | "
+            "status=no_market_data | actual=%ss",
             signal.id,
-            signal.token_address,
+            target_seconds,
+            observation.seconds_since_signal,
         )
+
         return
 
     primary_pair = select_primary_pair(pairs)
 
     if primary_pair is None:
+        async with SessionLocal() as session:
+            observation = await save_market_observation(
+                session,
+                signal=signal,
+                snapshot=None,
+                target_seconds=target_seconds,
+                observation_status="no_liquid_pair",
+            )
+
         logger.warning(
-            "NO LIQUID PAIR | signal_id=%s | mint=%s",
+            "⚠️ OBSERVATION | signal_id=%s | target=%ss | "
+            "status=no_liquid_pair | actual=%ss",
             signal.id,
-            signal.token_address,
+            target_seconds,
+            observation.seconds_since_signal,
         )
+
         return
 
     snapshot = create_market_snapshot(
@@ -58,14 +111,16 @@ async def capture_observation(signal: Signal, target_seconds: int) -> None:
             signal=signal,
             snapshot=snapshot,
             target_seconds=target_seconds,
+            observation_status="success",
         )
 
     logger.info(
         "📈 OBSERVATION | signal_id=%s | target=%ss | actual=%ss | "
-        "price=$%s | liquidity=$%s | dex=%s | pair=%s",
+        "status=%s | price=$%s | liquidity=$%s | dex=%s | pair=%s",
         observation.signal_id,
         observation.target_seconds,
         observation.seconds_since_signal,
+        observation.observation_status,
         observation.price_usd,
         observation.liquidity_usd,
         observation.dex_id,

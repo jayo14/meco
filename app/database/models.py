@@ -99,6 +99,12 @@ class MarketObservation(Base):
         String(64),
     )
 
+    observation_status: Mapped[str] = mapped_column(
+        String(32),
+        index=True,
+        default="success",
+    )
+
     observed_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         index=True,

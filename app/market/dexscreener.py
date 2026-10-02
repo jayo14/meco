@@ -1,6 +1,10 @@
 from dataclasses import dataclass
 
+import asyncio
+import logging
 import httpx
+
+logger = logging.getLogger("meco.market.dexscreener")
 
 DEXSCREENER_BASE_URL = "https://api.dexscreener.com"
 
