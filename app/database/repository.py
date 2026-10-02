@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.models import Signal
@@ -14,7 +16,7 @@ async def create_signal(
     signal: TokenSignal,
     source_name: str | None,
     source_username: str | None,
-) -> Signal:
+) -> Signal | None:
     saved_signal = Signal(
         chat_id=signal.chat_id,
         message_id=signal.message_id,
@@ -34,7 +36,26 @@ async def create_signal(
 
     session.add(saved_signal)
 
-    await session.commit()
+    try:
+        await session.commit()
+
+    except IntegrityError:
+        await session.rollback()
+
+        result = await session.execute(
+            select(Signal).where(
+                Signal.chat_id == signal.chat_id,
+                Signal.message_id == signal.message_id,
+            )
+        )
+
+        existing_signal = result.scalar_one_or_none()
+
+        if existing_signal is not None:
+            return None
+
+        raise
+
     await session.refresh(saved_signal)
 
     return saved_signal

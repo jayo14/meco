@@ -126,6 +126,14 @@ async def process_new_message(
             source_username=source_username,
         )
 
+    if saved_signal is None:
+        logger.info(
+            "⏭️ DUPLICATE SIGNAL | chat_id=%s | message_id=%s",
+            signal.chat_id,
+            signal.message_id,
+        )
+        return
+
     logger.info(
         "💾 SIGNAL SAVED | id=%s | mint=%s",
         saved_signal.id,
