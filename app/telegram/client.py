@@ -36,8 +36,21 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
     if not message.text:
         return
 
+    if (
+        settings.telegram_channel_ids
+        and event.chat_id not in settings.telegram_channel_ids
+    ):
+        return
+
+    chat = await event.get_chat()
+    source_name = getattr(chat, "title", None)
+    source_username = getattr(chat, "username", None)
+
     logger.info(
-        "New Telegram message | chat_id=%s | message_id=%s",
+        "New Telegram message | source=%s | username=%s | "
+        "chat_id=%s | message_id=%s",
+        source_name,
+        source_username,
         event.chat_id,
         message.id,
     )
@@ -112,6 +125,8 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
             signal=signal,
             mint_info=mint_info,
             snapshot=snapshot,
+            source_name=source_name,
+            source_username=source_username,
         )
 
     logger.info(
