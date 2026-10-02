@@ -63,11 +63,23 @@ class Signal(Base):
     # Initial market observation
     pair_address: Mapped[str | None] = mapped_column(String(128))
     dex_id: Mapped[str | None] = mapped_column(String(64))
+
     price_usd: Mapped[float | None] = mapped_column(Float)
     liquidity_usd: Mapped[float | None] = mapped_column(Float)
+
     volume_5m: Mapped[float | None] = mapped_column(Float)
+    volume_1h: Mapped[float | None] = mapped_column(Float)
+    volume_24h: Mapped[float | None] = mapped_column(Float)
+
     buys_5m: Mapped[int | None] = mapped_column(Integer)
     sells_5m: Mapped[int | None] = mapped_column(Integer)
+
+    price_change_5m: Mapped[float | None] = mapped_column(Float)
+    price_change_1h: Mapped[float | None] = mapped_column(Float)
+    price_change_24h: Mapped[float | None] = mapped_column(Float)
+
+    market_cap: Mapped[float | None] = mapped_column(Float)
+    fdv: Mapped[float | None] = mapped_column(Float)
 
     observed_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),

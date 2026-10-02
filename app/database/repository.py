@@ -99,9 +99,20 @@ async def update_signal_market(
     signal.dex_id = snapshot.dex_id
     signal.price_usd = snapshot.price_usd
     signal.liquidity_usd = snapshot.liquidity_usd
+
     signal.volume_5m = snapshot.volume_5m
+    signal.volume_1h = snapshot.volume_1h
+    signal.volume_24h = snapshot.volume_24h
+
     signal.buys_5m = snapshot.buys_5m
     signal.sells_5m = snapshot.sells_5m
+
+    signal.price_change_5m = snapshot.price_change_5m
+    signal.price_change_1h = snapshot.price_change_1h
+    signal.price_change_24h = snapshot.price_change_24h
+
+    signal.market_cap = snapshot.market_cap
+    signal.fdv = snapshot.fdv
 
     signal.observed_at = datetime.now(timezone.utc)
 
