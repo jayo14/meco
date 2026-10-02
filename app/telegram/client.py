@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import time
 from datetime import datetime, timezone
 
 from telethon import TelegramClient, events
@@ -66,6 +67,10 @@ async def process_new_message(
         )
         return
 
+    # perf_counter is for measuring elapsed durations.
+    # It is intentionally separate from wall-clock timestamps.
+    pipeline_started = time.perf_counter()
+
     chat = await event.get_chat()
 
     source_name = getattr(chat, "title", None)
@@ -101,6 +106,10 @@ async def process_new_message(
         signal.slippage,
     )
 
+    telegram_latency = (
+        signal.received_at - signal.message_created_at
+    ).total_seconds()
+
     logger.info(
         "📡 SIGNAL TIMING | chat_id=%s | message_id=%s | "
         "message_created_at=%s | received_at=%s | "
@@ -109,14 +118,14 @@ async def process_new_message(
         signal.message_id,
         signal.message_created_at,
         signal.received_at,
-        (
-            signal.received_at - signal.message_created_at
-        ).total_seconds(),
+        telegram_latency,
     )
 
     # ---------------------------------------------------------
     # STEP 1: DURABLE INGESTION
     # ---------------------------------------------------------
+
+    db_started = time.perf_counter()
 
     async with SessionLocal() as session:
         saved_signal = await create_signal(
@@ -126,26 +135,46 @@ async def process_new_message(
             source_username=source_username,
         )
 
+    db_duration = time.perf_counter() - db_started
+
     if saved_signal is None:
         logger.info(
-            "⏭️ DUPLICATE SIGNAL | chat_id=%s | message_id=%s",
+            "⏭️ DUPLICATE SIGNAL | chat_id=%s | message_id=%s | "
+            "db_persistence=%.3fs",
             signal.chat_id,
             signal.message_id,
+            db_duration,
         )
         return
 
     logger.info(
-        "💾 SIGNAL SAVED | id=%s | mint=%s",
+        "💾 SIGNAL SAVED | id=%s | mint=%s | "
+        "db_persistence=%.3fs",
         saved_signal.id,
         saved_signal.token_address,
+        db_duration,
     )
 
     # ---------------------------------------------------------
     # STEP 2: SOLANA VALIDATION
     # ---------------------------------------------------------
 
+    validation_started = time.perf_counter()
+
     validation = await get_mint_info(
         signal.token_address,
+    )
+
+    validation_duration = (
+        time.perf_counter() - validation_started
+    )
+
+    logger.info(
+        "⛓️ SOLANA VALIDATION | signal_id=%s | "
+        "status=%s | duration=%.3fs",
+        saved_signal.id,
+        validation.status.value,
+        validation_duration,
     )
 
     if validation.status == MintValidationStatus.INVALID:
@@ -155,6 +184,8 @@ async def process_new_message(
             signal.token_address,
         )
 
+        update_started = time.perf_counter()
+
         async with SessionLocal() as session:
             await update_signal_validation(
                 session,
@@ -162,6 +193,15 @@ async def process_new_message(
                 mint_info=None,
                 validation_status="invalid",
             )
+
+        update_duration = time.perf_counter() - update_started
+
+        logger.info(
+            "⏱️ VALIDATION STATUS PERSISTED | "
+            "signal_id=%s | duration=%.3fs",
+            saved_signal.id,
+            update_duration,
+        )
 
         return
 
@@ -172,6 +212,8 @@ async def process_new_message(
             signal.token_address,
         )
 
+        update_started = time.perf_counter()
+
         async with SessionLocal() as session:
             await update_signal_validation(
                 session,
@@ -179,6 +221,15 @@ async def process_new_message(
                 mint_info=None,
                 validation_status="rpc_failed",
             )
+
+        update_duration = time.perf_counter() - update_started
+
+        logger.info(
+            "⏱️ VALIDATION STATUS PERSISTED | "
+            "signal_id=%s | duration=%.3fs",
+            saved_signal.id,
+            update_duration,
+        )
 
         return
 
@@ -198,6 +249,8 @@ async def process_new_message(
         mint_info.supply,
     )
 
+    validation_db_started = time.perf_counter()
+
     async with SessionLocal() as session:
         await update_signal_validation(
             session,
@@ -206,19 +259,36 @@ async def process_new_message(
             validation_status="valid",
         )
 
+    validation_db_duration = (
+        time.perf_counter() - validation_db_started
+    )
+
+    logger.info(
+        "💾 VALIDATION SAVED | signal_id=%s | "
+        "duration=%.3fs",
+        saved_signal.id,
+        validation_db_duration,
+    )
+
     # ---------------------------------------------------------
     # STEP 3: MARKET DATA
     # ---------------------------------------------------------
+
+    market_started = time.perf_counter()
 
     try:
         pairs = await get_token_pairs(
             signal.token_address,
         )
     except Exception:
+        market_duration = time.perf_counter() - market_started
+
         logger.exception(
-            "MARKET FETCH FAILED | signal_id=%s | mint=%s",
+            "MARKET FETCH FAILED | signal_id=%s | mint=%s | "
+            "duration=%.3fs",
             saved_signal.id,
             signal.token_address,
+            market_duration,
         )
 
         async with SessionLocal() as session:
@@ -229,6 +299,16 @@ async def process_new_message(
             )
 
         return
+
+    market_duration = time.perf_counter() - market_started
+
+    logger.info(
+        "🌐 MARKET FETCH | signal_id=%s | "
+        "pairs=%s | duration=%.3fs",
+        saved_signal.id,
+        len(pairs),
+        market_duration,
+    )
 
     if not pairs:
         logger.warning(
@@ -269,12 +349,25 @@ async def process_new_message(
         primary_pair,
     )
 
+    market_db_started = time.perf_counter()
+
     async with SessionLocal() as session:
         await update_signal_market(
             session,
             signal_id=saved_signal.id,
             snapshot=snapshot,
         )
+
+    market_db_duration = (
+        time.perf_counter() - market_db_started
+    )
+
+    logger.info(
+        "💾 MARKET SNAPSHOT SAVED | signal_id=%s | "
+        "duration=%.3fs",
+        saved_signal.id,
+        market_db_duration,
+    )
 
     logger.info(
         "📊 MARKET SNAPSHOT | signal_id=%s | "
@@ -292,7 +385,32 @@ async def process_new_message(
     )
 
     # ---------------------------------------------------------
-    # STEP 4: SCHEDULE OBSERVATIONS
+    # STEP 4: PIPELINE TIMING
+    # ---------------------------------------------------------
+
+    total_duration = time.perf_counter() - pipeline_started
+
+    logger.info(
+        "⏱️ PIPELINE TIMING | signal_id=%s | "
+        "telegram_latency=%.3fs | "
+        "db_persistence=%.3fs | "
+        "solana_validation=%.3fs | "
+        "validation_db=%.3fs | "
+        "market_fetch=%.3fs | "
+        "market_db=%.3fs | "
+        "total_meco_processing=%.3fs",
+        saved_signal.id,
+        telegram_latency,
+        db_duration,
+        validation_duration,
+        validation_db_duration,
+        market_duration,
+        market_db_duration,
+        total_duration,
+    )
+
+    # ---------------------------------------------------------
+    # STEP 5: SCHEDULE OBSERVATIONS
     # ---------------------------------------------------------
 
     asyncio.create_task(
