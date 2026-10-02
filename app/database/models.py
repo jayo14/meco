@@ -1,6 +1,14 @@
 from datetime import datetime
 
-from sqlalchemy import BigInteger, DateTime, Float, Integer, String, Text
+from sqlalchemy import (
+    BigInteger,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -45,3 +53,35 @@ class Signal(Base):
     observed_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
     )
+
+class MarketObservation(Base):
+    __tablename__ = "market_observations"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    signal_id: Mapped[int] = mapped_column(
+        ForeignKey("signals.id"),
+        index=True,
+    )
+
+    token_address: Mapped[str] = mapped_column(
+        String(64),
+        index=True,
+    )
+
+    observed_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        index=True,
+    )
+
+    seconds_since_signal: Mapped[int] = mapped_column(Integer)
+
+    price_usd: Mapped[float | None] = mapped_column(Float)
+    liquidity_usd: Mapped[float | None] = mapped_column(Float)
+
+    volume_5m: Mapped[float | None] = mapped_column(Float)
+
+    buys_5m: Mapped[int | None] = mapped_column(Integer)
+    sells_5m: Mapped[int | None] = mapped_column(Integer)
+
+    price_change_5m: Mapped[float | None] = mapped_column(Float)
