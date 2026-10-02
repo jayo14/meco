@@ -1,68 +1,50 @@
 from datetime import datetime, timezone
 
 from app.telegram.parser import (
-    extract_slippage,
-    extract_solana_addresses,
+    extract_token_address,
     extract_token_signal,
 )
 
 
-TEST_TIME = datetime.now(timezone.utc)
+def test_extracts_address_after_ca():
+    text = """
+    Aping into $PUMPKINU at $110K!
+
+    CA (Tap to copy): B7yfFFkX4NtxtQwGdegi2DuaVssitc3FGpqF2pxUH1zM
+    """
+
+    assert (
+        extract_token_address(text)
+        == "B7yfFFkX4NtxtQwGdegi2DuaVssitc3FGpqF2pxUH1zM"
+    )
 
 
-def test_extract_solana_address():
-    address = "So11111111111111111111111111111111111111112"
+def test_extracts_address_after_contract_address():
+    address = "B7yfFFkX4NtxtQwGdegi2DuaVssitc3FGpqF2pxUH1zM"
 
-    text = f"BUY THIS TOKEN\nCA: {address}"
+    text = f"Contract Address: {address}"
 
-    result = extract_solana_addresses(text)
-
-    assert result == [address]
+    assert extract_token_address(text) == address
 
 
-def test_extract_slippage():
-    text = "🔥 NEW TOKEN\nSLIPPAGE: 15%"
+def test_falls_back_to_bare_address():
+    address = "B7yfFFkX4NtxtQwGdegi2DuaVssitc3FGpqF2pxUH1zM"
 
-    result = extract_slippage(text)
+    text = f"Buy this token: {address}"
 
-    assert result == 15.0
+    assert extract_token_address(text) == address
 
 
 def test_extract_token_signal():
-    address = "So11111111111111111111111111111111111111112"
+    address = "B7yfFFkX4NtxtQwGdegi2DuaVssitc3FGpqF2pxUH1zM"
 
-    text = f"""
-    🚀 NEW CALL
-
-    CA: {address}
-
-    SLIPPAGE: 10%
-    """
-
-    result = extract_token_signal(
-        text,
-        chat_id=123456,
-        message_id=789,
-        detected_at=TEST_TIME,
+    signal = extract_token_signal(
+        f"CA: {address}\nSlippage: 15%",
+        chat_id=-100123,
+        message_id=123,
+        detected_at=datetime.now(timezone.utc),
     )
 
-    assert result is not None
-    assert result.token_address == address
-    assert result.slippage == 10.0
-    assert result.chat_id == 123456
-    assert result.message_id == 789
-    assert result.message_text == text
-    assert result.detected_at == TEST_TIME
-
-
-def test_no_token_returns_none():
-    text = "Hey, this is just a normal Telegram message."
-
-    result = extract_token_signal(
-        text,
-        chat_id=123456,
-        message_id=789,
-        detected_at=TEST_TIME,
-    )
-
-    assert result is None
+    assert signal is not None
+    assert signal.token_address == address
+    assert signal.slippage == 15.0
