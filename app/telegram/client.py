@@ -6,6 +6,7 @@ from telethon import TelegramClient, events
 from app.config.settings import get_settings
 from app.database.repository import save_signal
 from app.database.session import SessionLocal
+from app.market.observer import observe_signal
 from app.market.dexscreener import get_token_pairs
 from app.market.snapshot import create_market_snapshot, select_primary_pair
 from app.solana.validator import get_mint_info
@@ -117,6 +118,10 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         "💾 SIGNAL SAVED | id=%s | mint=%s",
         saved_signal.id,
         saved_signal.token_address,
+    )
+
+    asyncio.create_task(
+        observe_signal(saved_signal)
     )
 
     logger.info(
