@@ -44,7 +44,12 @@ async def main() -> None:
     print(f"5m Sells: {snapshot.sells_5m}")
     print(f"5m Buy/Sell Ratio: {snapshot.buy_sell_ratio_5m}")
     print(f"5m Total Trades: {snapshot.total_trades_5m}")
-    print(f"5m Price Change: {snapshot.price_change_5m}%")
+    price_change = snapshot.price_change_5m
+
+    if price_change is None:
+        print("5m Price Change: unavailable")
+    else:
+        print(f"5m Price Change: {price_change}%")
     print(f"Market Cap: {snapshot.market_cap}")
     print(f"FDV: {snapshot.fdv}")
 
