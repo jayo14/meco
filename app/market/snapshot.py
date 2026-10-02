@@ -2,18 +2,40 @@ from app.market.dexscreener import MarketPair
 from app.market.models import MarketSnapshot
 
 
+def select_primary_pair(
+    pairs: list[MarketPair],
+) -> MarketPair | None:
+    """
+    Select the most liquid market pair.
+
+    Pairs without liquidity data are ignored.
+    """
+    pairs_with_liquidity = [
+        pair
+        for pair in pairs
+        if pair.liquidity_usd is not None
+    ]
+
+    if not pairs_with_liquidity:
+        return None
+
+    return max(
+        pairs_with_liquidity,
+        key=lambda pair: pair.liquidity_usd,
+    )
+
+
 def create_market_snapshot(
     token_address: str,
     pair: MarketPair,
 ) -> MarketSnapshot:
     """
-    Convert a raw DEX Screener pair into Meco's normalized
-    market snapshot.
+    Convert a raw DEX Screener pair into Meco's
+    normalized market snapshot.
     """
 
     return MarketSnapshot(
         token_address=token_address,
-
         pair_address=pair.pair_address,
         dex_id=pair.dex_id,
 

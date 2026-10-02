@@ -1,8 +1,10 @@
 import asyncio
 
 from app.market.dexscreener import get_token_pairs
-from app.market.snapshot import create_market_snapshot
-
+from app.market.snapshot import (
+    create_market_snapshot,
+    select_primary_pair,
+)
 
 async def main() -> None:
     address = "So11111111111111111111111111111111111111112"
@@ -15,10 +17,18 @@ async def main() -> None:
         print("No market pairs found.")
         return
 
+
+    primary_pair = select_primary_pair(pairs)
+
+    if primary_pair is None:
+       print("No pair with liquidity found.")
+       return
+
     snapshot = create_market_snapshot(
-        token_address=address,
-        pair=pairs[0],
+    token_address=address,
+    pair=primary_pair,
     )
+
 
     print()
     print("=== MARKET SNAPSHOT ===")
