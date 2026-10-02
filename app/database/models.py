@@ -40,7 +40,7 @@ class Signal(Base):
 
     # Solana
     decimals: Mapped[int | None] = mapped_column(Integer)
-    supply: Mapped[int | None] = mapped_column()
+    supply: Mapped[int | None] = mapped_column(BigInteger)
 
     # Initial market observation
     pair_address: Mapped[str | None] = mapped_column(String(128))
