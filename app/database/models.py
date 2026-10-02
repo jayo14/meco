@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import (
+    UniqueConstraint,
     BigInteger,
     DateTime,
     Float,
@@ -56,6 +57,14 @@ class Signal(Base):
 
 class MarketObservation(Base):
     __tablename__ = "market_observations"
+
+    __table_args__ = (
+        UniqueConstraint(
+            "signal_id",
+            "seconds_since_signal",
+            name="uq_market_observation_signal_time",
+        ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
