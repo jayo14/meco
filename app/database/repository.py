@@ -30,7 +30,7 @@ async def save_signal(
         volume_5m=snapshot.volume_5m,
         buys_5m=snapshot.buys_5m,
         sells_5m=snapshot.sells_5m,
-        observed_at=signal.detected_at,
+        observed_at=datetime.now(timezone.utc),
     )
 
     session.add(record)
