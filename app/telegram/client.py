@@ -80,6 +80,15 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         signal.detected_at,
     )
 
+    pairs = await get_token_pairs(signal.token_address)
+
+    if not pairs:
+        logger.warning(
+            "⚠️ NO MARKET DATA | mint=%s",
+            signal.token_address,
+        )
+        return
+
 async def main() -> None:
     logger.info("Starting Meco Telegram listener...")
 
