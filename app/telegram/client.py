@@ -15,9 +15,11 @@ from app.database.session import SessionLocal
 from app.market.dexscreener import get_token_pairs
 from app.market.observer import observe_signal
 from app.market.snapshot import create_market_snapshot, select_primary_pair
-from app.solana.validator import get_mint_info
+from app.solana.validator import (
+    MintValidationStatus,
+    get_mint_info,
+)
 from app.telegram.parser import extract_token_signal
-
 
 logging.basicConfig(
     format="[%(levelname)s %(asctime)s] %(name)s: %(message)s",
@@ -134,13 +136,13 @@ async def process_new_message(
     # STEP 2: SOLANA VALIDATION
     # ---------------------------------------------------------
 
-    mint_info = await get_mint_info(
+    validation = await get_mint_info(
         signal.token_address,
     )
 
-    if mint_info is None:
+    if validation.status == MintValidationStatus.INVALID:
         logger.warning(
-            "❌ TOKEN VALIDATION FAILED | signal_id=%s | mint=%s",
+            "❌ INVALID TOKEN MINT | signal_id=%s | mint=%s",
             saved_signal.id,
             signal.token_address,
         )
@@ -150,10 +152,34 @@ async def process_new_message(
                 session,
                 signal_id=saved_signal.id,
                 mint_info=None,
-                validation_status="failed",
+                validation_status="invalid",
             )
 
         return
+
+    if validation.status == MintValidationStatus.RPC_FAILED:
+        logger.error(
+            "⚠️ SOLANA RPC FAILED | signal_id=%s | mint=%s",
+            saved_signal.id,
+            signal.token_address,
+        )
+
+        async with SessionLocal() as session:
+            await update_signal_validation(
+                session,
+                signal_id=saved_signal.id,
+                mint_info=None,
+                validation_status="rpc_failed",
+            )
+
+        return
+
+    mint_info = validation.mint_info
+
+    if mint_info is None:
+        raise RuntimeError(
+            "VALID validation result has no mint info"
+        )
 
     logger.info(
         "✅ VALID TOKEN MINT | signal_id=%s | mint=%s | "
