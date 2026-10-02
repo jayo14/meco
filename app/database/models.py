@@ -26,8 +26,18 @@ class Signal(Base):
     chat_id: Mapped[int] = mapped_column(BigInteger, index=True)
     message_id: Mapped[int] = mapped_column(BigInteger)
     message_text: Mapped[str] = mapped_column(Text)
-    detected_at: Mapped[datetime] = mapped_column(
+    message_created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
+        index=True,
+    )
+
+    received_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        index=True,
+    )
+
+    market_status: Mapped[str | None] = mapped_column(
+        String(32),
         index=True,
     )
 

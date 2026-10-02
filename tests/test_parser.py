@@ -42,7 +42,8 @@ def test_extract_token_signal():
         f"CA: {address}\nSlippage: 15%",
         chat_id=-100123,
         message_id=123,
-        detected_at=datetime.now(timezone.utc),
+        message_created_at=datetime.now(timezone.utc),
+        received_at=datetime.now(timezone.utc),
     )
 
     assert signal is not None

@@ -15,9 +15,11 @@ async def save_market_observation(
 ) -> MarketObservation:
     observed_at = datetime.now(timezone.utc)
 
+    anchor = signal.received_at or signal.message_created_at
+
     seconds_since_signal = max(
         0,
-        int((observed_at - signal.detected_at).total_seconds()),
+        int((observed_at - anchor).total_seconds()),
     )
 
     observation = MarketObservation(

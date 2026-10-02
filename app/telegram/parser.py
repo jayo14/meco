@@ -30,7 +30,8 @@ class TokenSignal:
     chat_id: int
     message_id: int
     message_text: str
-    detected_at: datetime
+    message_created_at: datetime
+    received_at: datetime
 
 
 def extract_solana_addresses(text: str) -> list[str]:
@@ -83,7 +84,8 @@ def extract_token_signal(
     *,
     chat_id: int,
     message_id: int,
-    detected_at: datetime,
+    message_created_at: datetime
+    received_at: datetime,
 ) -> TokenSignal | None:
     token_address = extract_token_address(text)
 
@@ -96,5 +98,6 @@ def extract_token_signal(
         chat_id=chat_id,
         message_id=message_id,
         message_text=text,
-        detected_at=detected_at,
+        message_created_at=message_created_at,
+        received_at=received_at,
     )

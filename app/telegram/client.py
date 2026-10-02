@@ -4,7 +4,7 @@ import logging
 from telethon import TelegramClient, events
 
 from app.config.settings import get_settings
-from app.database.repository import save_signal
+from app.database.repository import save_signal, update_signal_market
 from app.database.session import SessionLocal
 from app.market.observer import observe_signal
 from app.market.dexscreener import get_token_pairs
@@ -98,35 +98,13 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         signal.detected_at,
     )
 
-    pairs = await get_token_pairs(signal.token_address)
-
-    if not pairs:
-        logger.warning(
-            "⚠️ NO MARKET DATA | mint=%s",
-            signal.token_address,
-        )
-        return
-
-    primary_pair = select_primary_pair(pairs)
-
-    if primary_pair is None:
-        logger.warning(
-            "⚠️ NO LIQUID MARKET PAIR | mint=%s",
-            signal.token_address,
-        )
-        return
-
-    snapshot = create_market_snapshot(
-        signal.token_address,
-        primary_pair,
-    )
-
     async with SessionLocal() as session:
         saved_signal = await save_signal(
             session=session,
             signal=signal,
             mint_info=mint_info,
-            snapshot=snapshot,
+            snapshot=None,
+            market_status="pending",
             source_name=source_name,
             source_username=source_username,
         )
@@ -137,9 +115,45 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         saved_signal.token_address,
     )
 
-    asyncio.create_task(
-        observe_signal(saved_signal)
+    pairs = await get_token_pairs(signal.token_address)
+
+    if not pairs:
+        logger.warning(
+            "⚠️ NO MARKET DATA | signal_id=%s | mint=%s",
+            saved_signal.id,
+            signal.token_address,
+        )
+        async with SessionLocal() as session:
+            saved_signal.market_status = "no_market_data"
+            session.add(saved_signal)
+            await session.commit()
+        return
+
+    primary_pair = select_primary_pair(pairs)
+
+    if primary_pair is None:
+        logger.warning(
+            "⚠️ NO LIQUID MARKET PAIR | signal_id=%s | mint=%s",
+            saved_signal.id,
+            signal.token_address,
+        )
+        async with SessionLocal() as session:
+            saved_signal.market_status = "no_liquid_pair"
+            session.add(saved_signal)
+            await session.commit()
+        return
+
+    snapshot = create_market_snapshot(
+        signal.token_address,
+        primary_pair,
     )
+
+    async with SessionLocal() as session:
+        await update_signal_market(
+            session,
+            signal_id=saved_signal.id,
+            snapshot=snapshot,
+        )
 
     logger.info(
         "📊 MARKET SNAPSHOT | price=$%s | liquidity=$%s | "
@@ -150,6 +164,10 @@ async def handle_new_message(event: events.NewMessage.Event) -> None:
         snapshot.buys_5m,
         snapshot.sells_5m,
         snapshot.dex_id,
+    )
+
+    asyncio.create_task(
+        observe_signal(saved_signal)
     )
 
 async def main() -> None:

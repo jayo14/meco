@@ -71,15 +71,21 @@ async def capture_observation(signal: Signal, target_seconds: int) -> None:
     )
 
 
+def get_signal_anchor(signal: Signal) -> datetime:
+    return signal.received_at or signal.message_created_at
+
+
 async def wait_and_capture(
     signal: Signal,
     target_seconds: int,
 ) -> None:
+    anchor = get_signal_anchor(signal)
+
     now = datetime.now(timezone.utc)
 
     elapsed = max(
         0,
-        (now - signal.detected_at).total_seconds(),
+        (now - anchor).total_seconds(),
     )
 
     delay = target_seconds - elapsed
