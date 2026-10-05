@@ -91,7 +91,7 @@ def format_executive_summary_markdown(
     lines.extend([
         "",
         "### Why Did All Hypotheses Fail?",
-        "1. **The 'VIP' Temporal Disconnect:** The channel claims 'VIP entered at $10k, now $100k'. When the free call drops, the token has already reached its climax. The free community provides exit liquidity for early callers.",
+        "1. **Late-Stage Market Arrival:** The observed free-channel signals are consistent with a late-stage distribution pattern. However, the available data cannot establish whether VIP participants caused the observed market behavior or whether the free channel itself functions as exit liquidity. By the time the free channel post appears, the initial momentum has typically already occurred.",
         "2. **The Friction Barrier:** To profit from a token whose median peak is +12.9% within 120s, a trader must overcome:",
         "   - ~1.5% entry slippage",
         "   - ~1.5% exit slippage",

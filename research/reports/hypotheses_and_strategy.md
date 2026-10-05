@@ -7,10 +7,10 @@
 
 | Hypothesis | Train Sigs | Train Win% | Train Net PnL | Test Sigs | Test Win% | Test Net PnL | Verdict |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| H0: Baseline Naive Follow (All S |        189 |      28.6% | $    -1750.73 |        88 |     33.0% | $    -487.29 | **REJECTED** |
+| H0: Baseline Naive Follow (All S |        190 |      28.9% | $    -1664.90 |        88 |     31.8% | $    -600.45 | **REJECTED** |
 | H1: Anti-Climax Filter (Low Volu |         64 |      34.4% | $     -363.01 |        36 |     27.8% | $    -218.75 | **REJECTED** |
 | H2: Buy-Pressure Momentum Scalp |         75 |      29.3% | $     -701.49 |        25 |     36.0% | $     -43.25 | **REJECTED** |
-| H3: Trailing Stop Momentum Rider |        175 |      24.0% | $    -1927.43 |        72 |     33.3% | $    -368.31 | **REJECTED** |
+| H3: Trailing Stop Momentum Rider |        176 |      24.4% | $    -1768.98 |        72 |     31.9% | $    -554.08 | **REJECTED** |
 
 ## Detailed Hypotheses Documentation
 
@@ -26,11 +26,11 @@
 - **Max Holding Period:** 180s
 
 #### Performance Breakdown
-- **In-Sample Train Set:** 189 trades, 28.6% win rate, Mean Net: -8.74%, Total PnL: $-1750.73
-- **Out-of-Sample Test Set:** 88 trades, 33.0% win rate, Mean Net: -5.02%, Total PnL: $-487.29
+- **In-Sample Train Set:** 190 trades, 28.9% win rate, Mean Net: -8.24%, Total PnL: $-1664.90
+- **Out-of-Sample Test Set:** 88 trades, 31.8% win rate, Mean Net: -6.30%, Total PnL: $-600.45
 
-- **Evidence:** Train PnL: $-1750.73 (28.6% win), Test PnL: $-487.29 (33.0% win)
-- **Counter-Evidence:** Test set mean net return is -5.02%. Slippage (~3-4% roundtrip) and $0.02 Solana fees consistently degrade theoretical gross gains.
+- **Evidence:** Train PnL: $-1664.90 (28.9% win), Test PnL: $-600.45 (31.8% win)
+- **Counter-Evidence:** Test set mean net return is -6.30%. Slippage (~3-4% roundtrip) and $0.02 Solana fees consistently degrade theoretical gross gains.
 - **Known Limitations:** Does not filter for illiquid tokens or post-pump exhaustion.
 - **Potential Leakage:** None (pure baseline).
 - **Verdict:** `REJECTED (Negative EV after execution constraints)`
@@ -39,7 +39,7 @@
 
 ### H1: Anti-Climax Filter (Low Volume/Liquidity)
 
-**Rationale:** Tokens called with low prior 5m volume (< $35k) and low volume-to-liquidity (<= 1.2) have not yet experienced VIP dump/exhaustion and suffer lower catastrophic drawdowns.
+**Rationale:** Tokens called with low prior 5m volume (< $35k) and low volume-to-liquidity (<= 1.2) have not yet experienced severe volume climax/exhaustion and suffer lower catastrophic drawdowns.
 
 - **Feature Condition:** `volume_5m <= $35,000 AND (volume_5m / liquidity_usd) <= 1.2`
 - **Entry Condition:** Market buy at T+0 with slippage + impact model
@@ -95,11 +95,11 @@
 - **Max Holding Period:** 300s
 
 #### Performance Breakdown
-- **In-Sample Train Set:** 175 trades, 24.0% win rate, Mean Net: -10.49%, Total PnL: $-1927.43
-- **Out-of-Sample Test Set:** 72 trades, 33.3% win rate, Mean Net: -4.60%, Total PnL: $-368.31
+- **In-Sample Train Set:** 176 trades, 24.4% win rate, Mean Net: -9.53%, Total PnL: $-1768.98
+- **Out-of-Sample Test Set:** 72 trades, 31.9% win rate, Mean Net: -7.18%, Total PnL: $-554.08
 
-- **Evidence:** Train PnL: $-1927.43 (24.0% win), Test PnL: $-368.31 (33.3% win)
-- **Counter-Evidence:** Test set mean net return is -4.60%. Slippage (~3-4% roundtrip) and $0.02 Solana fees consistently degrade theoretical gross gains.
+- **Evidence:** Train PnL: $-1768.98 (24.4% win), Test PnL: $-554.08 (31.9% win)
+- **Counter-Evidence:** Test set mean net return is -7.18%. Slippage (~3-4% roundtrip) and $0.02 Solana fees consistently degrade theoretical gross gains.
 - **Known Limitations:** Discrete observation checkpoints (10s, 30s, 60s...) underestimate intra-checkpoint wick drawdowns.
 - **Potential Leakage:** None.
 - **Verdict:** `REJECTED (Negative EV after execution constraints)`

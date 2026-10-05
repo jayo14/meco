@@ -80,7 +80,7 @@ def run_hypotheses_evaluation(
         },
         {
             "name": "H1: Anti-Climax Filter (Low Volume/Liquidity)",
-            "rationale": "Tokens called with low prior 5m volume (< $35k) and low volume-to-liquidity (<= 1.2) have not yet experienced VIP dump/exhaustion and suffer lower catastrophic drawdowns.",
+            "rationale": "Tokens called with low prior 5m volume (< $35k) and low volume-to-liquidity (<= 1.2) have not yet experienced severe volume climax/exhaustion and suffer lower catastrophic drawdowns.",
             "filter_fn": lambda s: (
                 (s.volume_5m is not None and s.volume_5m <= 35000.0)
                 and (

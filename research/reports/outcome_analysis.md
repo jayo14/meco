@@ -3,50 +3,50 @@
 > [!IMPORTANT]
 > These metrics reflect **observed DexScreener market price changes at discrete checkpoints**, NOT guaranteed executable returns. Real trading requires modeling slippage, liquidity constraints, transaction fees, and latency.
 
-- **Evaluated Clean Signals:** 304 (excluding test signals, #103, and unliquid calls)
+- **Evaluated Clean Signals:** 305 (excluding test signals, #103, and unliquid calls)
 
 ## 1. Checkpoint Return Distributions
 
 | Checkpoint | Samples | Median Return | Mean Return | Positive % | ≥ +20% (Win) | ≤ -20% (Loss) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| T+10       |     219 |        +0.00% |      +0.38% |       8.7% |          1.8% |           1.8% |
-| T+30       |     291 |        +0.00% |      -0.33% |      33.3% |          6.9% |           4.5% |
-| T+60       |     290 |        +0.00% |      -0.74% |      44.5% |         12.1% |          15.2% |
-| T+120      |     213 |        -0.44% |      -2.45% |      42.7% |         18.8% |          23.0% |
-| T+180      |     201 |        -2.36% |      -1.53% |      38.3% |         21.4% |          26.9% |
-| T+300      |     270 |        -6.74% |      -5.11% |      35.6% |         20.4% |          35.9% |
-| T+600      |     191 |       -14.08% |      -8.71% |      34.6% |         21.5% |          45.5% |
-| T+900      |     249 |       -22.02% |      -8.54% |      33.7% |         24.1% |          51.0% |
-| T+1800     |     202 |       -32.52% |     -11.03% |      34.2% |         20.8% |          54.0% |
-| T+3600     |     165 |       -52.48% |     -22.47% |      24.2% |         19.4% |          62.4% |
+| T+10       |     220 |        +0.00% |      +0.34% |       8.6% |          1.8% |           1.8% |
+| T+30       |     292 |        +0.00% |      -0.36% |      33.2% |          6.8% |           4.5% |
+| T+60       |     291 |        +0.00% |      -0.78% |      44.3% |         12.0% |          15.1% |
+| T+120      |     214 |        -0.55% |      -2.55% |      42.5% |         18.7% |          23.4% |
+| T+180      |     202 |        -2.16% |      -1.51% |      38.6% |         21.3% |          26.7% |
+| T+300      |     272 |        -7.44% |      -5.25% |      35.3% |         20.2% |          36.0% |
+| T+600      |     193 |       -14.15% |      -9.19% |      34.2% |         21.2% |          45.6% |
+| T+900      |     253 |       -22.02% |      -8.90% |      34.0% |         24.1% |          51.0% |
+| T+1800     |     206 |       -33.28% |     -12.08% |      33.5% |         20.4% |          54.9% |
+| T+3600     |     169 |       -52.48% |     -21.08% |      24.9% |         20.1% |          62.1% |
 
 ## 2. Excursion (MFE / MAE) & Path Dynamics
 
 ### Maximum Favorable Excursion (MFE - Peak Upside)
-- **Median Peak Upside:** +12.91%
-- **Mean Peak Upside:**   +56.46%
+- **Median Peak Upside:** +12.94%
+- **Mean Peak Upside:**   +56.48%
 - **Median Time to Peak:** 121 seconds (~2.0 min)
 
 ### Maximum Adverse Excursion (MAE - Worst Drawdown)
-- **Median Worst Drawdown:** -47.62%
-- **Mean Worst Drawdown:**   -48.98%
+- **Median Worst Drawdown:** -50.68%
+- **Mean Worst Drawdown:**   -49.59%
 - **Median Time to Trough:** 901 seconds (~15.0 min)
 
 ### Peak-to-Trough Collapse
-- **Median Drawdown After Reaching Peak:** -72.04%
-- **Mean Drawdown After Reaching Peak:**   -62.69%
+- **Median Drawdown After Reaching Peak:** -73.51%
+- **Mean Drawdown After Reaching Peak:**   -63.22%
 
 ## 3. Threshold Reachability Matrix
 
 | Threshold | Signals Reached | Percentage |
 | :--- | :--- | :--- |
-| Hit ≥ +20% MFE  | 138 / 304 | 45.4% |
-| Hit ≥ +50% MFE  | 85 / 304 | 28.0% |
-| Hit ≥ +100% MFE | 45 / 304 | 14.8% |
-| Hit ≤ -20% MAE  | 205 / 304 | 67.4% |
-| Hit ≤ -50% MAE  | 150 / 304 | 49.3% |
-| Hit ≤ -80% MAE  | 96 / 304 | 31.6% |
-| Hit ≤ -90% MAE  | 65 / 304 | 21.4% |
+| Hit ≥ +20% MFE  | 139 / 305 | 45.6% |
+| Hit ≥ +50% MFE  | 85 / 305 | 27.9% |
+| Hit ≥ +100% MFE | 45 / 305 | 14.8% |
+| Hit ≤ -20% MAE  | 207 / 305 | 67.9% |
+| Hit ≤ -50% MAE  | 153 / 305 | 50.2% |
+| Hit ≤ -80% MAE  | 99 / 305 | 32.5% |
+| Hit ≤ -90% MAE  | 67 / 305 | 22.0% |
 
 ## 4. Key Quantitative Insights
 
