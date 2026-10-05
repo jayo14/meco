@@ -452,5 +452,53 @@ async def test_inspect_bonding_curve_state(monkeypatch):
     assert res_found["data_len"] == 151
 
 
+def test_presignal_reconstruction_and_cohort():
+    from app.research.presignal import (
+        reconstruct_presignal_metrics,
+        analyze_presignal_cohort,
+        PreSignalMetrics,
+    )
+
+    t_signal = datetime(2026, 10, 2, 12, 15, 0, tzinfo=timezone.utc)
+    s = create_mock_signal(1, message_created_at=t_signal, volume_5m=5000.0, liquidity_usd=20000.0, buys_5m=80, sells_5m=20)
+
+    # 15 minutes earlier (900 seconds)
+    t_pool_ms = int(datetime(2026, 10, 2, 12, 0, 0, tzinfo=timezone.utc).timestamp() * 1000)
+    pair_obs = MarketPairObservation(
+        id=1,
+        signal_id=1,
+        target_seconds=10,
+        seconds_since_signal=10,
+        pair_address="pair_1",
+        dex_id="pumpswap",
+        base_token_address="Mint1",
+        quote_token_address="SOL",
+        pair_created_at=t_pool_ms,
+    )
+
+    metrics = reconstruct_presignal_metrics([s], [pair_obs])
+    assert len(metrics) == 1
+    m = metrics[0]
+    assert m.signal_id == 1
+    assert m.pool_age_at_signal_seconds == pytest.approx(900.0, rel=1e-3)
+    assert m.pre_signal_buy_ratio == pytest.approx(0.80)
+    assert m.volume_to_liquidity == pytest.approx(0.25)
+
+    # Test cohort analysis
+    m1 = PreSignalMetrics(1, "Mint1", "p1", "pump", t_signal, None, 60.0, 100, 10, 10, 0.5, 0.1) # 1m
+    m2 = PreSignalMetrics(2, "Mint2", "p2", "pump", t_signal, None, 240.0, 100, 10, 10, 0.5, 0.1) # 4m
+    m3 = PreSignalMetrics(3, "Mint3", "p3", "pump", t_signal, None, 600.0, 100, 10, 10, 0.5, 0.1) # 10m
+    m4 = PreSignalMetrics(4, "Mint4", "p4", "pump", t_signal, None, 4000.0, 100, 10, 10, 0.5, 0.1) # 66m
+
+    cohort = analyze_presignal_cohort([m1, m2, m3, m4])
+    assert cohort.total_evaluated == 4
+    assert cohort.pct_under_2_minutes == 25.0
+    assert cohort.pct_under_5_minutes == 50.0
+    assert cohort.pct_under_15_minutes == 75.0
+    assert cohort.pct_over_1_hour == 25.0
+    assert cohort.median_pool_age_seconds == pytest.approx(420.0) # (240 + 600)/2
+
+
+
 
 
