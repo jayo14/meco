@@ -1,0 +1,1964 @@
+{
+  "total_signals": 384,
+  "usable_count": 304,
+  "excluded_count": 80,
+  "total_anomalies": 163,
+  "severities": {
+    "critical": 1,
+    "high": 76,
+    "medium": 75,
+    "info": 11
+  },
+  "anomalies": [
+    {
+      "signal_id": 103,
+      "token_address": "ETXqxfVoPN9f1qX1EV9qPWNqYuu5TUUUXMUM4SsniJga",
+      "anomaly_type": "extreme_liquidity_drop",
+      "description": "Initial observation reported $345.8M liquidity which collapsed to $20.8K at T+900. Raydium pool pair manipulation or LP glitch.",
+      "severity": "critical",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "initial_liquidity": 345863635.06,
+        "initial_price": 0.3146,
+        "pair_address": "E7VkHPdTo8UKh54agKifhXtfVRMubzW4pttytSGuyApq"
+      }
+    },
+    {
+      "signal_id": 1,
+      "token_address": "So11111111111111111111111111111111111111112",
+      "anomaly_type": "test_signal",
+      "description": "Injected test signal with source_name=None (So11111111...)",
+      "severity": "high",
+      "recommended_action": "exclude_all",
+      "details": {
+        "token_address": "So11111111111111111111111111111111111111112"
+      }
+    },
+    {
+      "signal_id": 2,
+      "token_address": "So11111111111111111111111111111111111111112",
+      "anomaly_type": "test_signal",
+      "description": "Injected test signal with source_name=None (So11111111...)",
+      "severity": "high",
+      "recommended_action": "exclude_all",
+      "details": {
+        "token_address": "So11111111111111111111111111111111111111112"
+      }
+    },
+    {
+      "signal_id": 3,
+      "token_address": "B7yfFFkX4NtxtQwGdegi2DuaVssitc3FGpqF2pxUH1zM",
+      "anomaly_type": "test_signal",
+      "description": "Injected test signal with source_name=None (B7yfFFkX4N...)",
+      "severity": "high",
+      "recommended_action": "exclude_all",
+      "details": {
+        "token_address": "B7yfFFkX4NtxtQwGdegi2DuaVssitc3FGpqF2pxUH1zM"
+      }
+    },
+    {
+      "signal_id": 5,
+      "token_address": "84EQBdbc7XAi9Le9fnSPmDjQdH9Sqk7v5VQkhhcxpump",
+      "anomaly_type": "test_signal",
+      "description": "Injected test signal with source_name=None (84EQBdbc7X...)",
+      "severity": "high",
+      "recommended_action": "exclude_all",
+      "details": {
+        "token_address": "84EQBdbc7XAi9Le9fnSPmDjQdH9Sqk7v5VQkhhcxpump"
+      }
+    },
+    {
+      "signal_id": 10,
+      "token_address": "B7yfFFkX4NtxtQwGdegi2DuaVssitc3FGpqF2pxUH1zM",
+      "anomaly_type": "test_signal",
+      "description": "Injected test signal with source_name=None (B7yfFFkX4N...)",
+      "severity": "high",
+      "recommended_action": "exclude_all",
+      "details": {
+        "token_address": "B7yfFFkX4NtxtQwGdegi2DuaVssitc3FGpqF2pxUH1zM"
+      }
+    },
+    {
+      "signal_id": 39,
+      "token_address": "4pminhRSYTnY1p8e8TiszMPgty4jSXFLfGW5NNVypump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 42,
+      "token_address": "AZxD7oZ4xrfHNCY7aAEJU1RuJKsFE3HaWzGetq9LrogY",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 46,
+      "token_address": "FFtp6pxteF52PX3gryHrhQdxWze23Qzh7vC3kKzVpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 49,
+      "token_address": "HjtrhQgF6MZWmuok2U7Y7N397bVCueEd5mi9cceMpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 51,
+      "token_address": "5VuuiPvnmjhRQUdW9KNsLCfWk5pmgQtMsHw9vmCwQgqP",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 56,
+      "token_address": "2x6Nu11CLx7ZndKVSRpQ5R5xYKhNKBHecQ9CZRDoE4um",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 59,
+      "token_address": "Am6SB1xhuwyv6hENfR2uHj2fvKeo87KN8vVw28RcrmEa",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 62,
+      "token_address": "5SeSgDDm7oX8m1scMF1erzSFV4LB9W85DJZv2wCsJJGy",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 71,
+      "token_address": "6bzbiQxus18EMxG5hbzCbF5KRrw416tRyTc8QmUputer",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 74,
+      "token_address": "AvReVQWDjFRHZd4GHYxjztFCTNLX2qMQFbiqa6g6vPq4",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 82,
+      "token_address": "AUUeDvfh9YqkkevoF6JTXeR2FpdtGvHQaCBJ9fB8pump",
+      "anomaly_type": "dexscreener_fetch_failed",
+      "description": "DexScreener API timed out or errored on initial signal capture.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "fetch_failed"
+      }
+    },
+    {
+      "signal_id": 83,
+      "token_address": "DN5uhGU1Dfx1zJXveBuYk2Rn8eGuMKF7xJZmcZuLpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 99,
+      "token_address": "AYkTxWJHAgp95Xu1SDkmqzTpvpKmG7wLiUpUgzKVpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 101,
+      "token_address": "DioisRY2M15WKza2te7pCvEAe7B1EVp4N1ZrM6tn52Sp",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 102,
+      "token_address": "3YJSqXQkN5gXoZkHrHFnAMKwqyGv7B7WmRdyYVFAXnmh",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 111,
+      "token_address": "B77MYakpiRLtL6P8Mqa1DKnuk4nHKQ13Rpk4D8F7MVqi",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 112,
+      "token_address": "FM63ghHGHUQFqibWDyziwtXFVwK4PhSAfDy9Bo33pump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 117,
+      "token_address": "DptLiPxXuP5xwU6ZSKN4Fqx1bRCzmo41geLLM7Fepump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 118,
+      "token_address": "FtCot9E8ynW9cG116aGrHmFGFwwENKzrST5R6SoHpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 121,
+      "token_address": "C5CjDhwpVZULajo4kqPKa8pHysd2KxezwmQ4J6iqjHd9",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 124,
+      "token_address": "AYuNTGHHYzmH6LgwveNVc9TZFmPVZKUsM4k5tPqEpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 127,
+      "token_address": "3PvahwgS6tdL5jpiffokDbRfmtgZ2Yuv11EuKVPrkDEL",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 128,
+      "token_address": "GsdnirSKRcLVZ1u1uASsNTqD52L22ozAUK7uX3fXpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 129,
+      "token_address": "3vwAgtTjv6VvuaXtC4BFHeAzHF6Z7CaUaHCQE2PYpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 131,
+      "token_address": "6o3xN14C1KShv3sowiPwQWgVbnYGy6MyFU4kEzgjpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 139,
+      "token_address": "THFjvuT6FW7eEMR97MY5yDBTxEbFZ6u5aH59m32pump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 145,
+      "token_address": "6hTLdzZaaCjmqtn7RtaEMQsCbXT5Pg8q76tRViEGpump",
+      "anomaly_type": "dexscreener_fetch_failed",
+      "description": "DexScreener API timed out or errored on initial signal capture.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "fetch_failed"
+      }
+    },
+    {
+      "signal_id": 151,
+      "token_address": "CUAQ9ufBanfF4wG2wr2tvkpuqwhi3DHyCn6qCXY1pump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 157,
+      "token_address": "48TeaPLqFQBr9wf4FqHPXw2JMFNM8FCqrrRRLivMpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 159,
+      "token_address": "6JL6KPAsvssBCxc1QxaUgtYkPCgE9g459Qf79prU4PaD",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 160,
+      "token_address": "c2fJFn3satRgWcpdYcTP7smQHLKQeL9eGL6zMyVpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 161,
+      "token_address": "FPUDkQBAMYVzbg7Rmfr83bVTUKoZ7yoGHLQZLvMvfsC7",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 163,
+      "token_address": "Ev6U6B1aSAnevPx1esqCvwe2c6Kkew2qJdBcVjE5pump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 173,
+      "token_address": "BDjKkgY27muwXYWBmuMRWKqWadKGUoBiJijHogdCJjDk",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 180,
+      "token_address": "68vE4ZWw89DKqBEQVr4UXhTeDzn5dBwobiP1x8Qrpepe",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 191,
+      "token_address": "HnQuikzsihZBHrG6ZSQzFpJUkBWmMEy5yadqPr3epNgU",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 194,
+      "token_address": "9F49CPL937N5wUkEuudpjLr3khtRb7c7PxEu2V6HTmRE",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 196,
+      "token_address": "8NhRxoViq6zr7tY91e61duiVcpMmZ5FqYsdn1PKgYgTX",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 219,
+      "token_address": "6VsnbKz6erJRTPiiD34Msq7eWmmgZHDnh4Bxan4MpGjm",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 220,
+      "token_address": "HhUzCsowKRnCrA2eq2oHPn9LTDqS7aySLmGURgrgpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 226,
+      "token_address": "GZnAMJ7DSCa3k4FoNNMCrA4ZZdDDE9DZAEvcef5Ypump",
+      "anomaly_type": "signal_status_pending",
+      "description": "Signal pipeline remained in pending state without market resolution.",
+      "severity": "high",
+      "recommended_action": "exclude_all",
+      "details": {
+        "validation_status": "rpc_failed"
+      }
+    },
+    {
+      "signal_id": 232,
+      "token_address": "3JMpdC7tXi5Wga8vgUjgLSSihuBxHfzPdeSvqsATiLgE",
+      "anomaly_type": "dexscreener_fetch_failed",
+      "description": "DexScreener API timed out or errored on initial signal capture.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "fetch_failed"
+      }
+    },
+    {
+      "signal_id": 236,
+      "token_address": "8u1A1gWR6THkJTG8fipoeB8XkxYyZjETaRduaywrpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 238,
+      "token_address": "F5WvFdG9sCfhv3bVYAMJNWiwpx5e3X2uvpXDtLtdsDJs",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 239,
+      "token_address": "9a8ydwVbdakh5bg6MA32QTqkhLJRRMdxMV3HTjospump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 244,
+      "token_address": "6o8QVhkARAchGLeNSfH82juqLzTYNLWzRDfVUi2FUmvM",
+      "anomaly_type": "dexscreener_fetch_failed",
+      "description": "DexScreener API timed out or errored on initial signal capture.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "fetch_failed"
+      }
+    },
+    {
+      "signal_id": 245,
+      "token_address": "8BCVKvFBRSwfkdq94Kcw46W6g7cWLJCtM3xxmxiZHVJ8",
+      "anomaly_type": "dexscreener_fetch_failed",
+      "description": "DexScreener API timed out or errored on initial signal capture.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "fetch_failed"
+      }
+    },
+    {
+      "signal_id": 253,
+      "token_address": "EZK7a4eYaFm6J68WkxmzvM4B8oqsJKfV9EEL3cE6rvWp",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 255,
+      "token_address": "7KtbsRHbGdgYH5Qgdwsy7ceV49pgJTYmhxrsCyvPPDTM",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 256,
+      "token_address": "HVKHCL4PLJYT9YduT64gb464LmhtUjAcyxhWCPseB6in",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 261,
+      "token_address": "BzAtnnQDpHBjeur3cqyEK93imfJBXdbA3GmovdZLpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 273,
+      "token_address": "GYFLuEAZMDdpUsTmyGdHstuXQC3JB9ZqtZbfktpppump",
+      "anomaly_type": "dexscreener_fetch_failed",
+      "description": "DexScreener API timed out or errored on initial signal capture.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "fetch_failed"
+      }
+    },
+    {
+      "signal_id": 274,
+      "token_address": "GvA7fjPW3oMk8YVA9Eq1xCoaDkxDpZa67XciBoosVawH",
+      "anomaly_type": "dexscreener_fetch_failed",
+      "description": "DexScreener API timed out or errored on initial signal capture.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "fetch_failed"
+      }
+    },
+    {
+      "signal_id": 279,
+      "token_address": "61BkPLSPrgzYdJL1n2eVfauWRy92qd3bE7yjUBzc4fiD",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 281,
+      "token_address": "67PGKeiZxQPx6SxAR8SZrHCDssDur3BcWuFsGoxmhWLM",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 286,
+      "token_address": "97YQ91oKBWLUrH9JJ85QUub6VFz86eChuaxK7yUtSmyv",
+      "anomaly_type": "dexscreener_fetch_failed",
+      "description": "DexScreener API timed out or errored on initial signal capture.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "fetch_failed"
+      }
+    },
+    {
+      "signal_id": 287,
+      "token_address": "26YhHQsoW9obziCxmPzTdgsdUMgniKT76RxhFoAypump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 288,
+      "token_address": "GFU3iYSHw5VPp4oHT7rFTzFPZR3uNpuMQo88LGnVpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 290,
+      "token_address": "HBjM6iiNj9SqMiHudDrCsKojt1PeJh5pcwPcR8rxpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 292,
+      "token_address": "HwqyRuZrLca1QGgmY469q7tQtWVu1dCHKkeyF2ALjYBQ",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 293,
+      "token_address": "8bqKeRqFWH7YWir9kBHrdA7psoN4WyjAc46CVe5Qpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 296,
+      "token_address": "HCfdUmfdKnN8wTXhMW7yN5aedFqv4oPF1PJh479qp5Pc",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 301,
+      "token_address": "9MR3EaeFvb5bgNnQvrr4mvNc5VywEDAvQFTSmCps3ejp",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 305,
+      "token_address": "6g9XSgy7uo1epn1UXYznZzxmgrEMpAVUVTwiCWzxpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 310,
+      "token_address": "CAPHBaP1h4ZFHXQtLaXnHr2HvrdFzwXNbfcP2Bx9pump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 313,
+      "token_address": "C8ivuAd8xzEyf7aCKDXF4cD4oYsbamtvdNqiC1oNpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 318,
+      "token_address": "CxcqRz92SeGGgNzc2z9qb8UyHDmvBuBZpEh8pa2gpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 325,
+      "token_address": "kntrct9U7DfJqb9n3uPmAWvC5Bd3STfjs5oqt1zokcc",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 335,
+      "token_address": "3eQSKbRyeKfDkHXPLGBt4uP2fiBBL5tiyNd8hqDLpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 341,
+      "token_address": "3atCDRt8qpjTHSzt9sEdQEcD7RdG6RE7UzMhDP8mpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 342,
+      "token_address": "9r3c4As6KmMcHi9MjpmCWZkDiiBmHnLHg1ZE3JSTpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 349,
+      "token_address": "FPZC4wqjxwSmupNFW59gZi3qCtQLfDL6Ga9Fz1Repump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 354,
+      "token_address": "8soZdwXQEafmgjtzkBqyM3KZcPNcpoLH91e1Za6gpump",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 363,
+      "token_address": "8hPQV5THuZ7DPjusqpaNgF1cRStZxw9umfsKByvuEGft",
+      "anomaly_type": "no_liquid_pair_at_signal",
+      "description": "No liquid pool was discoverable by DexScreener when signal arrived.",
+      "severity": "medium",
+      "recommended_action": "exclude_all",
+      "details": {
+        "market_status": "no_liquid_pair"
+      }
+    },
+    {
+      "signal_id": 226,
+      "token_address": "GZnAMJ7DSCa3k4FoNNMCrA4ZZdDDE9DZAEvcef5Ypump",
+      "anomaly_type": "solana_rpc_failed",
+      "description": "Solana RPC timed out or failed to validate mint account info.",
+      "severity": "high",
+      "recommended_action": "exclude_all",
+      "details": {
+        "token_address": "GZnAMJ7DSCa3k4FoNNMCrA4ZZdDDE9DZAEvcef5Ypump"
+      }
+    },
+    {
+      "signal_id": 1,
+      "token_address": "So11111111111111111111111111111111111111112",
+      "anomaly_type": "non_standard_target",
+      "description": "Observation captured with non-standard target=6s (actual=6s)",
+      "severity": "info",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 6,
+        "seconds_since_signal": 6
+      }
+    },
+    {
+      "signal_id": 1,
+      "token_address": "So11111111111111111111111111111111111111112",
+      "anomaly_type": "non_standard_target",
+      "description": "Observation captured with non-standard target=16s (actual=16s)",
+      "severity": "info",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 16,
+        "seconds_since_signal": 16
+      }
+    },
+    {
+      "signal_id": 1,
+      "token_address": "So11111111111111111111111111111111111111112",
+      "anomaly_type": "non_standard_target",
+      "description": "Observation captured with non-standard target=37s (actual=37s)",
+      "severity": "info",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 37,
+        "seconds_since_signal": 37
+      }
+    },
+    {
+      "signal_id": 2,
+      "token_address": "So11111111111111111111111111111111111111112",
+      "anomaly_type": "non_standard_target",
+      "description": "Observation captured with non-standard target=301s (actual=301s)",
+      "severity": "info",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 301,
+        "seconds_since_signal": 301
+      }
+    },
+    {
+      "signal_id": 2,
+      "token_address": "So11111111111111111111111111111111111111112",
+      "anomaly_type": "non_standard_target",
+      "description": "Observation captured with non-standard target=905s (actual=905s)",
+      "severity": "info",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 905,
+        "seconds_since_signal": 905
+      }
+    },
+    {
+      "signal_id": 3,
+      "token_address": "B7yfFFkX4NtxtQwGdegi2DuaVssitc3FGpqF2pxUH1zM",
+      "anomaly_type": "non_standard_target",
+      "description": "Observation captured with non-standard target=31s (actual=31s)",
+      "severity": "info",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 31,
+        "seconds_since_signal": 31
+      }
+    },
+    {
+      "signal_id": 3,
+      "token_address": "B7yfFFkX4NtxtQwGdegi2DuaVssitc3FGpqF2pxUH1zM",
+      "anomaly_type": "non_standard_target",
+      "description": "Observation captured with non-standard target=302s (actual=302s)",
+      "severity": "info",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 302,
+        "seconds_since_signal": 302
+      }
+    },
+    {
+      "signal_id": 3,
+      "token_address": "B7yfFFkX4NtxtQwGdegi2DuaVssitc3FGpqF2pxUH1zM",
+      "anomaly_type": "non_standard_target",
+      "description": "Observation captured with non-standard target=901s (actual=901s)",
+      "severity": "info",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 901,
+        "seconds_since_signal": 901
+      }
+    },
+    {
+      "signal_id": 4,
+      "token_address": "7cYaQc21w9dzKkGP6LgkqtmL5yzoK5UJE1GeamTRHwny",
+      "anomaly_type": "non_standard_target",
+      "description": "Observation captured with non-standard target=51s (actual=51s)",
+      "severity": "info",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 51,
+        "seconds_since_signal": 51
+      }
+    },
+    {
+      "signal_id": 5,
+      "token_address": "84EQBdbc7XAi9Le9fnSPmDjQdH9Sqk7v5VQkhhcxpump",
+      "anomaly_type": "non_standard_target",
+      "description": "Observation captured with non-standard target=61s (actual=61s)",
+      "severity": "info",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 61,
+        "seconds_since_signal": 61
+      }
+    },
+    {
+      "signal_id": 5,
+      "token_address": "84EQBdbc7XAi9Le9fnSPmDjQdH9Sqk7v5VQkhhcxpump",
+      "anomaly_type": "non_standard_target",
+      "description": "Observation captured with non-standard target=301s (actual=301s)",
+      "severity": "info",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 301,
+        "seconds_since_signal": 301
+      }
+    },
+    {
+      "signal_id": 174,
+      "token_address": "CPqq6ceui3H6Ye2J41dmZFkD6iJWKARqKquJjsrvTmku",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 175,
+      "token_address": "3Dgwn5E7H5a8k6iGrz3qirkaJqUaJrKHEZ2xPcLRpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 176,
+      "token_address": "FRgxtZsC3J3uePkMME9WkDUbQkQeZXpgdDGqhzRx3V31",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 177,
+      "token_address": "9BenaMeegjDL87qjc8sJiYBCW9FYLx53t5FwJuZsvRKX",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 178,
+      "token_address": "DSgB7ASKXrfMUkpcr5T9Brt3kVAc7ttuUUd5fW58MPaH",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 179,
+      "token_address": "GQ2QgEa2EbM76mNkSNZUqdhLXWb5J13kgCYJtV6U32f6",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 181,
+      "token_address": "5t9rie78rVLPPQmFxumMbdEyFqS1LgUo9yM3oNcRprG6",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 182,
+      "token_address": "6FhVPctYg363pQbs4iSvqyHe2cJzfsvFD96gePy6pump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56350s (actual elapsed=77950s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77950,
+        "delay_seconds": 56350
+      }
+    },
+    {
+      "signal_id": 183,
+      "token_address": "J9YnEDijKzrDy3MMPj19idRRbesJf7vPcujbUh8ipump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56353s (actual elapsed=77953s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77953,
+        "delay_seconds": 56353
+      }
+    },
+    {
+      "signal_id": 184,
+      "token_address": "6fm4qZKbybAF5ckAytGgijKnM5PU9EkvoDPKfd2spump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 185,
+      "token_address": "HhMJF9TNzCZgKXcDQaCyNHDEgN8jvrbBwXbfJoCpPNai",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 186,
+      "token_address": "QdELvnkzrNiMid6xozVvb1hJXKkMiy7MkdqUWiNDyeQ",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 187,
+      "token_address": "4L8ckhBmUFgDjFuXBzM5rzqnDQT6DK5v7Mh9S5qz12vV",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 188,
+      "token_address": "2AVjqmGbMqg7rSyHVv2deVdggsBgBtu1Bi69BUvE5WRv",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 189,
+      "token_address": "8qREgLv5ims3ygkui41DBXoNsrwdvbdgwSk9QccWa2SY",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 190,
+      "token_address": "9vYT1B3DgP1HeHbpQTYDudHcoiW1BKopC6KksKDZVjNk",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 192,
+      "token_address": "GYznyz3yTXeTbZpoxzhLvoQ1wh57ve6UXMbb4zskP9hg",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 193,
+      "token_address": "H8mbCUwP4L7v1ZFkN8N9aLzgEVZTFr1vx3s5NKPRpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=21600s captured with delay of 56348s (actual elapsed=77948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 21600,
+        "seconds_since_signal": 77948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 221,
+      "token_address": "8u5sKMkNVhPPJrTMtFyPsS8SZtXu5VEiWu34QquWSq6x",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 597s (actual elapsed=4197s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 4197,
+        "delay_seconds": 597
+      }
+    },
+    {
+      "signal_id": 222,
+      "token_address": "CuY2M3PoyABAxNzEatBiwPtZCqrKyhRNxw2gmfSApump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 595s (actual elapsed=4195s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 4195,
+        "delay_seconds": 595
+      }
+    },
+    {
+      "signal_id": 223,
+      "token_address": "BXoHJddsWJLHtAopeiSbKUSELsu8hSFMs8baGMDkpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 56348s (actual elapsed=59948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 59948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 224,
+      "token_address": "FW1GWwatWoF9ryBvaywUzPNJBFH3XYgFbNyXD4gcpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 56348s (actual elapsed=59948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 59948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 225,
+      "token_address": "BbUhxxYjbKN55tCVbqhPhBrhyUmc72nTPvtWcPp4inRA",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 56347s (actual elapsed=59947s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 59947,
+        "delay_seconds": 56347
+      }
+    },
+    {
+      "signal_id": 227,
+      "token_address": "4SzWdVbXC7JiAtY5rH5MGc8HJPFAv6sSG97QEsjSpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=900s captured with delay of 602s (actual elapsed=1502s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 900,
+        "seconds_since_signal": 1502,
+        "delay_seconds": 602
+      }
+    },
+    {
+      "signal_id": 227,
+      "token_address": "4SzWdVbXC7JiAtY5rH5MGc8HJPFAv6sSG97QEsjSpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=1800s captured with delay of 596s (actual elapsed=2396s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 1800,
+        "seconds_since_signal": 2396,
+        "delay_seconds": 596
+      }
+    },
+    {
+      "signal_id": 227,
+      "token_address": "4SzWdVbXC7JiAtY5rH5MGc8HJPFAv6sSG97QEsjSpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 56348s (actual elapsed=59948s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 59948,
+        "delay_seconds": 56348
+      }
+    },
+    {
+      "signal_id": 228,
+      "token_address": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=900s captured with delay of 55752s (actual elapsed=56652s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 900,
+        "seconds_since_signal": 56652,
+        "delay_seconds": 55752
+      }
+    },
+    {
+      "signal_id": 228,
+      "token_address": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=1800s captured with delay of 55752s (actual elapsed=57552s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 1800,
+        "seconds_since_signal": 57552,
+        "delay_seconds": 55752
+      }
+    },
+    {
+      "signal_id": 228,
+      "token_address": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 55752s (actual elapsed=59352s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 59352,
+        "delay_seconds": 55752
+      }
+    },
+    {
+      "signal_id": 229,
+      "token_address": "6StMkk2nyQHVQq2679zSJ1kxWeq4YMjkphLiGeoUpaid",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=600s captured with delay of 55753s (actual elapsed=56353s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 600,
+        "seconds_since_signal": 56353,
+        "delay_seconds": 55753
+      }
+    },
+    {
+      "signal_id": 229,
+      "token_address": "6StMkk2nyQHVQq2679zSJ1kxWeq4YMjkphLiGeoUpaid",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=900s captured with delay of 55752s (actual elapsed=56652s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 900,
+        "seconds_since_signal": 56652,
+        "delay_seconds": 55752
+      }
+    },
+    {
+      "signal_id": 229,
+      "token_address": "6StMkk2nyQHVQq2679zSJ1kxWeq4YMjkphLiGeoUpaid",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=1800s captured with delay of 55754s (actual elapsed=57554s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 1800,
+        "seconds_since_signal": 57554,
+        "delay_seconds": 55754
+      }
+    },
+    {
+      "signal_id": 229,
+      "token_address": "6StMkk2nyQHVQq2679zSJ1kxWeq4YMjkphLiGeoUpaid",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 55753s (actual elapsed=59353s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 59353,
+        "delay_seconds": 55753
+      }
+    },
+    {
+      "signal_id": 230,
+      "token_address": "4Z27KbzjrQo1W5T3TXvo2J8ubMx1bBc248526FfqPDpk",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=600s captured with delay of 55752s (actual elapsed=56352s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 600,
+        "seconds_since_signal": 56352,
+        "delay_seconds": 55752
+      }
+    },
+    {
+      "signal_id": 230,
+      "token_address": "4Z27KbzjrQo1W5T3TXvo2J8ubMx1bBc248526FfqPDpk",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=900s captured with delay of 55752s (actual elapsed=56652s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 900,
+        "seconds_since_signal": 56652,
+        "delay_seconds": 55752
+      }
+    },
+    {
+      "signal_id": 230,
+      "token_address": "4Z27KbzjrQo1W5T3TXvo2J8ubMx1bBc248526FfqPDpk",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=1800s captured with delay of 55752s (actual elapsed=57552s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 1800,
+        "seconds_since_signal": 57552,
+        "delay_seconds": 55752
+      }
+    },
+    {
+      "signal_id": 230,
+      "token_address": "4Z27KbzjrQo1W5T3TXvo2J8ubMx1bBc248526FfqPDpk",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 55753s (actual elapsed=59353s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 59353,
+        "delay_seconds": 55753
+      }
+    },
+    {
+      "signal_id": 231,
+      "token_address": "AG3uJmpXnQEt1THPi8hEG1rtep3Ha53xyD6Gn6Rd4ZW7",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=300s captured with delay of 55753s (actual elapsed=56053s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 300,
+        "seconds_since_signal": 56053,
+        "delay_seconds": 55753
+      }
+    },
+    {
+      "signal_id": 231,
+      "token_address": "AG3uJmpXnQEt1THPi8hEG1rtep3Ha53xyD6Gn6Rd4ZW7",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=600s captured with delay of 55752s (actual elapsed=56352s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 600,
+        "seconds_since_signal": 56352,
+        "delay_seconds": 55752
+      }
+    },
+    {
+      "signal_id": 231,
+      "token_address": "AG3uJmpXnQEt1THPi8hEG1rtep3Ha53xyD6Gn6Rd4ZW7",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=900s captured with delay of 55752s (actual elapsed=56652s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 900,
+        "seconds_since_signal": 56652,
+        "delay_seconds": 55752
+      }
+    },
+    {
+      "signal_id": 231,
+      "token_address": "AG3uJmpXnQEt1THPi8hEG1rtep3Ha53xyD6Gn6Rd4ZW7",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=1800s captured with delay of 55752s (actual elapsed=57552s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 1800,
+        "seconds_since_signal": 57552,
+        "delay_seconds": 55752
+      }
+    },
+    {
+      "signal_id": 231,
+      "token_address": "AG3uJmpXnQEt1THPi8hEG1rtep3Ha53xyD6Gn6Rd4ZW7",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 55753s (actual elapsed=59353s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 59353,
+        "delay_seconds": 55753
+      }
+    },
+    {
+      "signal_id": 258,
+      "token_address": "2mcV9yz46nQ78J3hqzi7kEMzVzudFGJYSEtJy81GJBMm",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=1800s captured with delay of 6964s (actual elapsed=8764s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 1800,
+        "seconds_since_signal": 8764,
+        "delay_seconds": 6964
+      }
+    },
+    {
+      "signal_id": 258,
+      "token_address": "2mcV9yz46nQ78J3hqzi7kEMzVzudFGJYSEtJy81GJBMm",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 6965s (actual elapsed=10565s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 10565,
+        "delay_seconds": 6965
+      }
+    },
+    {
+      "signal_id": 259,
+      "token_address": "9LdFxvn2cMY2T6NDj3naThMhRUg7punCg6hAK5uXpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=1800s captured with delay of 6965s (actual elapsed=8765s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 1800,
+        "seconds_since_signal": 8765,
+        "delay_seconds": 6965
+      }
+    },
+    {
+      "signal_id": 259,
+      "token_address": "9LdFxvn2cMY2T6NDj3naThMhRUg7punCg6hAK5uXpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 6965s (actual elapsed=10565s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 10565,
+        "delay_seconds": 6965
+      }
+    },
+    {
+      "signal_id": 312,
+      "token_address": "6bmC8NGLPhUK26neLjmYhdyTh8WQteuNK6rVDx35ncv5",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 1042s (actual elapsed=4642s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 4642,
+        "delay_seconds": 1042
+      }
+    },
+    {
+      "signal_id": 314,
+      "token_address": "CkYC13iy8CsrWXKz3zqhjoyLvGBH2zFFwQKrcrvApump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 1042s (actual elapsed=4642s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 4642,
+        "delay_seconds": 1042
+      }
+    },
+    {
+      "signal_id": 315,
+      "token_address": "GbdUYiGiRxhr146N8d5hemgcscU8YUW8oYbKJhuApump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 1042s (actual elapsed=4642s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 4642,
+        "delay_seconds": 1042
+      }
+    },
+    {
+      "signal_id": 316,
+      "token_address": "5BD7HpRsi2EsSwoSRSzhkcjCBm6KdR6ZP1UrJVbNpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 1042s (actual elapsed=4642s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 4642,
+        "delay_seconds": 1042
+      }
+    },
+    {
+      "signal_id": 317,
+      "token_address": "7HE2WmPoYE7uaA7DKh25N5cUwEcUoiyjwZU9ZeaQpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 1042s (actual elapsed=4642s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 4642,
+        "delay_seconds": 1042
+      }
+    },
+    {
+      "signal_id": 319,
+      "token_address": "8nKp4JkesNtDgu3PiSjdTdNSrtBt8YCHhW8BU14wpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=1800s captured with delay of 1042s (actual elapsed=2842s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 1800,
+        "seconds_since_signal": 2842,
+        "delay_seconds": 1042
+      }
+    },
+    {
+      "signal_id": 319,
+      "token_address": "8nKp4JkesNtDgu3PiSjdTdNSrtBt8YCHhW8BU14wpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 1042s (actual elapsed=4642s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 4642,
+        "delay_seconds": 1042
+      }
+    },
+    {
+      "signal_id": 320,
+      "token_address": "EvwGJQ3Xp3h8hgHrSwAhBgSy7QAAzh7XSeah5gjBpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=1800s captured with delay of 1043s (actual elapsed=2843s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 1800,
+        "seconds_since_signal": 2843,
+        "delay_seconds": 1043
+      }
+    },
+    {
+      "signal_id": 320,
+      "token_address": "EvwGJQ3Xp3h8hgHrSwAhBgSy7QAAzh7XSeah5gjBpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 1042s (actual elapsed=4642s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 4642,
+        "delay_seconds": 1042
+      }
+    },
+    {
+      "signal_id": 321,
+      "token_address": "bgzZngPG4bZTPRFjsyaVA12LMP64ZgFjdjjzHZ9qQNR",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=1800s captured with delay of 1043s (actual elapsed=2843s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 1800,
+        "seconds_since_signal": 2843,
+        "delay_seconds": 1043
+      }
+    },
+    {
+      "signal_id": 321,
+      "token_address": "bgzZngPG4bZTPRFjsyaVA12LMP64ZgFjdjjzHZ9qQNR",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 1042s (actual elapsed=4642s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 4642,
+        "delay_seconds": 1042
+      }
+    },
+    {
+      "signal_id": 322,
+      "token_address": "5nv89wwFitM1K54YHS6RxP5B4MQw6HSLXvCnG9NMpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=1800s captured with delay of 1043s (actual elapsed=2843s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 1800,
+        "seconds_since_signal": 2843,
+        "delay_seconds": 1043
+      }
+    },
+    {
+      "signal_id": 322,
+      "token_address": "5nv89wwFitM1K54YHS6RxP5B4MQw6HSLXvCnG9NMpump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 1043s (actual elapsed=4643s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 4643,
+        "delay_seconds": 1043
+      }
+    },
+    {
+      "signal_id": 323,
+      "token_address": "9BMbyUfW6g4ptTGqyZeLdKRMz9tM4ssSgUEKYK94hook",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=600s captured with delay of 1042s (actual elapsed=1642s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 600,
+        "seconds_since_signal": 1642,
+        "delay_seconds": 1042
+      }
+    },
+    {
+      "signal_id": 323,
+      "token_address": "9BMbyUfW6g4ptTGqyZeLdKRMz9tM4ssSgUEKYK94hook",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=900s captured with delay of 1044s (actual elapsed=1944s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 900,
+        "seconds_since_signal": 1944,
+        "delay_seconds": 1044
+      }
+    },
+    {
+      "signal_id": 323,
+      "token_address": "9BMbyUfW6g4ptTGqyZeLdKRMz9tM4ssSgUEKYK94hook",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=1800s captured with delay of 1042s (actual elapsed=2842s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 1800,
+        "seconds_since_signal": 2842,
+        "delay_seconds": 1042
+      }
+    },
+    {
+      "signal_id": 323,
+      "token_address": "9BMbyUfW6g4ptTGqyZeLdKRMz9tM4ssSgUEKYK94hook",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 1042s (actual elapsed=4642s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 4642,
+        "delay_seconds": 1042
+      }
+    },
+    {
+      "signal_id": 350,
+      "token_address": "HpUitEaVAXqpBomwFzgyDmTMTgmc5uU3iqafwjq3pump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=180s captured with delay of 5967s (actual elapsed=6147s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 180,
+        "seconds_since_signal": 6147,
+        "delay_seconds": 5967
+      }
+    },
+    {
+      "signal_id": 350,
+      "token_address": "HpUitEaVAXqpBomwFzgyDmTMTgmc5uU3iqafwjq3pump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=300s captured with delay of 5961s (actual elapsed=6261s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 300,
+        "seconds_since_signal": 6261,
+        "delay_seconds": 5961
+      }
+    },
+    {
+      "signal_id": 350,
+      "token_address": "HpUitEaVAXqpBomwFzgyDmTMTgmc5uU3iqafwjq3pump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=600s captured with delay of 5961s (actual elapsed=6561s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 600,
+        "seconds_since_signal": 6561,
+        "delay_seconds": 5961
+      }
+    },
+    {
+      "signal_id": 350,
+      "token_address": "HpUitEaVAXqpBomwFzgyDmTMTgmc5uU3iqafwjq3pump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=900s captured with delay of 5966s (actual elapsed=6866s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 900,
+        "seconds_since_signal": 6866,
+        "delay_seconds": 5966
+      }
+    },
+    {
+      "signal_id": 350,
+      "token_address": "HpUitEaVAXqpBomwFzgyDmTMTgmc5uU3iqafwjq3pump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=1800s captured with delay of 5961s (actual elapsed=7761s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 1800,
+        "seconds_since_signal": 7761,
+        "delay_seconds": 5961
+      }
+    },
+    {
+      "signal_id": 350,
+      "token_address": "HpUitEaVAXqpBomwFzgyDmTMTgmc5uU3iqafwjq3pump",
+      "anomaly_type": "severe_observation_delay",
+      "description": "Observation target=3600s captured with delay of 5961s (actual elapsed=9561s). Caused by offline/sleep gap.",
+      "severity": "high",
+      "recommended_action": "exclude_from_returns",
+      "details": {
+        "target_seconds": 3600,
+        "seconds_since_signal": 9561,
+        "delay_seconds": 5961
+      }
+    },
+    {
+      "signal_id": 52,
+      "token_address": "7CTRbkV1tVuq1f59pRxT1Pb2W5AHG4gM9FMH4rGzKiXv",
+      "anomaly_type": "primary_pair_switched",
+      "description": "Primary pair switched between 2 different pools across checkpoints. Indicates token migration or shifting liquidity.",
+      "severity": "medium",
+      "recommended_action": "inspect",
+      "details": {
+        "pairs": [
+          "AZuZuTjHimKR4ouHwrZr4Aeq7acALBmopkvpCxyBJNRc",
+          "8yXpTJgDS9yjZdvLaTvrVBqab2fTAaKH1E13n6DWmP9F"
+        ]
+      }
+    },
+    {
+      "signal_id": 223,
+      "token_address": "BXoHJddsWJLHtAopeiSbKUSELsu8hSFMs8baGMDkpump",
+      "anomaly_type": "primary_pair_switched",
+      "description": "Primary pair switched between 2 different pools across checkpoints. Indicates token migration or shifting liquidity.",
+      "severity": "medium",
+      "recommended_action": "inspect",
+      "details": {
+        "pairs": [
+          "4s2bzyM1CStvWCUC1r1q8Maoj6UmkqnBqnwBEFtDtpko",
+          "2B8tftZ5ww8TREMr3pgkgERLNjJyJxEAPWMENViGMsL4"
+        ]
+      }
+    }
+  ]
+}
