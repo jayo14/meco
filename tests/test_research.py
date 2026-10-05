@@ -336,3 +336,55 @@ async def test_wait_and_capture_guards_expired_target(monkeypatch):
     assert call_kwargs["target_seconds"] == 60
     assert call_kwargs["snapshot"] is None
 
+
+def test_chronological_split_strict_timestamps():
+    from datetime import timedelta
+    base_time = datetime(2026, 10, 2, 10, 0, 0, tzinfo=timezone.utc)
+
+    # Intentionally shuffle IDs relative to creation timestamps
+    s1 = create_mock_signal(10, message_created_at=base_time + timedelta(minutes=1))
+    s2 = create_mock_signal(2, message_created_at=base_time + timedelta(minutes=2))
+    s3 = create_mock_signal(15, message_created_at=base_time + timedelta(minutes=3))
+    s4 = create_mock_signal(1, message_created_at=base_time + timedelta(minutes=4))
+
+    train, test = chronological_split([s1, s2, s3, s4], train_fraction=0.5)
+
+    assert len(train) == 2
+    assert len(test) == 2
+    # Ensure train timestamps strictly precede test timestamps regardless of IDs
+    assert max(s.message_created_at for s in train) <= min(s.message_created_at for s in test)
+    assert train[0].id == 10
+    assert train[1].id == 2
+    assert test[0].id == 15
+    assert test[1].id == 1
+
+
+def test_no_lookahead_leakage_in_features():
+    s = create_mock_signal(1)
+    feat = extract_signal_features(s)
+
+    # Verify no outcome or future checkpoint attributes exist on FeatureRecord
+    assert not hasattr(feat, "ret_60")
+    assert not hasattr(feat, "ret_300")
+    assert not hasattr(feat, "mfe")
+    assert not hasattr(feat, "mae")
+    assert not hasattr(feat, "hit_plus_20")
+    assert not hasattr(feat, "future_price")
+
+
+def test_friction_sensitivity_monotonicity():
+    from app.research.simulation import run_friction_sensitivity_grid
+    s = create_mock_signal(1, price_usd=0.001, liquidity_usd=25000.0)
+    obs = [
+        create_mock_observation(1, 30, 31, 0.0011),
+        create_mock_observation(1, 60, 61, 0.0009),
+    ]
+
+    grid = run_friction_sensitivity_grid([s], {1: obs})
+
+    # Net PnL must strictly decrease as friction increases: zero >= low >= baseline >= high
+    assert grid["zero_friction"]["total_pnl_usd"] >= grid["low_friction"]["total_pnl_usd"]
+    assert grid["low_friction"]["total_pnl_usd"] >= grid["baseline_friction"]["total_pnl_usd"]
+    assert grid["baseline_friction"]["total_pnl_usd"] >= grid["high_friction"]["total_pnl_usd"]
+
+

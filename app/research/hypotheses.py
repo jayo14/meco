@@ -13,9 +13,9 @@ def chronological_split(
 ) -> tuple[list[Signal], list[Signal]]:
     """
     Split signals chronologically into earlier training set and later validation set.
-    Strictly avoids random shuffling or temporal data leakage.
+    Sorts strictly by message_created_at (with id as tiebreaker) to guarantee zero temporal leakage.
     """
-    sorted_signals = sorted(signals, key=lambda s: s.id)
+    sorted_signals = sorted(signals, key=lambda s: (s.message_created_at, s.id))
     n = len(sorted_signals)
     split_idx = int(n * train_fraction)
     return sorted_signals[:split_idx], sorted_signals[split_idx:]
