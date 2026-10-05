@@ -1,0 +1,24 @@
+{
+  "boundary_signal_id": 387,
+  "freeze_timestamp": "2026-10-05T21:42:00+00:00",
+  "historical_summary": {
+    "cohort": "historical_research",
+    "min_id": 1,
+    "max_id": 387,
+    "total_signals": 387,
+    "min_timestamp": "2026-10-02 01:16:51.978986+00:00",
+    "max_timestamp": "2026-10-05 21:41:56+00:00",
+    "description": "Initial local development dataset (Signals 1-387). Used for initial audit, anomaly discovery, and baseline hypothesis evaluation. Subject to local offline gaps."
+  },
+  "forward_summary": {
+    "cohort": "forward_testing",
+    "min_id": null,
+    "max_id": null,
+    "total_signals": 0,
+    "min_timestamp": null,
+    "max_timestamp": null,
+    "description": "Empty cohort"
+  },
+  "usable_historical_count": 306,
+  "excluded_historical_count": 81
+}

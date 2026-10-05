@@ -388,3 +388,23 @@ def test_friction_sensitivity_monotonicity():
     assert grid["baseline_friction"]["total_pnl_usd"] >= grid["high_friction"]["total_pnl_usd"]
 
 
+def test_cohort_classification_and_partition():
+    from app.research.cohorts import (
+        HISTORICAL_RESEARCH_MAX_SIGNAL_ID,
+        SignalCohort,
+        classify_signal_cohort,
+        partition_by_cohort,
+    )
+
+    s_hist = create_mock_signal(HISTORICAL_RESEARCH_MAX_SIGNAL_ID)
+    s_fwd = create_mock_signal(HISTORICAL_RESEARCH_MAX_SIGNAL_ID + 1)
+
+    assert classify_signal_cohort(s_hist) == SignalCohort.HISTORICAL_RESEARCH
+    assert classify_signal_cohort(s_fwd) == SignalCohort.FORWARD_TESTING
+
+    parts = partition_by_cohort([s_hist, s_fwd])
+    assert len(parts[SignalCohort.HISTORICAL_RESEARCH]) == 1
+    assert len(parts[SignalCohort.FORWARD_TESTING]) == 1
+
+
+
