@@ -1,0 +1,217 @@
+{
+  "total_signals": 384,
+  "unique_signals": 384,
+  "unique_tokens": 382,
+  "duplicate_rate": 0.5208333333333333,
+  "source_distribution": {
+    "Unknown/Test": 5,
+    "Bullish Calls - Solana": 379
+  },
+  "date_distribution": {
+    "2026-10-02": 122,
+    "2026-10-03": 110,
+    "2026-10-04": 100,
+    "2026-10-05": 52
+  },
+  "validation_distribution": {
+    "unvalidated": 73,
+    "valid": 310,
+    "rpc_failed": 1
+  },
+  "market_status_distribution": {
+    "available": 310,
+    "no_liquid_pair": 65,
+    "fetch_failed": 8,
+    "pending": 1
+  },
+  "dex_distribution": {
+    "raydium": 15,
+    "pumpswap": 274,
+    "meteora": 21,
+    "none": 74
+  },
+  "target_coverage": [
+    {
+      "target_seconds": 10,
+      "eligible_count": 310,
+      "captured_count": 220,
+      "coverage_pct": 70.96774193548387,
+      "success_count": 219,
+      "failure_count": 1,
+      "failure_reasons": {
+        "fetch_failed": 1
+      },
+      "median_delay_seconds": 1.0,
+      "max_delay_seconds": 28.0,
+      "min_delay_seconds": 0.0
+    },
+    {
+      "target_seconds": 30,
+      "eligible_count": 310,
+      "captured_count": 303,
+      "coverage_pct": 97.74193548387096,
+      "success_count": 295,
+      "failure_count": 8,
+      "failure_reasons": {
+        "fetch_failed": 8
+      },
+      "median_delay_seconds": 1.0,
+      "max_delay_seconds": 36.0,
+      "min_delay_seconds": 0.0
+    },
+    {
+      "target_seconds": 60,
+      "eligible_count": 309,
+      "captured_count": 300,
+      "coverage_pct": 97.0873786407767,
+      "success_count": 293,
+      "failure_count": 7,
+      "failure_reasons": {
+        "fetch_failed": 7
+      },
+      "median_delay_seconds": 1.0,
+      "max_delay_seconds": 27.0,
+      "min_delay_seconds": 0.0
+    },
+    {
+      "target_seconds": 120,
+      "eligible_count": 309,
+      "captured_count": 216,
+      "coverage_pct": 69.90291262135922,
+      "success_count": 212,
+      "failure_count": 4,
+      "failure_reasons": {
+        "fetch_failed": 4
+      },
+      "median_delay_seconds": 1.0,
+      "max_delay_seconds": 14.0,
+      "min_delay_seconds": 0.0
+    },
+    {
+      "target_seconds": 180,
+      "eligible_count": 309,
+      "captured_count": 208,
+      "coverage_pct": 67.31391585760518,
+      "success_count": 201,
+      "failure_count": 7,
+      "failure_reasons": {
+        "fetch_failed": 7
+      },
+      "median_delay_seconds": 1.0,
+      "max_delay_seconds": 5967.0,
+      "min_delay_seconds": 0.0
+    },
+    {
+      "target_seconds": 300,
+      "eligible_count": 309,
+      "captured_count": 284,
+      "coverage_pct": 91.9093851132686,
+      "success_count": 274,
+      "failure_count": 10,
+      "failure_reasons": {
+        "fetch_failed": 10
+      },
+      "median_delay_seconds": 1.0,
+      "max_delay_seconds": 55753.0,
+      "min_delay_seconds": 0.0
+    },
+    {
+      "target_seconds": 600,
+      "eligible_count": 307,
+      "captured_count": 202,
+      "coverage_pct": 65.79804560260585,
+      "success_count": 194,
+      "failure_count": 8,
+      "failure_reasons": {
+        "fetch_failed": 8
+      },
+      "median_delay_seconds": 1.0,
+      "max_delay_seconds": 55753.0,
+      "min_delay_seconds": 0.0
+    },
+    {
+      "target_seconds": 900,
+      "eligible_count": 307,
+      "captured_count": 265,
+      "coverage_pct": 86.31921824104235,
+      "success_count": 258,
+      "failure_count": 7,
+      "failure_reasons": {
+        "fetch_failed": 7
+      },
+      "median_delay_seconds": 1.0,
+      "max_delay_seconds": 55752.0,
+      "min_delay_seconds": 0.0
+    },
+    {
+      "target_seconds": 1800,
+      "eligible_count": 305,
+      "captured_count": 229,
+      "coverage_pct": 75.08196721311475,
+      "success_count": 216,
+      "failure_count": 13,
+      "failure_reasons": {
+        "fetch_failed": 13
+      },
+      "median_delay_seconds": 1.0,
+      "max_delay_seconds": 55754.0,
+      "min_delay_seconds": 0.0
+    },
+    {
+      "target_seconds": 3600,
+      "eligible_count": 300,
+      "captured_count": 192,
+      "coverage_pct": 64.0,
+      "success_count": 188,
+      "failure_count": 4,
+      "failure_reasons": {
+        "fetch_failed": 4
+      },
+      "median_delay_seconds": 1.0,
+      "max_delay_seconds": 56348.0,
+      "min_delay_seconds": 0.0
+    },
+    {
+      "target_seconds": 21600,
+      "eligible_count": 277,
+      "captured_count": 18,
+      "coverage_pct": 6.4981949458483745,
+      "success_count": 18,
+      "failure_count": 0,
+      "failure_reasons": {},
+      "median_delay_seconds": 56348.0,
+      "max_delay_seconds": 56353.0,
+      "min_delay_seconds": 56348.0
+    },
+    {
+      "target_seconds": 86400,
+      "eligible_count": 235,
+      "captured_count": 0,
+      "coverage_pct": 0.0,
+      "success_count": 0,
+      "failure_count": 0,
+      "failure_reasons": {},
+      "median_delay_seconds": null,
+      "max_delay_seconds": null,
+      "min_delay_seconds": null
+    }
+  ],
+  "pair_stats": {
+    "total_pair_rows": 5125,
+    "signals_with_pair_observations": 213,
+    "first_signal_id_with_pairs": 114,
+    "min_pairs_per_checkpoint": 1,
+    "max_pairs_per_checkpoint": 27,
+    "avg_pairs_per_checkpoint": 2.62955361723961,
+    "median_pairs_per_checkpoint": 2.0
+  },
+  "pair_dex_distribution": {
+    "pumpswap": 1771,
+    "pumpfun": 1770,
+    "meteora": 1380,
+    "meteoradbc": 122,
+    "raydium": 78,
+    "orca": 4
+  },
+  "generated_at": "2026-10-05T21:13:31.079778+00:00"
+}
