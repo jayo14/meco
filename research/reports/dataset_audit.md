@@ -1,20 +1,20 @@
 # Meco Dataset Audit Report
 
-**Generated at:** 2026-10-05T21:41:20.948775+00:00
+**Generated at:** 2026-10-05T22:32:06.534389+00:00
 
 ## 1. High-Level Signal Summary
 
-- **Total Signals:** 386
-- **Unique Telegram Messages:** 386
-- **Unique Token Addresses:** 384
-- **Token Repetition / Duplicate Rate:** 0.52%
+- **Total Signals:** 393
+- **Unique Telegram Messages:** 393
+- **Unique Token Addresses:** 391
+- **Token Repetition / Duplicate Rate:** 0.51%
 
 ### Source Distribution
 
 | Source Channel | Signal Count | Share |
 | :--- | :--- | :--- |
 | Unknown/Test | 5 | 1.3% |
-| Bullish Calls - Solana | 381 | 98.7% |
+| Bullish Calls - Solana | 388 | 98.7% |
 
 ### Date Distribution
 
@@ -23,22 +23,22 @@
 | 2026-10-02 | 122 |
 | 2026-10-03 | 110 |
 | 2026-10-04 | 100 |
-| 2026-10-05 | 54 |
+| 2026-10-05 | 61 |
 
 ### Solana Mint Validation Status
 
 | Validation Status | Count | Notes |
 | :--- | :--- | :--- |
 | unvalidated | 73 | Pre-validation phase (Signals 1-73) |
-| valid | 312 | Valid SPL Token mint |
+| valid | 319 | Valid SPL Token mint |
 | rpc_failed | 1 | Solana RPC error during validation |
 
 ### Market Availability Status
 
 | Market Status | Count | Notes |
 | :--- | :--- | :--- |
-| available | 311 | Valid liquid pair found, observations scheduled |
-| no_liquid_pair | 66 | DexScreener found no pool with liquidity |
+| available | 317 | Valid liquid pair found, observations scheduled |
+| no_liquid_pair | 67 | DexScreener found no pool with liquidity |
 | fetch_failed | 8 | DexScreener API network/timeout error |
 | pending | 1 | Pipeline pending/aborted |
 
@@ -46,33 +46,33 @@
 
 | DEX ID | Initial Signals | Share |
 | :--- | :--- | :--- |
-| raydium | 15 | 3.9% |
-| pumpswap | 275 | 71.2% |
-| meteora | 21 | 5.4% |
-| none | 75 | 19.4% |
+| raydium | 15 | 3.8% |
+| pumpswap | 281 | 71.5% |
+| meteora | 21 | 5.3% |
+| none | 76 | 19.3% |
 
 ## 2. Observation Coverage by Target Checkpoint
 
 | Target | Eligible | Captured | Coverage % | Success | Failed | Med Delay (s) | Max Delay (s) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| T+10    |      311 |      221 |      71.1% |     220 |      1 |         +1.0s |        +28.0s |
-| T+30    |      311 |      304 |      97.7% |     296 |      8 |         +1.0s |        +36.0s |
-| T+60    |      311 |      302 |      97.1% |     295 |      7 |         +1.0s |        +27.0s |
-| T+120   |      311 |      218 |      70.1% |     214 |      4 |         +1.0s |        +14.0s |
-| T+180   |      311 |      210 |      67.5% |     203 |      7 |         +1.0s |      +5967.0s |
-| T+300   |      311 |      286 |      92.0% |     276 |     10 |         +1.0s |     +55753.0s |
-| T+600   |      311 |      206 |      66.2% |     198 |      8 |         +1.0s |     +55753.0s |
-| T+900   |      311 |      269 |      86.5% |     262 |      7 |         +1.0s |     +55752.0s |
-| T+1800  |      309 |      233 |      75.4% |     220 |     13 |         +1.0s |     +55754.0s |
-| T+3600  |      305 |      197 |      64.6% |     193 |      4 |         +1.0s |     +56348.0s |
+| T+10    |      317 |      227 |      71.6% |     226 |      1 |         +1.0s |        +28.0s |
+| T+30    |      317 |      310 |      97.8% |     302 |      8 |         +1.0s |        +36.0s |
+| T+60    |      317 |      308 |      97.2% |     301 |      7 |         +1.0s |        +27.0s |
+| T+120   |      316 |      223 |      70.6% |     219 |      4 |         +1.0s |        +14.0s |
+| T+180   |      316 |      215 |      68.0% |     208 |      7 |         +1.0s |      +5967.0s |
+| T+300   |      316 |      291 |      92.1% |     281 |     10 |         +1.0s |     +55753.0s |
+| T+600   |      313 |      208 |      66.5% |     199 |      9 |         +1.0s |     +55753.0s |
+| T+900   |      313 |      271 |      86.6% |     264 |      7 |         +1.0s |     +55752.0s |
+| T+1800  |      312 |      236 |      75.6% |     223 |     13 |         +1.0s |     +55754.0s |
+| T+3600  |      311 |      203 |      65.3% |     199 |      4 |         +1.0s |     +56348.0s |
 | T+21600 |      277 |       18 |       6.5% |      18 |      0 |     +56348.0s |     +56353.0s |
-| T+86400 |      238 |        0 |       0.0% |       0 |      0 |           n/a |           n/a |
+| T+86400 |      251 |        0 |       0.0% |       0 |      0 |           n/a |           n/a |
 
 ## 3. Pair-Level Observation Coverage
 
-- **Total Stored Pair Rows:** 5197
-- **Signals with Pair History:** 214 (Started at Signal #114)
-- **Average Pairs per Checkpoint:** 2.63
+- **Total Stored Pair Rows:** 5299
+- **Signals with Pair History:** 220 (Started at Signal #114)
+- **Average Pairs per Checkpoint:** 2.62
 - **Median Pairs per Checkpoint:** 2.0
 - **Max Pairs per Checkpoint:** 27
 
@@ -80,10 +80,10 @@
 
 | DEX | Pair Rows Captured |
 | :--- | :--- |
-| pumpswap | 1797 |
-| pumpfun | 1796 |
-| meteora | 1399 |
-| meteoradbc | 123 |
+| pumpswap | 1841 |
+| pumpfun | 1840 |
+| meteora | 1412 |
+| meteoradbc | 124 |
 | raydium | 78 |
 | orca | 4 |
 

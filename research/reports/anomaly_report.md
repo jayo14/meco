@@ -2,10 +2,10 @@
 
 ## Summary of Detected Anomalies
 
-- **Total Anomaly Events Flagged:** 164
+- **Total Anomaly Events Flagged:** 165
 - **Critical:** 1
 - **High:** 76
-- **Medium:** 76
+- **Medium:** 77
 - **Informational:** 11
 
 ### Breakdown by Anomaly Category
@@ -13,7 +13,7 @@
 | Anomaly Type | Occurrences | Default Action |
 | :--- | :--- | :--- |
 | severe_observation_delay | 69 | exclude_from_returns |
-| no_liquid_pair_at_signal | 66 | exclude_all |
+| no_liquid_pair_at_signal | 67 | exclude_all |
 | non_standard_target | 11 | exclude_from_returns |
 | dexscreener_fetch_failed | 8 | exclude_all |
 | test_signal | 5 | exclude_all |

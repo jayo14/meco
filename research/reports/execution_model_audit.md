@@ -35,10 +35,10 @@ To verify whether the negative research conclusion is an artifact of fee overest
 
 | Friction Tier | Trades | Win Rate % | Mean Gross Ret | Mean Net Ret | Total PnL ($100 Size) | Expectancy / Trade |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **zero_friction** |    278 |      41.4% |         -2.68% |       -2.68% | $             -745.15 | $            -2.68 |
-| **low_friction** |    278 |      36.0% |         -2.63% |       -4.43% | $            -1316.41 | $            -4.74 |
-| **baseline_friction** |    278 |      33.5% |         -2.47% |       -6.96% | $            -2078.63 | $            -7.48 |
-| **high_friction** |    278 |      27.0% |         -2.52% |      -10.51% | $            -3492.47 | $           -12.56 |
+| **zero_friction** |    284 |      41.2% |         -2.78% |       -2.78% | $             -788.85 | $            -2.78 |
+| **low_friction** |    284 |      35.9% |         -2.73% |       -4.52% | $            -1372.67 | $            -4.83 |
+| **baseline_friction** |    284 |      33.1% |         -2.57% |       -7.06% | $            -2151.94 | $            -7.58 |
+| **high_friction** |    284 |      26.8% |         -2.62% |      -10.61% | $            -3595.44 | $           -12.66 |
 
 ---
 

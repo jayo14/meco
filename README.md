@@ -81,7 +81,7 @@ Meco is built to answer one question: **"What actually happens to a token's pric
 
 ## Research & Analytics Suite
 
-Meco includes a reproducible, read-only quantitative research suite designed to audit data quality, track path-dependent excursion metrics (MFE/MAE), test signal-time features with zero lookahead bias, and validate paper-trading hypotheses across chronological splits:
+Meco includes a reproducible, read-only quantitative research suite designed to audit data quality, track path-dependent excursion metrics (MFE/MAE), test signal-time features with zero lookahead bias, validate paper-trading hypotheses across chronological splits, audit execution model friction, and investigate on-chain pre-signal dynamics:
 
 - **Run entire research pipeline and generate full report package:**
   ```bash
@@ -103,19 +103,53 @@ Meco includes a reproducible, read-only quantitative research suite designed to 
   ```bash
   python -m scripts.detect_anomalies
   ```
+- **Audit execution model assumptions and friction sensitivity grid:**
+  ```bash
+  python -m scripts.audit_execution_model
+  ```
+- **Summarize historical baseline freeze and forward-testing cohort:**
+  ```bash
+  python -m scripts.baseline_cohort
+  ```
+- **Review practical on-chain Solana data sources:**
+  ```bash
+  python -m scripts.review_onchain_sources
+  ```
+- **Reconstruct pre-signal pool age and on-chain timing plan:**
+  ```bash
+  python -m scripts.analyze_presignal
+  ```
 - **Generate formatted Markdown and JSON reports in `research/reports/`:**
   ```bash
   python -m scripts.generate_research_report
   ```
 
 All generated reports are stored in `research/reports/`:
-- [`executive_summary.md`](file:///home/codegallantx/moi/meco/research/reports/executive_summary.md)
-- [`dataset_audit.md`](file:///home/codegallantx/moi/meco/research/reports/dataset_audit.md)
-- [`anomaly_report.md`](file:///home/codegallantx/moi/meco/research/reports/anomaly_report.md)
-- [`outcome_analysis.md`](file:///home/codegallantx/moi/meco/research/reports/outcome_analysis.md)
-- [`feature_analysis.md`](file:///home/codegallantx/moi/meco/research/reports/feature_analysis.md)
-- [`hypotheses_and_strategy.md`](file:///home/codegallantx/moi/meco/research/reports/hypotheses_and_strategy.md)
+- [`executive_summary.md`](file:///home/codegallantx/moi/meco/research/reports/executive_summary.md): High-level quantitative synthesis and strategic conclusions.
+- [`dataset_audit.md`](file:///home/codegallantx/moi/meco/research/reports/dataset_audit.md): Data health, checkpoint completeness, and latency profile.
+- [`anomaly_report.md`](file:///home/codegallantx/moi/meco/research/reports/anomaly_report.md): Excluded signals, extreme price moves, and liquidity shifts.
+- [`outcome_analysis.md`](file:///home/codegallantx/moi/meco/research/reports/outcome_analysis.md): MFE, MAE, checkpoint distributions, and post-peak drawdowns.
+- [`feature_analysis.md`](file:///home/codegallantx/moi/meco/research/reports/feature_analysis.md): Correlation and quintile analysis of zero-lookahead features.
+- [`hypotheses_and_strategy.md`](file:///home/codegallantx/moi/meco/research/reports/hypotheses_and_strategy.md): In-sample vs out-of-sample chronological backtests.
+- [`execution_model_audit.md`](file:///home/codegallantx/moi/meco/research/reports/execution_model_audit.md): Parameter classification and 4-tier friction sensitivity grid.
+- [`forward_testing_baseline.md`](file:///home/codegallantx/moi/meco/research/reports/forward_testing_baseline.md): Cohort partition boundary (Signals 1-387 frozen).
+- [`onchain_data_source_review.md`](file:///home/codegallantx/moi/meco/research/reports/onchain_data_source_review.md): Practical Solana RPC/data source assessment.
+- [`presignal_research_plan.md`](file:///home/codegallantx/moi/meco/research/reports/presignal_research_plan.md): Pre-signal empirical findings (15.8m pool age) and prospective design.
 
+---
+
+## Production VPS Operation
+
+Meco is hardened for continuous 24/7 VPS operation:
+
+- **Systemd Service Unit:** Located at [`systemd/meco.service`](file:///home/codegallantx/moi/meco/systemd/meco.service) with automatic restart, exponential backoff, and non-root execution.
+- **Automated Health Check:**
+  ```bash
+  python -m scripts.healthcheck
+  ```
+  Inspects PostgreSQL connectivity, recent signal stream, scheduled observation backlog, and stale observation rates. Exits with code `0` on healthy, `1` on degraded, `2` on unhealthy.
+
+---
 
 ## Testing
 

@@ -3,50 +3,50 @@
 > [!IMPORTANT]
 > These metrics reflect **observed DexScreener market price changes at discrete checkpoints**, NOT guaranteed executable returns. Real trading requires modeling slippage, liquidity constraints, transaction fees, and latency.
 
-- **Evaluated Clean Signals:** 305 (excluding test signals, #103, and unliquid calls)
+- **Evaluated Clean Signals:** 311 (excluding test signals, #103, and unliquid calls)
 
 ## 1. Checkpoint Return Distributions
 
 | Checkpoint | Samples | Median Return | Mean Return | Positive % | ≥ +20% (Win) | ≤ -20% (Loss) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| T+10       |     220 |        +0.00% |      +0.34% |       8.6% |          1.8% |           1.8% |
-| T+30       |     292 |        +0.00% |      -0.36% |      33.2% |          6.8% |           4.5% |
-| T+60       |     291 |        +0.00% |      -0.78% |      44.3% |         12.0% |          15.1% |
-| T+120      |     214 |        -0.55% |      -2.55% |      42.5% |         18.7% |          23.4% |
-| T+180      |     202 |        -2.16% |      -1.51% |      38.6% |         21.3% |          26.7% |
-| T+300      |     272 |        -7.44% |      -5.25% |      35.3% |         20.2% |          36.0% |
-| T+600      |     193 |       -14.15% |      -9.19% |      34.2% |         21.2% |          45.6% |
-| T+900      |     253 |       -22.02% |      -8.90% |      34.0% |         24.1% |          51.0% |
-| T+1800     |     206 |       -33.28% |     -12.08% |      33.5% |         20.4% |          54.9% |
-| T+3600     |     169 |       -52.48% |     -21.08% |      24.9% |         20.1% |          62.1% |
+| T+10       |     226 |        +0.00% |      +0.33% |       8.4% |          1.8% |           1.8% |
+| T+30       |     298 |        +0.00% |      -0.42% |      33.2% |          6.7% |           4.7% |
+| T+60       |     297 |        +0.00% |      -1.24% |      43.8% |         11.8% |          15.5% |
+| T+120      |     219 |        -0.44% |      -3.07% |      42.9% |         18.7% |          23.7% |
+| T+180      |     207 |        -2.36% |      -2.31% |      38.6% |         21.3% |          27.1% |
+| T+300      |     277 |        -8.02% |      -5.65% |      35.0% |         20.2% |          36.5% |
+| T+600      |     194 |       -14.27% |      -9.30% |      34.0% |         21.1% |          45.9% |
+| T+900      |     255 |       -22.15% |      -9.34% |      33.7% |         23.9% |          51.4% |
+| T+1800     |     209 |       -32.99% |     -12.40% |      33.5% |         20.1% |          55.0% |
+| T+3600     |     175 |       -59.37% |     -22.96% |      24.0% |         19.4% |          63.4% |
 
 ## 2. Excursion (MFE / MAE) & Path Dynamics
 
 ### Maximum Favorable Excursion (MFE - Peak Upside)
-- **Median Peak Upside:** +12.94%
-- **Mean Peak Upside:**   +56.48%
+- **Median Peak Upside:** +12.73%
+- **Mean Peak Upside:**   +55.69%
 - **Median Time to Peak:** 121 seconds (~2.0 min)
 
 ### Maximum Adverse Excursion (MAE - Worst Drawdown)
 - **Median Worst Drawdown:** -50.68%
-- **Mean Worst Drawdown:**   -49.59%
+- **Mean Worst Drawdown:**   -49.58%
 - **Median Time to Trough:** 901 seconds (~15.0 min)
 
 ### Peak-to-Trough Collapse
 - **Median Drawdown After Reaching Peak:** -73.51%
-- **Mean Drawdown After Reaching Peak:**   -63.22%
+- **Mean Drawdown After Reaching Peak:**   -63.01%
 
 ## 3. Threshold Reachability Matrix
 
 | Threshold | Signals Reached | Percentage |
 | :--- | :--- | :--- |
-| Hit ≥ +20% MFE  | 139 / 305 | 45.6% |
-| Hit ≥ +50% MFE  | 85 / 305 | 27.9% |
-| Hit ≥ +100% MFE | 45 / 305 | 14.8% |
-| Hit ≤ -20% MAE  | 207 / 305 | 67.9% |
-| Hit ≤ -50% MAE  | 153 / 305 | 50.2% |
-| Hit ≤ -80% MAE  | 99 / 305 | 32.5% |
-| Hit ≤ -90% MAE  | 67 / 305 | 22.0% |
+| Hit ≥ +20% MFE  | 140 / 311 | 45.0% |
+| Hit ≥ +50% MFE  | 86 / 311 | 27.7% |
+| Hit ≥ +100% MFE | 45 / 311 | 14.5% |
+| Hit ≤ -20% MAE  | 210 / 311 | 67.5% |
+| Hit ≤ -50% MAE  | 156 / 311 | 50.2% |
+| Hit ≤ -80% MAE  | 102 / 311 | 32.8% |
+| Hit ≤ -90% MAE  | 69 / 311 | 22.2% |
 
 ## 4. Key Quantitative Insights
 

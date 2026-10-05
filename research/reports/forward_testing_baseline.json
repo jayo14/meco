@@ -12,12 +12,12 @@
   },
   "forward_summary": {
     "cohort": "forward_testing",
-    "min_id": null,
-    "max_id": null,
-    "total_signals": 0,
-    "min_timestamp": null,
-    "max_timestamp": null,
-    "description": "Empty cohort"
+    "min_id": 388,
+    "max_id": 393,
+    "total_signals": 6,
+    "min_timestamp": "2026-10-05 21:49:45+00:00",
+    "max_timestamp": "2026-10-05 22:30:32+00:00",
+    "description": "Forward testing dataset (Signals >= 388). Intended for uninterrupted, continuous 24/7 capture on VPS to forward-test hypotheses with clean T+24h coverage."
   },
   "usable_historical_count": 306,
   "excluded_historical_count": 81

@@ -6,12 +6,12 @@
 > *Is the public Telegram signal an actionable source of forward-looking alpha, or merely a delayed confirmation of an on-chain event that has already progressed past its optimal entry point?*
 
 ### Empirical Finding from Historical Reconstruction:
-- Across **215 evaluated tokens** with on-chain pool creation timestamps:
-- **Median Pool Age when Telegram alert was posted:** **15.5 minutes (930s)**.
+- Across **220 evaluated tokens** with on-chain pool creation timestamps:
+- **Median Pool Age when Telegram alert was posted:** **15.8 minutes (946s)**.
 - Tokens ≤ 2 minutes old at signal time: **0.0%**.
-- Tokens ≤ 5 minutes old at signal time: **3.7%**.
-- Tokens ≤ 15 minutes old at signal time: **48.8%**.
-- Tokens > 1 hour old at signal time: **21.9%**.
+- Tokens ≤ 5 minutes old at signal time: **3.6%**.
+- Tokens ≤ 15 minutes old at signal time: **48.2%**.
+- Tokens > 1 hour old at signal time: **22.3%**.
 
 **Conclusion:** The public Telegram channel is systematically late. In fast-moving Solana meme-coin markets, an 8.6-minute delay means retail callers enter after early snipers and accumulation have completed.
 

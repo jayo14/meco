@@ -1,12 +1,12 @@
 {
   "cohort_analysis": {
-    "total_evaluated": 215,
-    "median_pool_age_seconds": 930.0,
-    "mean_pool_age_seconds": 55248.0,
+    "total_evaluated": 220,
+    "median_pool_age_seconds": 945.5,
+    "mean_pool_age_seconds": 54920.645454545454,
     "pct_under_2_minutes": 0.0,
-    "pct_under_5_minutes": 3.7209302325581395,
-    "pct_under_15_minutes": 48.837209302325576,
-    "pct_over_1_hour": 21.86046511627907
+    "pct_under_5_minutes": 3.6363636363636362,
+    "pct_under_15_minutes": 48.18181818181818,
+    "pct_over_1_hour": 22.272727272727273
   },
   "sample_metrics": [
     {

@@ -1,9 +1,9 @@
 # Meco Quantitative Research Report: Executive Summary
 
-**Date Generated:** 2026-10-05T21:41:20.948775+00:00
+**Date Generated:** 2026-10-05T22:32:06.534389+00:00
 **Dataset Window:** 2026-10-02 to 2026-10-05 (4 Days)
-**Total Captured Signals:** 386 (384 unique token mints)
-**Clean Evaluated Signals:** 305 (excluding test calls, unliquid pools, and anomaly #103)
+**Total Captured Signals:** 393 (391 unique token mints)
+**Clean Evaluated Signals:** 311 (excluding test calls, unliquid pools, and anomaly #103)
 
 ---
 
@@ -28,13 +28,13 @@ After rigorous chronological auditing and execution modeling accounting for real
 | :--- | :--- | :--- |
 | **Median Checkpoint Return (T+10s)** | +0.00% | Latency cushion: prices have rarely begun moving on DEX within 10s. |
 | **Median Checkpoint Return (T+60s)** | +0.00% | Equilibrium point: 44.5% positive, 55.5% flat or negative. |
-| **Median Checkpoint Return (T+300s)** | -7.44% | Reversal in full effect: median return is distinctly negative. |
-| **Median Checkpoint Return (T+900s)** | -22.02% | Deep decay: median token has lost ~22% of its initial value. |
-| **Median Peak Upside (MFE)** | +12.94% | Modest median upside before failure; heavily right-skewed by rare outliers. |
+| **Median Checkpoint Return (T+300s)** | -8.02% | Reversal in full effect: median return is distinctly negative. |
+| **Median Checkpoint Return (T+900s)** | -22.15% | Deep decay: median token has lost ~22% of its initial value. |
+| **Median Peak Upside (MFE)** | +12.73% | Modest median upside before failure; heavily right-skewed by rare outliers. |
 | **Median Time to Peak (MFE)** | 121 seconds | Extremely compressed window (~2 min). Impossible for manual traders. |
 | **Median Worst Drawdown (MAE)** | -50.68% | Severe downside risk: half of all tokens lose ≥ 46.8% of value. |
 | **Drawdown After Peak** | -73.51% | Severe post-peak drop: even 'winners' immediately dump. |
-| **Catastrophic Collapse Rate (≤ -80%)** | 32.5% | Roughly 1 in 3 called tokens essentially go to zero. |
+| **Catastrophic Collapse Rate (≤ -80%)** | 32.8% | Roughly 1 in 3 called tokens essentially go to zero. |
 
 ---
 
@@ -55,10 +55,10 @@ All strategies were evaluated chronologically: **Train Set (earlier 65%)** vs **
 
 | Strategy | Feature Filter | Train Win% | Train Net PnL | Test Win% | Test Net PnL | Scientific Verdict |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **H0: Baseline Naive Follow** | `Any valid signal with price > ` | 28.9% | $-1664.90 | 31.8% | $-600.45 | `REJECTED` |
-| **H1: Anti-Climax Filter (L** | `volume_5m <= $35,000 AND (volu` | 34.4% | $-363.01 | 27.8% | $-218.75 | `REJECTED` |
-| **H2: Buy-Pressure Momentum** | `buy_sell_ratio >= 1.30 AND liq` | 29.3% | $-701.49 | 36.0% | $-43.25 | `REJECTED` |
-| **H3: Trailing Stop Momentu** | `liquidity_usd >= $15,000` | 24.4% | $-1768.98 | 31.9% | $-554.08 | `REJECTED` |
+| **H0: Baseline Naive Follow** | `Any valid signal with price > ` | 28.4% | $-1752.00 | 32.2% | $-586.67 | `REJECTED` |
+| **H1: Anti-Climax Filter (L** | `volume_5m <= $35,000 AND (volu` | 33.3% | $-391.87 | 27.0% | $-260.39 | `REJECTED` |
+| **H2: Buy-Pressure Momentum** | `buy_sell_ratio >= 1.30 AND liq` | 28.9% | $-724.30 | 34.6% | $-89.59 | `REJECTED` |
+| **H3: Trailing Stop Momentu** | `liquidity_usd >= $15,000` | 24.0% | $-1850.04 | 32.4% | $-503.68 | `REJECTED` |
 
 ### Why Did All Hypotheses Fail?
 1. **Late-Stage Market Arrival:** The observed free-channel signals are consistent with a late-stage distribution pattern. However, the available data cannot establish whether VIP participants caused the observed market behavior or whether the free channel itself functions as exit liquidity. By the time the free channel post appears, the initial momentum has typically already occurred.
