@@ -79,14 +79,43 @@ Meco is built to answer one question: **"What actually happens to a token's pric
 
 ---
 
-## Analytics
+## Research & Analytics Suite
 
-Meco comes with an analytics script that cross-references initial market snapshots against post-call checkpoint observations (e.g., `T+900s`). It calculates median price returns, median liquidity decay, and initial feature differences between winners and losers.
+Meco includes a reproducible, read-only quantitative research suite designed to audit data quality, track path-dependent excursion metrics (MFE/MAE), test signal-time features with zero lookahead bias, and validate paper-trading hypotheses across chronological splits:
 
-Run the analysis script via:
-```bash
-python -m scripts.analyze_signals
-```
+- **Run entire research pipeline and generate full report package:**
+  ```bash
+  python -m scripts.research
+  ```
+- **Audit historical signal and observation coverage:**
+  ```bash
+  python -m scripts.audit_dataset
+  ```
+- **Analyze path-dependent returns and MFE/MAE excursions:**
+  ```bash
+  python -m scripts.analyze_outcomes
+  ```
+- **Analyze signal-time features vs. subsequent returns:**
+  ```bash
+  python -m scripts.analyze_features
+  ```
+- **Scan for anomalies, liquidity shifts, and delay artifacts:**
+  ```bash
+  python -m scripts.detect_anomalies
+  ```
+- **Generate formatted Markdown and JSON reports in `research/reports/`:**
+  ```bash
+  python -m scripts.generate_research_report
+  ```
+
+All generated reports are stored in `research/reports/`:
+- [`executive_summary.md`](file:///home/codegallantx/moi/meco/research/reports/executive_summary.md)
+- [`dataset_audit.md`](file:///home/codegallantx/moi/meco/research/reports/dataset_audit.md)
+- [`anomaly_report.md`](file:///home/codegallantx/moi/meco/research/reports/anomaly_report.md)
+- [`outcome_analysis.md`](file:///home/codegallantx/moi/meco/research/reports/outcome_analysis.md)
+- [`feature_analysis.md`](file:///home/codegallantx/moi/meco/research/reports/feature_analysis.md)
+- [`hypotheses_and_strategy.md`](file:///home/codegallantx/moi/meco/research/reports/hypotheses_and_strategy.md)
+
 
 ## Testing
 

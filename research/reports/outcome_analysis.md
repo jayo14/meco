@@ -12,29 +12,29 @@
 | T+10       |     219 |        +0.00% |      +0.38% |       8.7% |          1.8% |           1.8% |
 | T+30       |     291 |        +0.00% |      -0.33% |      33.3% |          6.9% |           4.5% |
 | T+60       |     290 |        +0.00% |      -0.74% |      44.5% |         12.1% |          15.2% |
-| T+120      |     212 |        -0.22% |      -2.30% |      42.9% |         18.9% |          22.6% |
-| T+180      |     200 |        -2.16% |      -1.46% |      38.5% |         21.5% |          27.0% |
+| T+120      |     213 |        -0.44% |      -2.45% |      42.7% |         18.8% |          23.0% |
+| T+180      |     201 |        -2.36% |      -1.53% |      38.3% |         21.4% |          26.9% |
 | T+300      |     270 |        -6.74% |      -5.11% |      35.6% |         20.4% |          35.9% |
-| T+600      |     189 |       -14.08% |      -8.67% |      34.4% |         21.2% |          45.5% |
+| T+600      |     191 |       -14.08% |      -8.71% |      34.6% |         21.5% |          45.5% |
 | T+900      |     249 |       -22.02% |      -8.54% |      33.7% |         24.1% |          51.0% |
 | T+1800     |     202 |       -32.52% |     -11.03% |      34.2% |         20.8% |          54.0% |
-| T+3600     |     164 |       -54.31% |     -22.41% |      24.4% |         19.5% |          62.2% |
+| T+3600     |     165 |       -52.48% |     -22.47% |      24.2% |         19.4% |          62.4% |
 
 ## 2. Excursion (MFE / MAE) & Path Dynamics
 
 ### Maximum Favorable Excursion (MFE - Peak Upside)
 - **Median Peak Upside:** +12.91%
-- **Mean Peak Upside:**   +56.43%
+- **Mean Peak Upside:**   +56.46%
 - **Median Time to Peak:** 121 seconds (~2.0 min)
 
 ### Maximum Adverse Excursion (MAE - Worst Drawdown)
-- **Median Worst Drawdown:** -46.85%
-- **Mean Worst Drawdown:**   -48.83%
+- **Median Worst Drawdown:** -47.62%
+- **Mean Worst Drawdown:**   -48.98%
 - **Median Time to Trough:** 901 seconds (~15.0 min)
 
 ### Peak-to-Trough Collapse
-- **Median Drawdown After Reaching Peak:** -72.03%
-- **Mean Drawdown After Reaching Peak:**   -62.32%
+- **Median Drawdown After Reaching Peak:** -72.04%
+- **Mean Drawdown After Reaching Peak:**   -62.69%
 
 ## 3. Threshold Reachability Matrix
 
@@ -43,8 +43,8 @@
 | Hit ≥ +20% MFE  | 138 / 304 | 45.4% |
 | Hit ≥ +50% MFE  | 85 / 304 | 28.0% |
 | Hit ≥ +100% MFE | 45 / 304 | 14.8% |
-| Hit ≤ -20% MAE  | 204 / 304 | 67.1% |
-| Hit ≤ -50% MAE  | 149 / 304 | 49.0% |
+| Hit ≤ -20% MAE  | 205 / 304 | 67.4% |
+| Hit ≤ -50% MAE  | 150 / 304 | 49.3% |
 | Hit ≤ -80% MAE  | 96 / 304 | 31.6% |
 | Hit ≤ -90% MAE  | 65 / 304 | 21.4% |
 
