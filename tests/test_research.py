@@ -407,4 +407,50 @@ def test_cohort_classification_and_partition():
     assert len(parts[SignalCohort.FORWARD_TESTING]) == 1
 
 
+def test_derive_pump_bonding_curve():
+    from app.research.onchain import PUMP_PROGRAM_ID, derive_pump_bonding_curve
+    from solders.pubkey import Pubkey
+
+    # Test with standard valid pump mint
+    test_mint = "6HEDwKSR1UpV8dJW7sVjFQoh2UnXKCZZCWi8uZVgpump"
+    bc = derive_pump_bonding_curve(test_mint)
+    assert bc is not None
+    assert isinstance(bc, Pubkey)
+
+    # Test with malformed mint string
+    bad_bc = derive_pump_bonding_curve("invalid_mint_string")
+    assert bad_bc is None
+
+
+@pytest.mark.asyncio
+async def test_inspect_bonding_curve_state(monkeypatch):
+    from unittest.mock import AsyncMock
+    from app.research.onchain import PUMP_PROGRAM_ID, inspect_bonding_curve_state
+
+    mock_client = AsyncMock()
+
+    # Simulate account not found
+    mock_resp_none = AsyncMock()
+    mock_resp_none.value = None
+    mock_client.get_account_info.return_value = mock_resp_none
+
+    res = await inspect_bonding_curve_state("6HEDwKSR1UpV8dJW7sVjFQoh2UnXKCZZCWi8uZVgpump", mock_client)
+    assert res["exists"] is False
+
+    # Simulate account found
+    mock_account = AsyncMock()
+    mock_account.owner = PUMP_PROGRAM_ID
+    mock_account.data = b"\x00" * 151
+    mock_account.lamports = 100000000
+    mock_resp_found = AsyncMock()
+    mock_resp_found.value = mock_account
+    mock_client.get_account_info.return_value = mock_resp_found
+
+    res_found = await inspect_bonding_curve_state("6HEDwKSR1UpV8dJW7sVjFQoh2UnXKCZZCWi8uZVgpump", mock_client)
+    assert res_found["exists"] is True
+    assert res_found["is_pump_owned"] is True
+    assert res_found["data_len"] == 151
+
+
+
 
