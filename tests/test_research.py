@@ -306,3 +306,33 @@ def test_chronological_split():
     assert len(train) == 70
     assert len(test) == 30
     assert max(s.id for s in train) < min(s.id for s in test)
+
+
+@pytest.mark.asyncio
+async def test_wait_and_capture_guards_expired_target(monkeypatch):
+    from unittest.mock import AsyncMock
+    from datetime import timedelta
+    from app.market.observer import wait_and_capture
+
+    # Signal created 2 hours ago
+    old_time = datetime.now(timezone.utc) - timedelta(hours=2)
+    s = create_mock_signal(1, message_created_at=old_time, received_at=old_time)
+
+    mock_save = AsyncMock()
+    mock_capture = AsyncMock()
+
+    monkeypatch.setattr("app.market.observer.save_market_observation", mock_save)
+    monkeypatch.setattr("app.market.observer.capture_observation", mock_capture)
+
+    # For a 60s target on a 2-hour old signal, it should trigger the guard
+    await wait_and_capture(s, target_seconds=60)
+
+    # capture_observation should NOT have been called
+    mock_capture.assert_not_called()
+    # save_market_observation should have been called with missed_offline
+    assert mock_save.await_count == 1
+    call_kwargs = mock_save.call_args.kwargs
+    assert call_kwargs["observation_status"] == "missed_offline"
+    assert call_kwargs["target_seconds"] == 60
+    assert call_kwargs["snapshot"] is None
+

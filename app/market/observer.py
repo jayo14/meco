@@ -169,6 +169,24 @@ async def wait_and_capture(
 
     delay = target_seconds - elapsed
 
+    max_tolerance = 60 if target_seconds < 3600 else 300
+    if elapsed > (target_seconds + max_tolerance):
+        logger.warning(
+            "⚠️ MISSED OBSERVATION (OFFLINE) | signal_id=%s | target=%ss | elapsed=%.1fs",
+            signal.id,
+            target_seconds,
+            elapsed,
+        )
+        async with SessionLocal() as session:
+            await save_market_observation(
+                session,
+                signal=signal,
+                snapshot=None,
+                target_seconds=target_seconds,
+                observation_status="missed_offline",
+            )
+        return
+
     if delay > 0:
         await asyncio.sleep(delay)
 
