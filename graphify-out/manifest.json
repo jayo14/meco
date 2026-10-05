@@ -120,9 +120,9 @@
     "semantic_hash": ""
   },
   "app/research/hypotheses.py": {
-    "mtime": 1791234921.3827314,
-    "seen": 1791235074.9432456,
-    "ast_hash": "a3a4740b7ea477e63376e8960fb39b69",
+    "mtime": 1791236549.5711102,
+    "seen": 1791237575.534058,
+    "ast_hash": "8624677014ed585d3c3cfbe654eebe7d",
     "semantic_hash": ""
   },
   "app/research/loader.py": {
@@ -144,15 +144,15 @@
     "semantic_hash": ""
   },
   "app/research/reports.py": {
-    "mtime": 1791234945.6845317,
-    "seen": 1791235074.943251,
-    "ast_hash": "4617135564e8b3fe4f384a4a48ab3b5c",
+    "mtime": 1791236466.2213414,
+    "seen": 1791237575.534068,
+    "ast_hash": "12fc6d57e0f575690c99faf3f4074937",
     "semantic_hash": ""
   },
   "app/research/simulation.py": {
-    "mtime": 1791234908.475305,
-    "seen": 1791235074.9432526,
-    "ast_hash": "4cc392cef27b1b416af576f0e4cc27d0",
+    "mtime": 1791236514.98837,
+    "seen": 1791237575.5340695,
+    "ast_hash": "5889f6fe4b5615ddbf3acb91eb07e190",
     "semantic_hash": ""
   },
   "app/solana/__init__.py": {
@@ -180,9 +180,9 @@
     "semantic_hash": ""
   },
   "app/telegram/client.py": {
-    "mtime": 1790968358.1607115,
-    "seen": 1791235074.9432592,
-    "ast_hash": "e69dec761aea4b83aaefa2e9c90c3f76",
+    "mtime": 1791236634.7999692,
+    "seen": 1791237575.5340767,
+    "ast_hash": "96e13b4137228089306db03fbb623da2",
     "semantic_hash": ""
   },
   "app/telegram/parser.py": {
@@ -228,9 +228,9 @@
     "semantic_hash": ""
   },
   "research/reports/research_package.json": {
-    "mtime": 1791234964.0789886,
-    "seen": 1791235074.9432714,
-    "ast_hash": "8eb680876aafed0027fc813461156278",
+    "mtime": 1791239526.6601832,
+    "seen": 1791239668.8823452,
+    "ast_hash": "bb7216174608513da9821fabf5a8030a",
     "semantic_hash": ""
   },
   "scripts/analyze_features.py": {
@@ -264,9 +264,9 @@
     "semantic_hash": ""
   },
   "scripts/generate_research_report.py": {
-    "mtime": 1791234954.3548164,
-    "seen": 1791235074.943301,
-    "ast_hash": "ac081687da7afcfa0cb68af957506864",
+    "mtime": 1791239514.7100856,
+    "seen": 1791239668.8823557,
+    "ast_hash": "e7b3a35257094efc23ce964ced39dbef",
     "semantic_hash": ""
   },
   "scripts/list_telegram_chats.py": {
@@ -312,15 +312,15 @@
     "semantic_hash": ""
   },
   "tests/test_research.py": {
-    "mtime": 1791235053.0800312,
-    "seen": 1791235074.9433131,
-    "ast_hash": "bd7dd8074901a76bcf7be2bab4b37348",
+    "mtime": 1791237564.7750332,
+    "seen": 1791237575.53412,
+    "ast_hash": "33f48f830ae1a785ec5405dcb8bfd092",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1790984059.2357848,
-    "seen": 1791235074.9433148,
-    "ast_hash": "6cd6f14ebd3273546f1da041fa32a199",
+    "mtime": 1791239543.055011,
+    "seen": 1791239668.8823693,
+    "ast_hash": "31cfdc694cc5d88997222a8e198e34ca",
     "semantic_hash": ""
   },
   "docker-compose.yml": {
@@ -336,39 +336,147 @@
     "semantic_hash": ""
   },
   "research/reports/anomaly_report.md": {
-    "mtime": 1791234964.0764835,
-    "seen": 1791235074.9433193,
-    "ast_hash": "200e4bc0139353915f458bfd4768464a",
+    "mtime": 1791239526.6553724,
+    "seen": 1791239668.8823721,
+    "ast_hash": "f53345e3d27fe79c9e30da45e63315bf",
     "semantic_hash": ""
   },
   "research/reports/dataset_audit.md": {
-    "mtime": 1791234964.0760336,
-    "seen": 1791235074.9433212,
-    "ast_hash": "65620aff36f21e6620b92ea0d8df2e06",
+    "mtime": 1791239526.654874,
+    "seen": 1791239668.8823736,
+    "ast_hash": "3e0de31a236faed8812076d590e45f47",
     "semantic_hash": ""
   },
   "research/reports/executive_summary.md": {
-    "mtime": 1791234964.0778956,
-    "seen": 1791235074.9433227,
-    "ast_hash": "f7257002bf84de7e08c5553b88395429",
+    "mtime": 1791239526.6578023,
+    "seen": 1791239668.8823757,
+    "ast_hash": "b99230a05fbd57c6d30289123ed84383",
     "semantic_hash": ""
   },
   "research/reports/feature_analysis.md": {
-    "mtime": 1791234964.077369,
-    "seen": 1791235074.943324,
-    "ast_hash": "bbcdf95fb2e84f86cf704866e6d61c64",
+    "mtime": 1791239526.6560533,
+    "seen": 1791239668.8823767,
+    "ast_hash": "0ddfa7bb16d17df2d80fa9564e18a3f5",
     "semantic_hash": ""
   },
   "research/reports/hypotheses_and_strategy.md": {
-    "mtime": 1791234964.077687,
-    "seen": 1791235074.9433258,
-    "ast_hash": "ad0f162668b4b8b97f4d4411b2273ea0",
+    "mtime": 1791239526.6566374,
+    "seen": 1791239668.882379,
+    "ast_hash": "14712b71cba4ded9a6aee954a58508e1",
     "semantic_hash": ""
   },
   "research/reports/outcome_analysis.md": {
-    "mtime": 1791234964.0768201,
-    "seen": 1791235074.9433274,
-    "ast_hash": "36edb085b86ca1a5b596082615e45ac7",
+    "mtime": 1791239526.6557853,
+    "seen": 1791239668.8823817,
+    "ast_hash": "30545d95debe2dc6aae1ed475ec12364",
+    "semantic_hash": ""
+  },
+  "app/research/cohorts.py": {
+    "mtime": 1791239490.1641555,
+    "seen": 1791239668.882309,
+    "ast_hash": "10920dd31d873c5a0f1bd81e1ac6b467",
+    "semantic_hash": ""
+  },
+  "app/research/onchain.py": {
+    "mtime": 1791237442.0030167,
+    "seen": 1791237575.534063,
+    "ast_hash": "cb6eafac68be2f6d57d1b0aeb693b07b",
+    "semantic_hash": ""
+  },
+  "app/research/presignal.py": {
+    "mtime": 1791237514.8488047,
+    "seen": 1791237575.5340662,
+    "ast_hash": "614802030e7f13a1c651ad38e645566d",
+    "semantic_hash": ""
+  },
+  "research/reports/execution_model_audit.json": {
+    "mtime": 1791239526.6582155,
+    "seen": 1791239668.882338,
+    "ast_hash": "4c344a8ab3e4ceb0a98d2b947c2a79da",
+    "semantic_hash": ""
+  },
+  "research/reports/forward_testing_baseline.json": {
+    "mtime": 1791239526.6584737,
+    "seen": 1791239668.882341,
+    "ast_hash": "7142b1795cda6c3f1ce4fa536f109719",
+    "semantic_hash": ""
+  },
+  "research/reports/onchain_data_source_review.json": {
+    "mtime": 1791237463.814969,
+    "seen": 1791237575.5340896,
+    "ast_hash": "ae77d3affbbc7e3e69478205cc8f940a",
+    "semantic_hash": ""
+  },
+  "research/reports/presignal_research_plan.json": {
+    "mtime": 1791239526.6590986,
+    "seen": 1791239668.8823442,
+    "ast_hash": "9f2f2a15bb321d638dd25939027d1561",
+    "semantic_hash": ""
+  },
+  "scripts/analyze_presignal.py": {
+    "mtime": 1791237526.894101,
+    "seen": 1791237575.534098,
+    "ast_hash": "15ba623b4635517557d927e1fcda6fb5",
+    "semantic_hash": ""
+  },
+  "scripts/audit_execution_model.py": {
+    "mtime": 1791236521.714513,
+    "seen": 1791237575.5341032,
+    "ast_hash": "6bdf57285c51f9b6e762efe9dab78bf0",
+    "semantic_hash": ""
+  },
+  "scripts/baseline_cohort.py": {
+    "mtime": 1791239496.3141375,
+    "seen": 1791239668.8823533,
+    "ast_hash": "38083113c21eb946d76639fab18713a2",
+    "semantic_hash": ""
+  },
+  "scripts/healthcheck.py": {
+    "mtime": 1791237297.0644798,
+    "seen": 1791237575.5341082,
+    "ast_hash": "790b0a8735aae46b0bc7731efd6daabc",
+    "semantic_hash": ""
+  },
+  "scripts/review_onchain_sources.py": {
+    "mtime": 1791237453.771305,
+    "seen": 1791237575.5341122,
+    "ast_hash": "d03516b69b6ac41a54a772b950c9ea87",
+    "semantic_hash": ""
+  },
+  "research/reports/execution_model_audit.md": {
+    "mtime": 1791239526.656908,
+    "seen": 1791239668.8823748,
+    "ast_hash": "545e25fe9729bfd0af3049272d1c0df1",
+    "semantic_hash": ""
+  },
+  "research/reports/forward_testing_baseline.md": {
+    "mtime": 1791239526.6572104,
+    "seen": 1791239668.882378,
+    "ast_hash": "26c8e4acfd5e1c3d29075d7a447fdfe4",
+    "semantic_hash": ""
+  },
+  "research/reports/onchain_data_source_review.md": {
+    "mtime": 1791237463.8135514,
+    "seen": 1791237575.5341346,
+    "ast_hash": "90d1fe05ad26e534185caa0c75db14db",
+    "semantic_hash": ""
+  },
+  "research/reports/presignal_research_plan.md": {
+    "mtime": 1791239526.6575482,
+    "seen": 1791239668.8823826,
+    "ast_hash": "f328979c87a4e1428e4c59e3ebcaffee",
+    "semantic_hash": ""
+  },
+  "app/solana/detector.py": {
+    "mtime": 1791239627.9278247,
+    "seen": 1791239668.8823245,
+    "ast_hash": "8c8242f99f73bdc5e7f3b559b89a3b7e",
+    "semantic_hash": ""
+  },
+  "tests/test_detector.py": {
+    "mtime": 1791239637.7178066,
+    "seen": 1791239668.8823655,
+    "ast_hash": "64ae0e267143abd4eaa9e44001e56c9f",
     "semantic_hash": ""
   }
 }
