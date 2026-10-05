@@ -421,18 +421,33 @@ async def process_new_message(
 async def main() -> None:
     logger.info("Starting Meco Telegram listener...")
 
-    await client.start()
+    backoff = 2
+    while True:
+        try:
+            if not client.is_connected():
+                await client.start()
 
-    me = await client.get_me()
+            me = await client.get_me()
+            backoff = 2  # reset backoff on successful connect
 
-    logger.info(
-        "Authenticated as: %s",
-        getattr(me, "username", None) or me.first_name,
-    )
+            logger.info(
+                "Authenticated as: %s",
+                getattr(me, "username", None) or getattr(me, "first_name", "Unknown"),
+            )
+            logger.info("Listening for Telegram messages...")
 
-    logger.info("Listening for Telegram messages...")
+            await client.run_until_disconnected()
+            logger.warning("Telegram client disconnected. Attempting reconnect...")
 
-    await client.run_until_disconnected()
+        except asyncio.CancelledError:
+            logger.info("Shutdown signal received. Stopping Meco listener cleanly...")
+            break
+        except Exception:
+            logger.exception(
+                "Connection error occurred. Retrying in %ss...", backoff
+            )
+            await asyncio.sleep(backoff)
+            backoff = min(backoff * 2, 60)
 
 
 if __name__ == "__main__":
