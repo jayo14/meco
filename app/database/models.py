@@ -1,16 +1,18 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import (
     BigInteger,
+    Boolean,
     DateTime,
     Float,
     ForeignKey,
     Integer,
+    JSON,
     String,
     Text,
     UniqueConstraint,
 )
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
@@ -223,3 +225,250 @@ class MarketPairObservation(Base):
     fdv: Mapped[float | None] = mapped_column(Float)
 
     pair_created_at: Mapped[int | None] = mapped_column(BigInteger)
+
+
+class Token(Base):
+    __tablename__ = "tokens"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    mint_address: Mapped[str] = mapped_column(
+        String(64),
+        unique=True,
+        index=True,
+    )
+    name: Mapped[str | None] = mapped_column(String(255))
+    symbol: Mapped[str | None] = mapped_column(String(64))
+    decimals: Mapped[int | None] = mapped_column(Integer)
+    total_supply: Mapped[int | None] = mapped_column(BigInteger)
+
+    first_discovered_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        index=True,
+    )
+    first_discovery_source: Mapped[str] = mapped_column(
+        String(64),
+        index=True,
+    )
+    verification_status: Mapped[str] = mapped_column(
+        String(32),
+        default="unverified",
+        index=True,
+    )
+    metadata_uri: Mapped[str | None] = mapped_column(Text)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+    discovery_events: Mapped[list["DiscoveryEvent"]] = relationship(
+        "DiscoveryEvent",
+        back_populates="token",
+        cascade="all, delete-orphan",
+    )
+    sources: Mapped[list["TokenSource"]] = relationship(
+        "TokenSource",
+        back_populates="token",
+        cascade="all, delete-orphan",
+    )
+
+
+class DiscoveryEvent(Base):
+    __tablename__ = "discovery_events"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    token_id: Mapped[int | None] = mapped_column(
+        ForeignKey("tokens.id"),
+        index=True,
+    )
+    mint_address: Mapped[str] = mapped_column(
+        String(64),
+        index=True,
+    )
+    source: Mapped[str] = mapped_column(
+        String(64),
+        index=True,
+    )
+    event_type: Mapped[str] = mapped_column(
+        String(64),
+        index=True,
+        default="token_created",
+    )
+    source_event_id: Mapped[str | None] = mapped_column(
+        String(255),
+        index=True,
+    )
+    signature: Mapped[str | None] = mapped_column(
+        String(128),
+        index=True,
+    )
+    slot: Mapped[int | None] = mapped_column(BigInteger)
+    commitment: Mapped[str | None] = mapped_column(String(32))
+
+    source_timestamp: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        index=True,
+    )
+    received_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        index=True,
+    )
+    raw_payload: Mapped[dict | None] = mapped_column(JSON)
+    processed_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+    is_duplicate: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+    )
+    error_message: Mapped[str | None] = mapped_column(Text)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    token: Mapped[Token | None] = relationship(
+        "Token",
+        back_populates="discovery_events",
+    )
+
+
+class TokenSource(Base):
+    __tablename__ = "token_sources"
+
+    __table_args__ = (
+        UniqueConstraint("token_id", "source", name="uq_token_source"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    token_id: Mapped[int] = mapped_column(
+        ForeignKey("tokens.id"),
+        index=True,
+    )
+    source: Mapped[str] = mapped_column(
+        String(64),
+        index=True,
+    )
+    first_seen_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        index=True,
+    )
+    last_seen_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+    )
+    event_count: Mapped[int] = mapped_column(
+        Integer,
+        default=1,
+    )
+    source_metadata: Mapped[dict | None] = mapped_column(JSON)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+    token: Mapped[Token] = relationship(
+        "Token",
+        back_populates="sources",
+    )
+
+
+class DiscoveryCheckpoint(Base):
+    __tablename__ = "discovery_checkpoints"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    source: Mapped[str] = mapped_column(
+        String(64),
+        unique=True,
+        index=True,
+    )
+    last_signature: Mapped[str | None] = mapped_column(String(128))
+    last_slot: Mapped[int | None] = mapped_column(BigInteger)
+    last_event_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+
+class StreamHealth(Base):
+    __tablename__ = "stream_health"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    source: Mapped[str] = mapped_column(
+        String(64),
+        unique=True,
+        index=True,
+    )
+    status: Mapped[str] = mapped_column(
+        String(32),
+        default="disconnected",
+        index=True,
+    )
+    last_connected_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+    )
+    last_disconnected_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+    )
+    last_event_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+    )
+    last_error: Mapped[str | None] = mapped_column(Text)
+    last_error_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+    )
+    reconnect_count: Mapped[int] = mapped_column(
+        Integer,
+        default=0,
+    )
+    events_received: Mapped[int] = mapped_column(
+        Integer,
+        default=0,
+    )
+    valid_events: Mapped[int] = mapped_column(
+        Integer,
+        default=0,
+    )
+    invalid_events: Mapped[int] = mapped_column(
+        Integer,
+        default=0,
+    )
+    duplicate_events: Mapped[int] = mapped_column(
+        Integer,
+        default=0,
+    )
+    new_tokens_count: Mapped[int] = mapped_column(
+        Integer,
+        default=0,
+    )
+    processing_failures: Mapped[int] = mapped_column(
+        Integer,
+        default=0,
+    )
+    last_processing_latency_ms: Mapped[float | None] = mapped_column(Float)
+    last_source_latency_ms: Mapped[float | None] = mapped_column(Float)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
