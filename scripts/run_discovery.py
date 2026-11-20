@@ -9,6 +9,7 @@ from app.discovery.engine import DiscoveryEngine
 from app.discovery.models import NormalizedDiscoveryEvent
 from app.discovery.pumpportal import PumpPortalDiscoveryAdapter
 from app.discovery.solana_rpc import SolanaRpcDiscoveryAdapter
+from app.intelligence.orchestrator import TokenIntelligenceOrchestrator
 
 logging.basicConfig(
     format="[%(levelname)s %(asctime)s] %(name)s: %(message)s",
@@ -17,24 +18,30 @@ logging.basicConfig(
 logger = logging.getLogger("meco.discovery.runner")
 
 
-async def on_token_discovered(token: Any, event: NormalizedDiscoveryEvent, is_new: bool) -> None:
-    status_label = "🌟 NEW CANONICAL TOKEN" if is_new else "🔁 DUP DISCOVERY"
-    logger.info(
-        "%s | mint=%s | source=%s | name=%s | symbol=%s | sig=%s",
-        status_label,
-        event.mint_address,
-        event.source,
-        event.name or token.name,
-        event.symbol or token.symbol,
-        event.signature or "n/a",
-    )
-
-
 async def main() -> None:
     settings = get_settings()
-    logger.info("Initializing Meco Independent Token Discovery Subsystem...")
+    logger.info("Initializing Meco Independent Token Discovery & Intelligence Subsystems...")
 
     engine = DiscoveryEngine()
+    orchestrator = TokenIntelligenceOrchestrator()
+
+    async def on_token_discovered(token: Any, event: NormalizedDiscoveryEvent, is_new: bool) -> None:
+        status_label = "🌟 NEW CANONICAL TOKEN" if is_new else "🔁 DUP DISCOVERY"
+        logger.info(
+            "%s | mint=%s | source=%s | name=%s | symbol=%s | sig=%s",
+            status_label,
+            event.mint_address,
+            event.source,
+            event.name or token.name,
+            event.symbol or token.symbol,
+            event.signature or "n/a",
+        )
+        if is_new:
+            try:
+                await orchestrator.schedule_initial_enrichment(token.id, token.mint_address)
+                logger.info("Scheduled initial intelligence enrichment for token #%s (%s)", token.id, token.mint_address)
+            except Exception as e:  # noqa: BLE001
+                logger.warning("Failed scheduling initial enrichment: %s", e)
 
     if settings.enable_pumpportal_discovery:
         pumpportal_adapter = PumpPortalDiscoveryAdapter(
@@ -59,7 +66,8 @@ async def main() -> None:
     engine.subscribe_token_discovered(on_token_discovered)
 
     await engine.start()
-    logger.info("Discovery engine active. Press Ctrl+C to terminate.")
+    await orchestrator.start()
+    logger.info("Discovery and intelligence orchestrator active. Press Ctrl+C to terminate.")
 
     stop_event = asyncio.Event()
 
@@ -89,9 +97,10 @@ async def main() -> None:
     except asyncio.CancelledError:
         pass
     finally:
-        logger.info("Shutting down discovery engine...")
+        logger.info("Shutting down discovery engine and orchestrator...")
         await engine.stop()
-        logger.info("Discovery engine shutdown complete.")
+        await orchestrator.stop()
+        logger.info("Discovery and intelligence shutdown complete.")
 
 
 if __name__ == "__main__":
