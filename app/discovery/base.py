@@ -73,7 +73,9 @@ class BaseDiscoveryAdapter:
 
         for handler in self._event_handlers:
             try:
-                await handler(event)
+                res = handler(event)
+                if asyncio.iscoroutine(res):
+                    await res
             except Exception as e:
                 logger.exception(
                     "Error executing event handler in adapter %s: %s",
@@ -88,7 +90,9 @@ class BaseDiscoveryAdapter:
         self.health.last_error_at = now
         for handler in self._error_handlers:
             try:
-                await handler(exc)
+                res = handler(exc)
+                if asyncio.iscoroutine(res):
+                    await res
             except Exception as e:
                 logger.exception("Error executing error handler in adapter %s: %s", self.source_name, e)
 
