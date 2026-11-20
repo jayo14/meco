@@ -1,5 +1,6 @@
 import asyncio
 
+from app.database.models import Signal
 from app.database.observation_repository import save_market_observation
 from app.database.session import SessionLocal
 from app.market.dexscreener import get_token_pairs
@@ -29,12 +30,17 @@ async def main() -> None:
     )
 
     async with SessionLocal() as session:
+        signal = await session.get(Signal, SIGNAL_ID)
+        if signal is None:
+            print(f"Signal #{SIGNAL_ID} not found in database. Exiting.")
+            return
+
         observation = await save_market_observation(
             session,
-            signal_id=SIGNAL_ID,
-            token_address=TOKEN_ADDRESS,
-            seconds_since_signal=60,
+            signal=signal,
             snapshot=snapshot,
+            target_seconds=60,
+            observation_status="success",
         )
 
     print("=== OBSERVATION SAVED ===")
