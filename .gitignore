@@ -38,3 +38,6 @@ Thumbs.db
 .gemini/
 GEMINI.md
 do_commits.py
+
+# Knowledge graph
+graphify-out/
