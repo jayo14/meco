@@ -359,3 +359,73 @@ class TokenRegistry:
         await session.flush()
         await session.refresh(cp)
         return cp
+
+    @staticmethod
+    async def record_telegram_signal_discovery(
+        session: AsyncSession,
+        *,
+        chat_id: int,
+        message_id: int,
+        message_text: str,
+        token_address: str,
+        message_created_at: datetime,
+        received_at: datetime,
+        source_name: str | None = None,
+        source_username: str | None = None,
+        decimals: int | None = None,
+        supply: int | None = None,
+        validation_status: str = "unverified",
+    ) -> Token | None:
+        """
+        Integrates a Telegram signal into the canonical token registry and discovery events.
+        Ensures Telegram calls resolve to the same canonical token identity.
+        """
+        if not is_valid_solana_address(token_address):
+            return None
+
+        token, is_new = await TokenRegistry.resolve_or_create_token(
+            session,
+            mint_address=token_address,
+            source="telegram",
+            discovered_at=received_at,
+            decimals=decimals,
+            total_supply=supply,
+            verification_status=validation_status,
+        )
+
+        # Record discovery event
+        source_event_id = f"{chat_id}:{message_id}"
+        await TokenRegistry.record_discovery_event(
+            session,
+            token_id=token.id,
+            mint_address=token_address,
+            source="telegram",
+            event_type="signal_call",
+            source_event_id=source_event_id,
+            source_timestamp=message_created_at,
+            received_at=received_at,
+            raw_payload={
+                "chat_id": chat_id,
+                "message_id": message_id,
+                "message_text": message_text,
+                "source_name": source_name,
+                "source_username": source_username,
+            },
+            is_duplicate=not is_new,
+        )
+
+        # Associate token source
+        await TokenRegistry.associate_token_source(
+            session,
+            token_id=token.id,
+            source="telegram",
+            seen_at=received_at,
+            source_metadata={
+                "source_name": source_name,
+                "source_username": source_username,
+                "chat_id": chat_id,
+            },
+        )
+
+        return token
+

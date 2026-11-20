@@ -13,6 +13,7 @@ from app.database.repository import (
     update_signal_validation,
 )
 from app.database.session import SessionLocal
+from app.identity.registry import TokenRegistry
 from app.market.dexscreener import get_token_pairs
 from app.market.observer import observe_signal
 from app.market.snapshot import create_market_snapshot, select_primary_pair
@@ -154,6 +155,26 @@ async def process_new_message(
         saved_signal.token_address,
         db_duration,
     )
+
+    try:
+        async with SessionLocal() as session:
+            async with session.begin():
+                await TokenRegistry.record_telegram_signal_discovery(
+                    session,
+                    chat_id=signal.chat_id,
+                    message_id=signal.message_id,
+                    message_text=signal.message_text,
+                    token_address=signal.token_address,
+                    message_created_at=signal.message_created_at,
+                    received_at=signal.received_at,
+                    source_name=source_name,
+                    source_username=source_username,
+                )
+    except Exception as reg_exc:
+        logger.warning(
+            "Canonical token resolution skipped for Telegram signal: %s",
+            reg_exc,
+        )
 
     # ---------------------------------------------------------
     # STEP 2: SOLANA VALIDATION
