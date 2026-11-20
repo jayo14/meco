@@ -1,11 +1,7 @@
-import asyncio
-from collections.abc import Awaitable, Callable
-from datetime import datetime, timezone
 import logging
 import time
+from collections.abc import Awaitable, Callable
 from typing import Any
-
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.session import SessionLocal
 from app.discovery.base import BaseDiscoveryAdapter
@@ -101,60 +97,59 @@ class DiscoveryEngine:
                 adapter.health.valid_events += 1
 
             # Step 5 to 9: Persistence, canonical identity resolution & deduplication
-            async with self.session_factory() as session:
-                async with session.begin():
-                    # Check if token already exists to determine is_new / duplicate
-                    existing = await TokenRegistry.get_token_by_mint(session, clean_mint)
-                    is_new = existing is None
+            async with self.session_factory() as session, session.begin():
+                # Check if token already exists to determine is_new / duplicate
+                existing = await TokenRegistry.get_token_by_mint(session, clean_mint)
+                is_new = existing is None
 
-                    # Resolve or create canonical token
-                    token, created = await TokenRegistry.resolve_or_create_token(
+                # Resolve or create canonical token
+                token, _created = await TokenRegistry.resolve_or_create_token(
+                    session,
+                    mint_address=clean_mint,
+                    source=source,
+                    discovered_at=event.received_at,
+                    name=event.name,
+                    symbol=event.symbol,
+                    decimals=event.decimals,
+                    total_supply=event.total_supply,
+                    metadata_uri=event.metadata_uri,
+                )
+
+                # Persist raw event
+                await TokenRegistry.record_discovery_event(
+                    session,
+                    token_id=token.id,
+                    mint_address=clean_mint,
+                    source=source,
+                    event_type=event.event_type,
+                    source_event_id=event.source_event_id,
+                    signature=event.signature,
+                    slot=event.slot,
+                    commitment=event.commitment,
+                    source_timestamp=event.source_timestamp,
+                    received_at=event.received_at,
+                    raw_payload=event.raw_payload,
+                    is_duplicate=not is_new,
+                )
+
+                # Associate source with token
+                await TokenRegistry.associate_token_source(
+                    session,
+                    token_id=token.id,
+                    source=source,
+                    seen_at=event.received_at,
+                    source_metadata=event.source_metadata,
+                )
+
+                # Update checkpoint if signature or slot is provided
+                if event.signature or event.slot:
+                    await TokenRegistry.update_checkpoint(
                         session,
-                        mint_address=clean_mint,
                         source=source,
-                        discovered_at=event.received_at,
-                        name=event.name,
-                        symbol=event.symbol,
-                        decimals=event.decimals,
-                        total_supply=event.total_supply,
-                        metadata_uri=event.metadata_uri,
+                        last_signature=event.signature,
+                        last_slot=event.slot,
+                        last_event_at=event.received_at,
                     )
-
-                    # Persist raw event
-                    db_event = await TokenRegistry.record_discovery_event(
-                        session,
-                        token_id=token.id,
-                        mint_address=clean_mint,
-                        source=source,
-                        event_type=event.event_type,
-                        source_event_id=event.source_event_id,
-                        signature=event.signature,
-                        slot=event.slot,
-                        commitment=event.commitment,
-                        source_timestamp=event.source_timestamp,
-                        received_at=event.received_at,
-                        raw_payload=event.raw_payload,
-                        is_duplicate=not is_new,
-                    )
-
-                    # Associate source with token
-                    await TokenRegistry.associate_token_source(
-                        session,
-                        token_id=token.id,
-                        source=source,
-                        seen_at=event.received_at,
-                        source_metadata=event.source_metadata,
-                    )
-
-                    # Update checkpoint if signature or slot is provided
-                    if event.signature or event.slot:
-                        await TokenRegistry.update_checkpoint(
-                            session,
-                            source=source,
-                            last_signature=event.signature,
-                            last_slot=event.slot,
-                            last_event_at=event.received_at,
-                        )
 
             # Update in-memory adapter metrics
             proc_latency_ms = (time.perf_counter() - start_time) * 1000.0
@@ -177,19 +172,17 @@ class DiscoveryEngine:
             for subscriber in self._subscribers:
                 try:
                     await subscriber(token, event, is_new)
-                except Exception as sub_err:
+                except Exception:
                     logger.exception(
-                        "Error in discovery subscriber callback for mint %s: %s",
+                        "Error in discovery subscriber callback for mint %s",
                         clean_mint,
-                        sub_err,
                     )
 
-        except Exception as exc:
+        except Exception:
             logger.exception(
-                "Failed processing discovery event from %s for mint %s: %s",
+                "Failed processing discovery event from %s for mint %s",
                 source,
                 getattr(event, "mint_address", None),
-                exc,
             )
             if adapter:
                 adapter.health.processing_failures += 1

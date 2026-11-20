@@ -1,14 +1,13 @@
-import asyncio
-from datetime import datetime, timezone
 import json
 import logging
 import re
+from datetime import datetime, timezone
 from typing import Any
 
+import websockets
 from solana.rpc.async_api import AsyncClient
 from solders.pubkey import Pubkey
 from solders.signature import Signature
-import websockets
 
 from app.config.settings import get_settings
 from app.discovery.base import BaseDiscoveryAdapter
@@ -190,7 +189,7 @@ class SolanaRpcDiscoveryAdapter(BaseDiscoveryAdapter):
                         mint = getattr(bal, "mint", None)
                         if mint and is_valid_solana_address(str(mint)):
                             return str(mint)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.debug("Failed on-chain transaction lookup for %s: %s", signature, e)
         return None
 
@@ -231,7 +230,7 @@ class SolanaRpcDiscoveryAdapter(BaseDiscoveryAdapter):
                 received_at = datetime.now(timezone.utc)
                 try:
                     data = json.loads(message)
-                except Exception:
+                except (json.JSONDecodeError, ValueError):
                     self.health.invalid_events += 1
                     continue
 

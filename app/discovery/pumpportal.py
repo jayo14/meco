@@ -1,7 +1,6 @@
-import asyncio
-from datetime import datetime, timezone
 import json
 import logging
+from datetime import datetime, timezone
 from typing import Any
 
 import websockets
@@ -30,7 +29,7 @@ def parse_pumpportal_message(
     if isinstance(raw_message, (str, bytes)):
         try:
             payload = json.loads(raw_message)
-        except Exception:
+        except (json.JSONDecodeError, ValueError, TypeError):
             return None
     elif isinstance(raw_message, dict):
         payload = raw_message
@@ -64,7 +63,7 @@ def parse_pumpportal_message(
                     source_ts = datetime.fromtimestamp(float(raw_ts), tz=timezone.utc)
             elif isinstance(raw_ts, str):
                 source_ts = datetime.fromisoformat(raw_ts)
-        except Exception:
+        except (ValueError, TypeError, OverflowError):
             source_ts = None
 
     name = payload.get("name")
@@ -162,7 +161,7 @@ class PumpPortalDiscoveryAdapter(BaseDiscoveryAdapter):
                     event = parse_pumpportal_message(message, received_at=received_at)
                     if event is not None:
                         await self.emit_event(event)
-                except Exception as parse_err:
+                except Exception as parse_err:  # noqa: BLE001
                     logger.warning("Error processing PumpPortal message: %s", parse_err)
                     self.health.invalid_events += 1
 

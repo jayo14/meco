@@ -1,8 +1,7 @@
 import asyncio
+import logging
 from collections.abc import Awaitable, Callable
 from datetime import datetime, timezone
-import logging
-from typing import Any
 
 from app.discovery.models import (
     ConnectionState,
@@ -76,25 +75,24 @@ class BaseDiscoveryAdapter:
                 res = handler(event)
                 if asyncio.iscoroutine(res):
                     await res
-            except Exception as e:
+            except Exception:
                 logger.exception(
-                    "Error executing event handler in adapter %s: %s",
+                    "Error executing event handler in adapter %s",
                     self.source_name,
-                    e,
                 )
 
     async def emit_error(self, exc: Exception) -> None:
         """Dispatch an error to registered error handlers and update health."""
         now = datetime.now(timezone.utc)
-        self.health.last_error = f"{type(exc).__name__}: {str(exc)}"
+        self.health.last_error = f"{type(exc).__name__}: {exc!s}"
         self.health.last_error_at = now
         for handler in self._error_handlers:
             try:
                 res = handler(exc)
                 if asyncio.iscoroutine(res):
                     await res
-            except Exception as e:
-                logger.exception("Error executing error handler in adapter %s: %s", self.source_name, e)
+            except Exception:
+                logger.exception("Error executing error handler in adapter %s", self.source_name)
 
     def mark_connected(self) -> None:
         self.health.status = ConnectionState.CONNECTED
@@ -151,7 +149,7 @@ class BaseDiscoveryAdapter:
                 delay = self.reconnect_min_delay
             except asyncio.CancelledError:
                 break
-            except Exception as exc:
+            except Exception as exc:  # noqa: BLE001
                 self.mark_disconnected()
                 await self.emit_error(exc)
                 logger.warning(

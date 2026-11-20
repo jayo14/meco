@@ -2,10 +2,10 @@ import logging
 from datetime import datetime, timezone
 from typing import Any
 
+from solders.pubkey import Pubkey
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
-from solders.pubkey import Pubkey
 
 from app.database.models import (
     DiscoveryCheckpoint,
@@ -28,7 +28,7 @@ def is_valid_solana_address(address: str | None) -> bool:
     try:
         Pubkey.from_string(address)
         return True
-    except Exception:
+    except ValueError:
         return False
 
 

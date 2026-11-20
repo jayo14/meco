@@ -1,15 +1,14 @@
 import asyncio
-from datetime import datetime, timezone
 import json
+from datetime import datetime, timezone
 from unittest.mock import AsyncMock, MagicMock
+
 import pytest
 
 from app.discovery.engine import DiscoveryEngine
 from app.discovery.models import (
     ConnectionState,
     NormalizedDiscoveryEvent,
-    SourceCapabilities,
-    SourceHealthSnapshot,
 )
 from app.discovery.pumpportal import (
     PumpPortalDiscoveryAdapter,
@@ -23,7 +22,6 @@ from app.discovery.solana_rpc import (
 from app.identity.registry import TokenRegistry, is_valid_solana_address
 from app.research.onchain import PUMP_PROGRAM_ID
 from app.telegram.parser import extract_token_signal
-
 
 # ==============================================================================
 # In-Memory Fake Async Session for Persistence Testing
@@ -101,12 +99,6 @@ class FakeAsyncSession:
         pass
 
     async def execute(self, stmt):
-        from app.database.models import (
-            DiscoveryCheckpoint,
-            StreamHealth,
-            Token,
-            TokenSource,
-        )
         # Inspect query entity
         text_str = str(stmt)
         result_mock = MagicMock()
@@ -516,7 +508,7 @@ async def test_discovery_engine_rejects_invalid_mint():
 @pytest.mark.asyncio
 async def test_discovery_engine_fault_isolation_and_db_error():
     """Verify database exceptions do not crash the engine or halt processing."""
-    session_factory, state = create_fake_session_factory()
+    _session_factory, _state = create_fake_session_factory()
 
     # Session that raises database error
     failing_session = MagicMock()
@@ -775,7 +767,7 @@ async def test_concurrent_discovery_events():
 @pytest.mark.asyncio
 async def test_stream_health_and_checkpoint_tracking():
     """Verify TokenRegistry correctly updates stream health metrics and checkpoints."""
-    session_factory, state = create_fake_session_factory()
+    session_factory, _state = create_fake_session_factory()
 
     async with session_factory() as session:
         # 1. Update stream health
