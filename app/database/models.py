@@ -1,13 +1,14 @@
 from datetime import datetime, timezone
 
 from sqlalchemy import (
+    JSON,
     BigInteger,
     Boolean,
     DateTime,
     Float,
     ForeignKey,
+    Index,
     Integer,
-    JSON,
     String,
     Text,
     UniqueConstraint,
@@ -314,6 +315,26 @@ class Token(Base):
     )
     enrichment_tasks: Mapped[list["EnrichmentTask"]] = relationship(
         "EnrichmentTask",
+        back_populates="token",
+        cascade="all, delete-orphan",
+    )
+    social_associations: Mapped[list["SocialTokenAssociation"]] = relationship(
+        "SocialTokenAssociation",
+        back_populates="token",
+        cascade="all, delete-orphan",
+    )
+    narrative_associations: Mapped[list["TokenNarrativeAssociation"]] = relationship(
+        "TokenNarrativeAssociation",
+        back_populates="token",
+        cascade="all, delete-orphan",
+    )
+    social_metrics: Mapped[list["SocialMetricsSnapshot"]] = relationship(
+        "SocialMetricsSnapshot",
+        back_populates="token",
+        cascade="all, delete-orphan",
+    )
+    social_findings: Mapped[list["SocialIntelligenceFinding"]] = relationship(
+        "SocialIntelligenceFinding",
         back_populates="token",
         cascade="all, delete-orphan",
     )
@@ -773,4 +794,311 @@ class TokenLifecycleEvent(Base):
     token: Mapped[Token] = relationship(
         "Token",
         back_populates="lifecycle_events",
+    )
+
+
+class SocialPost(Base):
+    __tablename__ = "social_posts"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    source: Mapped[str] = mapped_column(
+        String(32),
+        index=True,
+    )
+    external_id: Mapped[str] = mapped_column(
+        String(255),
+        index=True,
+    )
+    author_id: Mapped[str] = mapped_column(
+        String(255),
+        index=True,
+    )
+    author_username: Mapped[str | None] = mapped_column(String(255))
+    content: Mapped[str] = mapped_column(Text)
+    sanitized_content: Mapped[str] = mapped_column(Text)
+    published_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        index=True,
+    )
+    ingested_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        index=True,
+        default=lambda: datetime.now(timezone.utc),
+    )
+    likes_count: Mapped[int] = mapped_column(Integer, default=0)
+    reposts_count: Mapped[int] = mapped_column(Integer, default=0)
+    replies_count: Mapped[int] = mapped_column(Integer, default=0)
+    views_count: Mapped[int] = mapped_column(Integer, default=0)
+    referenced_mints: Mapped[list | None] = mapped_column(JSON)
+    referenced_symbols: Mapped[list | None] = mapped_column(JSON)
+    urls: Mapped[list | None] = mapped_column(JSON)
+    language: Mapped[str] = mapped_column(String(10), default="en")
+    raw_metadata: Mapped[dict | None] = mapped_column(JSON)
+    content_hash: Mapped[str] = mapped_column(
+        String(64),
+        index=True,
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    __table_args__ = (
+        UniqueConstraint("source", "external_id", name="uq_social_posts_source_ext_id"),
+        Index("ix_social_posts_source_published", "source", "published_at"),
+    )
+
+    token_associations: Mapped[list["SocialTokenAssociation"]] = relationship(
+        "SocialTokenAssociation",
+        back_populates="social_post",
+        cascade="all, delete-orphan",
+    )
+    narrative_associations: Mapped[list["SocialNarrativeAssociation"]] = relationship(
+        "SocialNarrativeAssociation",
+        back_populates="social_post",
+        cascade="all, delete-orphan",
+    )
+
+
+class Narrative(Base):
+    __tablename__ = "narratives"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(
+        String(128),
+        unique=True,
+    )
+    slug: Mapped[str] = mapped_column(
+        String(128),
+        unique=True,
+        index=True,
+    )
+    category: Mapped[str] = mapped_column(
+        String(64),
+        index=True,
+    )
+    keywords: Mapped[list] = mapped_column(JSON)
+    description: Mapped[str | None] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(
+        String(32),
+        index=True,
+        default="active",
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    social_associations: Mapped[list["SocialNarrativeAssociation"]] = relationship(
+        "SocialNarrativeAssociation",
+        back_populates="narrative",
+        cascade="all, delete-orphan",
+    )
+    token_associations: Mapped[list["TokenNarrativeAssociation"]] = relationship(
+        "TokenNarrativeAssociation",
+        back_populates="narrative",
+        cascade="all, delete-orphan",
+    )
+    metrics_snapshots: Mapped[list["SocialMetricsSnapshot"]] = relationship(
+        "SocialMetricsSnapshot",
+        back_populates="narrative",
+        cascade="all, delete-orphan",
+    )
+    findings: Mapped[list["SocialIntelligenceFinding"]] = relationship(
+        "SocialIntelligenceFinding",
+        back_populates="narrative",
+        cascade="all, delete-orphan",
+    )
+
+
+class SocialTokenAssociation(Base):
+    __tablename__ = "social_token_associations"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    social_post_id: Mapped[int] = mapped_column(
+        ForeignKey("social_posts.id", ondelete="CASCADE"),
+        index=True,
+    )
+    token_id: Mapped[int] = mapped_column(
+        ForeignKey("tokens.id", ondelete="CASCADE"),
+        index=True,
+    )
+    match_type: Mapped[str] = mapped_column(
+        String(32),
+        index=True,
+    )
+    confidence: Mapped[float] = mapped_column(Float)
+    match_evidence: Mapped[dict | None] = mapped_column(JSON)
+    associated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    __table_args__ = (
+        UniqueConstraint("social_post_id", "token_id", name="uq_post_token_assoc"),
+    )
+
+    social_post: Mapped[SocialPost] = relationship(
+        "SocialPost",
+        back_populates="token_associations",
+    )
+    token: Mapped[Token] = relationship(
+        "Token",
+        back_populates="social_associations",
+    )
+
+
+class SocialNarrativeAssociation(Base):
+    __tablename__ = "social_narrative_associations"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    social_post_id: Mapped[int] = mapped_column(
+        ForeignKey("social_posts.id", ondelete="CASCADE"),
+        index=True,
+    )
+    narrative_id: Mapped[int] = mapped_column(
+        ForeignKey("narratives.id", ondelete="CASCADE"),
+        index=True,
+    )
+    confidence: Mapped[float] = mapped_column(Float)
+    matched_keywords: Mapped[list | None] = mapped_column(JSON)
+    associated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    __table_args__ = (
+        UniqueConstraint("social_post_id", "narrative_id", name="uq_post_narrative_assoc"),
+    )
+
+    social_post: Mapped[SocialPost] = relationship(
+        "SocialPost",
+        back_populates="narrative_associations",
+    )
+    narrative: Mapped[Narrative] = relationship(
+        "Narrative",
+        back_populates="social_associations",
+    )
+
+
+class TokenNarrativeAssociation(Base):
+    __tablename__ = "token_narrative_associations"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    token_id: Mapped[int] = mapped_column(
+        ForeignKey("tokens.id", ondelete="CASCADE"),
+        index=True,
+    )
+    narrative_id: Mapped[int] = mapped_column(
+        ForeignKey("narratives.id", ondelete="CASCADE"),
+        index=True,
+    )
+    confidence: Mapped[float] = mapped_column(Float)
+    evidence: Mapped[dict | None] = mapped_column(JSON)
+    first_associated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+    last_associated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    __table_args__ = (
+        UniqueConstraint("token_id", "narrative_id", name="uq_token_narrative_assoc"),
+    )
+
+    token: Mapped[Token] = relationship(
+        "Token",
+        back_populates="narrative_associations",
+    )
+    narrative: Mapped[Narrative] = relationship(
+        "Narrative",
+        back_populates="token_associations",
+    )
+
+
+class SocialMetricsSnapshot(Base):
+    __tablename__ = "social_metrics_snapshots"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    token_id: Mapped[int | None] = mapped_column(
+        ForeignKey("tokens.id", ondelete="CASCADE"),
+        index=True,
+    )
+    narrative_id: Mapped[int | None] = mapped_column(
+        ForeignKey("narratives.id", ondelete="CASCADE"),
+        index=True,
+    )
+    window_seconds: Mapped[int] = mapped_column(
+        Integer,
+        default=3600,
+    )
+    snapshot_time: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        index=True,
+    )
+    mention_count: Mapped[int] = mapped_column(Integer, default=0)
+    mention_velocity: Mapped[float] = mapped_column(Float, default=0.0)
+    unique_authors_count: Mapped[int] = mapped_column(Integer, default=0)
+    author_concentration: Mapped[float] = mapped_column(Float, default=0.0)
+    total_engagement: Mapped[int] = mapped_column(Integer, default=0)
+    engagement_velocity: Mapped[float] = mapped_column(Float, default=0.0)
+    sentiment_positive: Mapped[float] = mapped_column(Float, default=0.0)
+    sentiment_negative: Mapped[float] = mapped_column(Float, default=0.0)
+    sentiment_neutral: Mapped[float] = mapped_column(Float, default=1.0)
+    spam_score: Mapped[float] = mapped_column(Float, default=0.0)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    token: Mapped[Token | None] = relationship(
+        "Token",
+        back_populates="social_metrics",
+    )
+    narrative: Mapped[Narrative | None] = relationship(
+        "Narrative",
+        back_populates="metrics_snapshots",
+    )
+
+
+class SocialIntelligenceFinding(Base):
+    __tablename__ = "social_intelligence_findings"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    token_id: Mapped[int | None] = mapped_column(
+        ForeignKey("tokens.id", ondelete="CASCADE"),
+        index=True,
+    )
+    narrative_id: Mapped[int | None] = mapped_column(
+        ForeignKey("narratives.id", ondelete="CASCADE"),
+        index=True,
+    )
+    finding_type: Mapped[str] = mapped_column(
+        String(64),
+        index=True,
+    )
+    title: Mapped[str] = mapped_column(String(255))
+    summary: Mapped[str] = mapped_column(Text)
+    confidence: Mapped[float] = mapped_column(Float)
+    supporting_evidence: Mapped[dict | None] = mapped_column(JSON)
+    source_references: Mapped[list | None] = mapped_column(JSON)
+    observed_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        index=True,
+    )
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    token: Mapped[Token | None] = relationship(
+        "Token",
+        back_populates="social_findings",
+    )
+    narrative: Mapped[Narrative | None] = relationship(
+        "Narrative",
+        back_populates="findings",
     )

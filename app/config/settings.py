@@ -28,6 +28,18 @@ class Settings(BaseSettings):
     discovery_reconnect_min_delay: float = 1.0
     discovery_reconnect_max_delay: float = 60.0
 
+    # Social Intelligence settings
+    x_api_bearer_token: str | None = None
+    enable_x_social: bool = False
+    enable_rss_social: bool = True
+    enable_telegram_social: bool = True
+    rss_feeds: str = (
+        "https://cointelegraph.com/rss,"
+        "https://www.coindesk.com/arc/outboundfeeds/rss/,"
+        "https://decrypt.co/feed"
+    )
+    social_poll_interval: float = 60.0
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
