@@ -17,6 +17,10 @@ from app.identity.registry import TokenRegistry
 from app.market.dexscreener import get_token_pairs
 from app.market.observer import observe_signal
 from app.market.snapshot import create_market_snapshot, select_primary_pair
+from app.social.ingestion import SocialIngestionService
+from app.social.matcher import TokenSocialMatcher
+from app.social.narratives import NarrativeEngine
+from app.social.telegram_adapter import TelegramSocialAdapter
 from app.solana.validator import (
     MintValidationStatus,
     get_mint_info,
@@ -90,6 +94,29 @@ async def process_new_message(
 
     received_at = datetime.now(timezone.utc)
 
+    if settings.enable_telegram_social and message.text:
+        try:
+            tg_adapter = TelegramSocialAdapter()
+            raw_post = tg_adapter.transform_telegram_message(
+                message_id=message.id,
+                channel_id=event.chat_id,
+                channel_title=source_name or source_username,
+                text=message.text,
+                date=message.date,
+                views=getattr(message, "views", 0) or 0,
+                forwards=getattr(message, "forwards", 0) or 0,
+            )
+            ingestion_service = SocialIngestionService(SessionLocal)
+            matcher = TokenSocialMatcher(SessionLocal)
+            narrative_engine = NarrativeEngine(SessionLocal)
+            async with SessionLocal() as session, session.begin():
+                db_post = await ingestion_service.ingest_post(session, raw_post)
+                if db_post:
+                    await matcher.associate_post(session, db_post)
+                    await narrative_engine.associate_post_narratives(session, db_post)
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Failed ingesting telegram message into social pipeline: %s", exc)
+
     signal = extract_token_signal(
         message.text,
         chat_id=event.chat_id,
@@ -157,20 +184,19 @@ async def process_new_message(
     )
 
     try:
-        async with SessionLocal() as session:
-            async with session.begin():
-                await TokenRegistry.record_telegram_signal_discovery(
-                    session,
-                    chat_id=signal.chat_id,
-                    message_id=signal.message_id,
-                    message_text=signal.message_text,
-                    token_address=signal.token_address,
-                    message_created_at=signal.message_created_at,
-                    received_at=signal.received_at,
-                    source_name=source_name,
-                    source_username=source_username,
-                )
-    except Exception as reg_exc:
+        async with SessionLocal() as session, session.begin():
+            await TokenRegistry.record_telegram_signal_discovery(
+                session,
+                chat_id=signal.chat_id,
+                message_id=signal.message_id,
+                message_text=signal.message_text,
+                token_address=signal.token_address,
+                message_created_at=signal.message_created_at,
+                received_at=signal.received_at,
+                source_name=source_name,
+                source_username=source_username,
+            )
+    except Exception as reg_exc:  # noqa: BLE001
         logger.warning(
             "Canonical token resolution skipped for Telegram signal: %s",
             reg_exc,
