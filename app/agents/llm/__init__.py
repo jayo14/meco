@@ -7,6 +7,11 @@ from app.agents.llm.prompts import (
     RISK_AGENT_PROMPT_V1,
     SOCIAL_AGENT_PROMPT_V1,
 )
+from app.agents.llm.sanitizer import (
+    SanitizedContent,
+    sanitize_untrusted_text,
+    wrap_untrusted_data,
+)
 
 __all__ = [
     "LLMClient",
@@ -18,4 +23,7 @@ __all__ = [
     "RESEARCH_AGENT_PROMPT_V1",
     "RISK_AGENT_PROMPT_V1",
     "SOCIAL_AGENT_PROMPT_V1",
+    "SanitizedContent",
+    "sanitize_untrusted_text",
+    "wrap_untrusted_data",
 ]
