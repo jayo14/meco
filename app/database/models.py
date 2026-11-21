@@ -338,6 +338,11 @@ class Token(Base):
         back_populates="token",
         cascade="all, delete-orphan",
     )
+    investigations: Mapped[list["TokenInvestigation"]] = relationship(
+        "TokenInvestigation",
+        back_populates="token",
+        cascade="all, delete-orphan",
+    )
 
 
 class DiscoveryEvent(Base):
@@ -1102,3 +1107,93 @@ class SocialIntelligenceFinding(Base):
         "Narrative",
         back_populates="findings",
     )
+
+
+class TokenInvestigation(Base):
+    __tablename__ = "token_investigations"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    token_id: Mapped[int | None] = mapped_column(
+        ForeignKey("tokens.id", ondelete="CASCADE"),
+        index=True,
+        nullable=True,
+    )
+    mint_address: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    trigger: Mapped[str] = mapped_column(String(64), index=True, default="manual")
+    status: Mapped[str] = mapped_column(String(32), index=True, default="pending")
+    requested_agents: Mapped[list] = mapped_column(JSON, default=list)
+    completed_agents: Mapped[list] = mapped_column(JSON, default=list)
+    failed_agents: Mapped[list] = mapped_column(JSON, default=list)
+    verdict: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    start_time: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    completion_time: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+    __table_args__ = (
+        Index("ix_token_investigations_mint_status", "mint_address", "status"),
+    )
+
+    token: Mapped[Token | None] = relationship(
+        "Token",
+        back_populates="investigations",
+    )
+    agent_results: Mapped[list["AgentInvestigationResult"]] = relationship(
+        "AgentInvestigationResult",
+        back_populates="investigation",
+        cascade="all, delete-orphan",
+    )
+
+
+class AgentInvestigationResult(Base):
+    __tablename__ = "agent_investigation_results"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    investigation_id: Mapped[str] = mapped_column(
+        ForeignKey("token_investigations.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+    )
+    agent_name: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    status: Mapped[str] = mapped_column(String(32), index=True, default="pending")
+    execution_state: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    findings: Mapped[list] = mapped_column(JSON, default=list)
+    evidence_references: Mapped[list] = mapped_column(JSON, default=list)
+    confidence: Mapped[float] = mapped_column(Float, default=0.0)
+    insufficient_evidence: Mapped[bool] = mapped_column(Boolean, default=False)
+    unanswered_questions: Mapped[list | None] = mapped_column(JSON, nullable=True)
+    hard_risks: Mapped[list | None] = mapped_column(JSON, nullable=True)
+    soft_warnings: Mapped[list | None] = mapped_column(JSON, nullable=True)
+    metrics: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    retry_count: Mapped[int] = mapped_column(Integer, default=0)
+    model_provider: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    model_name: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    prompt_version: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    tokens_used: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    execution_duration_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    raw_output: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    __table_args__ = (
+        UniqueConstraint("investigation_id", "agent_name", name="uq_investigation_agent"),
+    )
+
+    investigation: Mapped[TokenInvestigation] = relationship(
+        "TokenInvestigation",
+        back_populates="agent_results",
+    )
+
