@@ -6,6 +6,10 @@ from app.trading.accounting import (
     PortfolioAccount,
     quantize_usd,
 )
+from app.trading.execution import (
+    ExecutionSimulatorConfig,
+    PaperExecutionSimulator,
+)
 from app.trading.models import (
     ExitConditions,
     ExitReason,
@@ -31,10 +35,12 @@ from app.trading.sizing import (
 )
 
 __all__ = [
+    "ExecutionSimulatorConfig",
     "ExitConditions",
     "ExitReason",
     "OrderSide",
     "OrderType",
+    "PaperExecutionSimulator",
     "PaperOrder",
     "PaperPosition",
     "PortfolioAccount",
