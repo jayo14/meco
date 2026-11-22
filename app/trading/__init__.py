@@ -27,6 +27,11 @@ from app.trading.models import (
     TakeProfitStage,
     TradeProposal,
 )
+from app.trading.position_manager import (
+    ExitEvaluator,
+    ExitSignal,
+    PositionManager,
+)
 from app.trading.proposal import (
     ProposalGenerator,
 )
@@ -51,7 +56,9 @@ __all__ = [
     "BaseTradingStrategy",
     "ExecutionSimulatorConfig",
     "ExitConditions",
+    "ExitEvaluator",
     "ExitReason",
+    "ExitSignal",
     "LiquiditySurgeStrategy",
     "MomentumBreakoutStrategy",
     "OrderSide",
@@ -61,6 +68,7 @@ __all__ = [
     "PaperPosition",
     "PortfolioAccount",
     "PortfolioSnapshot",
+    "PositionManager",
     "PositionSizer",
     "PositionSizingConfig",
     "PositionStatus",
