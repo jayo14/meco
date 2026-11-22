@@ -361,5 +361,26 @@ class PositionManager:
     def all_active_positions(self) -> list[PaperPosition]:
         return list(self.open_positions.values())
 
+    def close_position(
+        self,
+        position_id: str,
+        exit_price: Decimal,
+        exit_time: datetime,
+        exit_reason: ExitReason = ExitReason.MANUAL_EXIT,
+        fee_usd: Decimal = Decimal("0.00"),
+    ) -> PaperPosition:
+        """Manually close an open position and move it to positions_history."""
+        pos = self.open_positions.pop(position_id)
+        pos.status = PositionStatus.CLOSED
+        pos.closed_at = exit_time
+        pos.exit_reason = exit_reason
+        gross_pnl = (exit_price - pos.entry_price) * pos.quantity
+        pos.realised_pnl_usd = quantize_usd(gross_pnl - fee_usd)
+        pos.unrealised_pnl_usd = Decimal("0.00")
+        pos.total_fees_paid_usd = quantize_usd(pos.total_fees_paid_usd + fee_usd)
+        pos.quantity = Decimal("0.00")
+        self.positions_history.append(pos)
+        return pos
+
     def all_closed_positions(self) -> list[PaperPosition]:
         return self.positions_history
