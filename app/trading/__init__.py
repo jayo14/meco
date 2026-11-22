@@ -35,6 +35,9 @@ from app.trading.performance import (
     StrategyPerformanceSummary,
     TradingPerformanceReport,
 )
+from app.trading.persistence import (
+    PersistenceManager,
+)
 from app.trading.position_manager import (
     ExitEvaluator,
     ExitSignal,
@@ -76,6 +79,7 @@ __all__ = [
     "PaperPosition",
     "PaperTradingEngine",
     "PerformanceAnalyzer",
+    "PersistenceManager",
     "PortfolioAccount",
     "PortfolioSnapshot",
     "PositionManager",
