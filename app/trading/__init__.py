@@ -40,11 +40,20 @@ from app.trading.sizing import (
     SizingDecision,
     SizingMethod,
 )
+from app.trading.strategy import (
+    BaseTradingStrategy,
+    LiquiditySurgeStrategy,
+    MomentumBreakoutStrategy,
+    StrategyRegistry,
+)
 
 __all__ = [
+    "BaseTradingStrategy",
     "ExecutionSimulatorConfig",
     "ExitConditions",
     "ExitReason",
+    "LiquiditySurgeStrategy",
+    "MomentumBreakoutStrategy",
     "OrderSide",
     "OrderType",
     "PaperExecutionSimulator",
@@ -64,6 +73,7 @@ __all__ = [
     "SizingDecision",
     "SizingMethod",
     "StopLossConfig",
+    "StrategyRegistry",
     "TakeProfitConfig",
     "TakeProfitStage",
     "TradeProposal",
