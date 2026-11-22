@@ -27,6 +27,11 @@ from app.trading.models import (
     TakeProfitStage,
     TradeProposal,
 )
+from app.trading.performance import (
+    PerformanceAnalyzer,
+    StrategyPerformanceSummary,
+    TradingPerformanceReport,
+)
 from app.trading.position_manager import (
     ExitEvaluator,
     ExitSignal,
@@ -66,6 +71,7 @@ __all__ = [
     "PaperExecutionSimulator",
     "PaperOrder",
     "PaperPosition",
+    "PerformanceAnalyzer",
     "PortfolioAccount",
     "PortfolioSnapshot",
     "PositionManager",
@@ -81,9 +87,11 @@ __all__ = [
     "SizingDecision",
     "SizingMethod",
     "StopLossConfig",
+    "StrategyPerformanceSummary",
     "StrategyRegistry",
     "TakeProfitConfig",
     "TakeProfitStage",
     "TradeProposal",
+    "TradingPerformanceReport",
     "quantize_usd",
 ]
