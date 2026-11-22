@@ -2,6 +2,10 @@
 Meco Autonomous Paper Trading Engine package (Phase 6).
 Simulates execution and portfolio management without broadcasting real transactions.
 """
+from app.trading.accounting import (
+    PortfolioAccount,
+    quantize_usd,
+)
 from app.trading.models import (
     ExitConditions,
     ExitReason,
@@ -27,6 +31,7 @@ __all__ = [
     "OrderType",
     "PaperOrder",
     "PaperPosition",
+    "PortfolioAccount",
     "PortfolioSnapshot",
     "PositionStatus",
     "ProposalStatus",
@@ -36,4 +41,5 @@ __all__ = [
     "TakeProfitConfig",
     "TakeProfitStage",
     "TradeProposal",
+    "quantize_usd",
 ]
