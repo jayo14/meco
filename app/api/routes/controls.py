@@ -13,16 +13,17 @@ Enforces confirmation guards for consequential operations.
 """
 from datetime import datetime, timezone
 from decimal import Decimal
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.api.schemas import OperatorControlCommand
 from app.api.state import system_state
+from app.security.auth import verify_operator_access
 from app.trading.models import ExitReason, OrderSide
 
 router = APIRouter(prefix="/controls", tags=["Operator Controls"])
 
 
-@router.post("/execute")
+@router.post("/execute", dependencies=[Depends(verify_operator_access)])
 async def execute_operator_command(cmd: OperatorControlCommand):
     """
     Executes real operator control actions with mandatory confirmation validation.

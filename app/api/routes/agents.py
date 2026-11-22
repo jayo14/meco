@@ -120,8 +120,8 @@ async def trigger_investigation(
     Dispatches task to background agent orchestrator and records in recent telemetry.
     """
     task_id = f"task-inv-{payload.token_mint[:8]}"
-    system_state.recent_system_logs.insert(
-        0, f"Triggered investigation {task_id} for mint {payload.token_mint[:10]}..."
+    system_state.log_event(
+        "INFO", f"Triggered investigation {task_id} for mint {payload.token_mint[:10]}..."
     )
     return {
         "message": "Investigation successfully dispatched",

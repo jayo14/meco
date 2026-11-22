@@ -15,7 +15,7 @@ from app.database.repository import (
 from app.database.session import SessionLocal
 from app.identity.registry import TokenRegistry
 from app.market.dexscreener import get_token_pairs
-from app.market.observer import observe_signal
+from app.market.observer import observe_signal, recover_pending_observations
 from app.market.snapshot import create_market_snapshot, select_primary_pair
 from app.social.ingestion import SocialIngestionService
 from app.social.matcher import TokenSocialMatcher
@@ -25,12 +25,14 @@ from app.solana.validator import (
     MintValidationStatus,
     get_mint_info,
 )
+from app.security.redaction import setup_secure_logging
 from app.telegram.parser import extract_token_signal
 
 logging.basicConfig(
     format="[%(levelname)s %(asctime)s] %(name)s: %(message)s",
     level=logging.INFO,
 )
+setup_secure_logging()
 
 logger = logging.getLogger("meco.telegram")
 
@@ -481,6 +483,13 @@ async def main() -> None:
                 "Authenticated as: %s",
                 getattr(me, "username", None) or getattr(me, "first_name", "Unknown"),
             )
+            try:
+                recovered = await recover_pending_observations()
+                if recovered > 0:
+                    logger.info("Durable checkpoint recovery: %s pending observations queued", recovered)
+            except Exception as e:
+                logger.warning("Observation checkpoint recovery failed: %s", e)
+
             logger.info("Listening for Telegram messages...")
 
             await client.run_until_disconnected()
