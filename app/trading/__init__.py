@@ -6,6 +6,9 @@ from app.trading.accounting import (
     PortfolioAccount,
     quantize_usd,
 )
+from app.trading.engine import (
+    PaperTradingEngine,
+)
 from app.trading.execution import (
     ExecutionSimulatorConfig,
     PaperExecutionSimulator,
@@ -71,6 +74,7 @@ __all__ = [
     "PaperExecutionSimulator",
     "PaperOrder",
     "PaperPosition",
+    "PaperTradingEngine",
     "PerformanceAnalyzer",
     "PortfolioAccount",
     "PortfolioSnapshot",
