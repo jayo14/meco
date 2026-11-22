@@ -67,8 +67,14 @@ class PortfolioAccount:
         amount_committed = quantize_usd(amount_committed)
         fee = quantize_usd(fee)
 
-        # Release reservation
-        self.reserved_capital = quantize_usd(max(Decimal("0.00"), self.reserved_capital - amount_committed))
+        # Release reservation; if entering without prior reservation, debit available capital directly
+        if self.reserved_capital >= amount_committed:
+            self.reserved_capital = quantize_usd(self.reserved_capital - amount_committed)
+        else:
+            unreserved = quantize_usd(amount_committed - self.reserved_capital)
+            self.reserved_capital = Decimal("0.00")
+            self.available_capital = quantize_usd(self.available_capital - unreserved)
+
         # Deduct transaction fee from available capital
         self.available_capital = quantize_usd(self.available_capital - fee)
         self.total_fees_paid = quantize_usd(self.total_fees_paid + fee)

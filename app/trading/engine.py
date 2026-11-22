@@ -178,7 +178,7 @@ class PaperTradingEngine:
             requested_size_usd=size_to_reserve,
             displayed_spot_price=displayed_spot_price,
             pool_liquidity_usd=pool_liquidity_usd,
-            quote_timestamp=eval_time,
+            quote_timestamp=proposal.proposal_timestamp,
             execution_timestamp=eval_time,
             dex_id=dex_id,
             transfer_fee_bps=transfer_fee_bps,
@@ -216,6 +216,7 @@ class PaperTradingEngine:
             capital_committed=exec_res.executed_size_usd,
             exit_conditions=proposal.exit_conditions,
             token_id=proposal.token_id,
+            initial_pool_liquidity_usd=pool_liquidity_usd,
             as_of=eval_time,
         )
 

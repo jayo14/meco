@@ -175,6 +175,7 @@ class PositionManager:
         capital_committed: Decimal,
         exit_conditions: ExitConditions,
         token_id: int | None = None,
+        initial_pool_liquidity_usd: Decimal | None = None,
         as_of: datetime | None = None,
     ) -> PaperPosition:
         """Create and track a new active position upon simulated buy fill."""
@@ -199,6 +200,7 @@ class PositionManager:
             exit_history=[],
             exit_conditions=exit_conditions,
             peak_price=entry_price,
+            initial_pool_liquidity_usd=initial_pool_liquidity_usd,
             max_favourable_excursion_usd=Decimal("0.00"),
             max_adverse_excursion_usd=Decimal("0.00"),
             updated_at=now,
@@ -277,7 +279,7 @@ class PositionManager:
                 position=pos,
                 current_price=price,
                 current_liquidity_usd=current_liq,
-                initial_liquidity_usd=current_liq,
+                initial_liquidity_usd=pos.initial_pool_liquidity_usd or current_liq,
                 is_token_in_hard_risk=is_risk,
                 as_of=eval_time,
             )

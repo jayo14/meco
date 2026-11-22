@@ -28,6 +28,7 @@ class ProposalStatus(str, Enum):
     REJECTED = "rejected"
     EXPIRED = "expired"
     EXECUTED = "executed"
+    FAILED = "failed"
 
 
 class OrderSide(str, Enum):
@@ -192,6 +193,7 @@ class PaperPosition(BaseModel):
     exit_history: list[PaperOrder] = Field(default_factory=list)
     exit_conditions: ExitConditions
     peak_price: Decimal
+    initial_pool_liquidity_usd: Decimal | None = None
     max_favourable_excursion_usd: Decimal = Decimal("0")
     max_adverse_excursion_usd: Decimal = Decimal("0")
     exit_reason: ExitReason | None = None
