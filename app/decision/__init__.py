@@ -15,6 +15,9 @@ from app.decision.freshness import (
     FreshnessValidationResult,
     evaluate_input_freshness,
 )
+from app.decision.hard_rules import (
+    evaluate_hard_risk_rules,
+)
 from app.decision.models import (
     DecisionDimension,
     DecisionExplanation,
@@ -46,6 +49,7 @@ __all__ = [
     "ReassessmentTriggerType",
     "TokenDecisionInput",
     "TokenDecisionResult",
+    "evaluate_hard_risk_rules",
     "evaluate_input_freshness",
     "get_decision_config",
     "register_decision_config",
