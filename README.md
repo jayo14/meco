@@ -138,16 +138,31 @@ All generated reports are stored in `research/reports/`:
 
 ---
 
-## Production VPS Operation
+## Production VPS Operation & Reliability
 
-Meco is hardened for continuous 24/7 VPS operation:
+Meco is hardened for continuous 24/7 VPS operation on resource-constrained Linux servers. See complete operating runbooks in [`docs/OPERATIONS.md`](file:///home/codegallantx/moi/meco/docs/OPERATIONS.md).
 
-- **Systemd Service Unit:** Located at [`systemd/meco.service`](file:///home/codegallantx/moi/meco/systemd/meco.service) with automatic restart, exponential backoff, and non-root execution.
+- **Systemd Service Units:**
+  - [`systemd/meco.service`](file:///home/codegallantx/moi/meco/systemd/meco.service): Unified daemon supervisor (discovery, enrichment, paper trading, and FastAPI control centre).
+  - [`systemd/meco-telegram.service`](file:///home/codegallantx/moi/meco/systemd/meco-telegram.service): Isolated Telegram MTProto listener service.
+  - [`systemd/meco-backup.timer`](file:///home/codegallantx/moi/meco/systemd/meco-backup.timer): Automated daily 03:00 UTC database backup with randomized jitter.
 - **Automated Health Check:**
   ```bash
   python -m scripts.healthcheck
   ```
-  Inspects PostgreSQL connectivity, recent signal stream, scheduled observation backlog, and stale observation rates. Exits with code `0` on healthy, `1` on degraded, `2` on unhealthy.
+  Evaluates PostgreSQL connectivity, signal stream, observation backlogs, agent investigations, and active positions.
+- **Resource Capacity Audit:**
+  ```bash
+  python -m scripts.resource_audit
+  ```
+  Measures process RSS memory footprint, system RAM headroom, database disk size, pool connection usage, and RPC latency.
+- **Automated Backup & Recovery:**
+  ```bash
+  python -m scripts.backup_db                      # Manual compressed backup (.sql.gz)
+  python -m scripts.backup_db --restore <dump>     # Verified disaster recovery restore
+  ```
+- **Security & Log Redaction:**
+  Automated regex redaction strips database passwords, private keys, Bearer tokens, Telegram hashes, and LLM API keys before writing to logs. All control operations require token authentication.
 
 ---
 
