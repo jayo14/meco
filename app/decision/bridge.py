@@ -74,17 +74,17 @@ async def build_decision_input_from_db(
         select(DiscoveryEvent)
         .where(
             DiscoveryEvent.mint_address == mint_address,
-            DiscoveryEvent.discovered_at <= eval_time,
+            DiscoveryEvent.received_at <= eval_time,
         )
-        .order_by(DiscoveryEvent.discovered_at.asc())
+        .order_by(DiscoveryEvent.received_at.asc())
     )
     disc_res = await session.execute(disc_stmt)
     disc_events = [
         {
             "source": d.source,
             "event_type": d.event_type,
-            "timestamp": d.discovered_at,
-            "metadata": d.initial_metadata,
+            "timestamp": d.received_at,
+            "metadata": d.raw_payload,
         }
         for d in disc_res.scalars().all()
     ]
@@ -94,9 +94,9 @@ async def build_decision_input_from_db(
         select(TokenSecurityProfile)
         .where(
             TokenSecurityProfile.mint_address == mint_address,
-            TokenSecurityProfile.analyzed_at <= eval_time,
+            TokenSecurityProfile.updated_at <= eval_time,
         )
-        .order_by(TokenSecurityProfile.analyzed_at.desc())
+        .order_by(TokenSecurityProfile.updated_at.desc())
     )
     sec_res = await session.execute(sec_stmt)
     sec = sec_res.scalars().first()
@@ -105,38 +105,36 @@ async def build_decision_input_from_db(
         sec_dict = {
             "mint_authority": sec.mint_authority,
             "freeze_authority": sec.freeze_authority,
-            "has_mint_authority": sec.has_mint_authority,
-            "has_freeze_authority": sec.has_freeze_authority,
+            "has_mint_authority": sec.is_mintable or bool(sec.mint_authority),
+            "has_freeze_authority": sec.is_freezable or bool(sec.freeze_authority),
             "is_mutable": sec.is_mutable,
-            "is_token_2022": sec.is_token_2022,
-            "transfer_fee_bps": sec.transfer_fee_bps,
-            "lp_burned_percentage": sec.lp_burned_percentage,
-            "top_10_holder_percent": sec.top_10_holder_percent,
-            "is_honeypot": sec.honeypot_risk,
-            "honeypot_risk": sec.honeypot_risk,
+            "transfer_fee_bps": sec.transfer_fee_basis_points or 0,
+            "lp_burned_percentage": 100.0 if sec.is_lp_burned_or_locked else 0.0,
+            "is_honeypot": False,
+            "honeypot_risk": False,
         }
-        input_timestamps["security_findings"] = sec.analyzed_at
+        input_timestamps["security_findings"] = sec.updated_at
 
     # 4. Holder Distribution
     holder_stmt = (
         select(TokenHolderSnapshot)
         .where(
             TokenHolderSnapshot.mint_address == mint_address,
-            TokenHolderSnapshot.snapshot_time <= eval_time,
+            TokenHolderSnapshot.observed_at <= eval_time,
         )
-        .order_by(TokenHolderSnapshot.snapshot_time.desc())
+        .order_by(TokenHolderSnapshot.observed_at.desc())
     )
     holder_res = await session.execute(holder_stmt)
     holder = holder_res.scalars().first()
     holder_dict = None
     if holder:
         holder_dict = {
-            "top_10_percentage": holder.top_10_percent,
-            "unique_holders_count": holder.unique_holders,
-            "deployer_holding_pct": holder.deployer_balance_percent,
-            "max_single_holder_pct": holder.top_10_percent / 2.5 if holder.top_10_percent else 0.0,
+            "top_10_percentage": holder.top10_concentration_pct or 0.0,
+            "unique_holders_count": holder.total_holders_count or 0,
+            "deployer_holding_pct": holder.deployer_holding_pct or 0.0,
+            "max_single_holder_pct": (holder.top10_concentration_pct / 2.5) if holder.top10_concentration_pct else 0.0,
         }
-        input_timestamps["holder_distribution"] = holder.snapshot_time
+        input_timestamps["holder_distribution"] = holder.observed_at
 
     # 5. Liquidity Pool
     pool_stmt = (
@@ -170,10 +168,10 @@ async def build_decision_input_from_db(
     obs_stmt = (
         select(MarketObservation)
         .where(
-            MarketObservation.mint_address == mint_address,
-            MarketObservation.observation_time <= eval_time,
+            MarketObservation.token_address == mint_address,
+            MarketObservation.observed_at <= eval_time,
         )
-        .order_by(MarketObservation.observation_time.asc())
+        .order_by(MarketObservation.observed_at.asc())
         .limit(20)
     )
     obs_res = await session.execute(obs_stmt)
@@ -181,12 +179,10 @@ async def build_decision_input_from_db(
         {
             "price_usd": o.price_usd,
             "volume_5m": o.volume_5m,
-            "volume_1h": o.volume_1h,
             "buys_5m": o.buys_5m,
             "sells_5m": o.sells_5m,
             "price_change_5m": o.price_change_5m,
-            "price_change_1h": o.price_change_1h,
-            "timestamp": o.observation_time,
+            "timestamp": o.observed_at,
         }
         for o in obs_res.scalars().all()
     ]

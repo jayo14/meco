@@ -202,6 +202,7 @@ class DecisionEngine:
             dim_scores.social_traction,
             dim_scores.liquidity_quality,
             dim_scores.execution_feasibility,
+            dim_scores.data_confidence,
         ]:
             if d.score >= 50.0:
                 supporting_evidence.extend(d.evidence_sources)
@@ -229,6 +230,15 @@ class DecisionEngine:
                 })
                 if sw.evidence:
                     contradictory_evidence.append(sw.evidence)
+                else:
+                    contradictory_evidence.append(
+                        EvidenceItem(
+                            source="risk_agent",
+                            timestamp=eval_time,
+                            reference=f"mint:{input_data.mint_address}",
+                            details={"code": sw.code, "description": sw.description},
+                        )
+                    )
 
         # ----------------------------------------------------------------------
         # STAGE 4: Deterministic Outcome Classification
