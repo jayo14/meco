@@ -36,6 +36,10 @@ from app.decision.models import (
     TokenDecisionInput,
     TokenDecisionResult,
 )
+from app.decision.ranking import (
+    OpportunityRanker,
+    RankedTokenOpportunity,
+)
 
 __all__ = [
     "DecisionAuditTracer",
@@ -52,7 +56,9 @@ __all__ = [
     "HardRiskViolation",
     "OpportunityWeightsConfig",
     "OutcomeThresholdsConfig",
+    "RankedTokenOpportunity",
     "ReassessmentConfig",
+    "OpportunityRanker",
     "ReassessmentTriggerEvent",
     "ReassessmentTriggerType",
     "TokenDecisionInput",
