@@ -40,6 +40,21 @@ class Settings(BaseSettings):
     )
     social_poll_interval: float = 60.0
 
+    # Production Database Connection Pooling
+    db_pool_size: int = 10
+    db_max_overflow: int = 5
+    db_pool_recycle: int = 300
+    db_pool_timeout: float = 30.0
+    db_pool_pre_ping: bool = True
+
+    # Security & API settings
+    api_auth_token: str | None = None
+    api_host: str = "0.0.0.0"
+    api_port: int = 8000
+    cors_allowed_origins: str = (
+        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:8000,http://127.0.0.1:8000"
+    )
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
