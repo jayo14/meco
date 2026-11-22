@@ -11,6 +11,9 @@ from app.decision.config import (
     get_decision_config,
     register_decision_config,
 )
+from app.decision.engine import (
+    DecisionEngine,
+)
 from app.decision.freshness import (
     FreshnessValidationResult,
     evaluate_input_freshness,
@@ -33,6 +36,7 @@ from app.decision.models import (
 
 __all__ = [
     "DecisionDimension",
+    "DecisionEngine",
     "DecisionEngineConfig",
     "DecisionExplanation",
     "DecisionOutcome",
