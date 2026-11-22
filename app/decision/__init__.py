@@ -1,6 +1,9 @@
 """
 Meco Evidence-Based Decision Engine package (Phase 5).
 """
+from app.decision.bridge import (
+    build_decision_input_from_db,
+)
 from app.decision.config import (
     DecisionEngineConfig,
     FreshnessConfig,
@@ -73,6 +76,7 @@ __all__ = [
     "ReassessmentTriggerType",
     "TokenDecisionInput",
     "TokenDecisionResult",
+    "build_decision_input_from_db",
     "evaluate_hard_risk_rules",
     "evaluate_input_freshness",
     "get_decision_config",
