@@ -1539,4 +1539,9 @@ class PromotionAuditRecordDB(Base):
     )
 
 
+# Convenience Aliases
+TokenDecisionDB = TokenDecisionRecord
+PaperPositionDB = PaperPositionRecord
+
+
 
