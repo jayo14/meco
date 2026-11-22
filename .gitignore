@@ -19,6 +19,8 @@ __pycache__/
 *.db
 *.sqlite
 *.sqlite3
+backups/
+*.sql.gz
 
 # IDE
 .vscode/
