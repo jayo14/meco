@@ -1445,3 +1445,98 @@ class PortfolioSnapshotRecord(Base):
     )
 
 
+class ResearchDatasetRecord(Base):
+    __tablename__ = "research_datasets"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    version: Mapped[str] = mapped_column(String(32), nullable=False)
+    row_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    token_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    feature_columns: Mapped[dict] = mapped_column(JSON, nullable=False)
+    time_window_start: Mapped[str] = mapped_column(String(64), nullable=False)
+    time_window_end: Mapped[str] = mapped_column(String(64), nullable=False)
+    sha256_hash: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    metadata_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+
+class ModelArtifactRecordDB(Base):
+    __tablename__ = "model_artifacts"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    version: Mapped[str] = mapped_column(String(32), nullable=False)
+    model_family: Mapped[str] = mapped_column(String(64), nullable=False)
+    hyperparameters: Mapped[dict] = mapped_column(JSON, nullable=False)
+    feature_columns: Mapped[dict] = mapped_column(JSON, nullable=False)
+    trained_dataset_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    in_sample_metrics: Mapped[dict] = mapped_column(JSON, nullable=False)
+    out_of_sample_metrics: Mapped[dict] = mapped_column(JSON, nullable=False)
+    is_champion: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+
+class StrategyVersionRecordDB(Base):
+    __tablename__ = "strategy_versions"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    version: Mapped[str] = mapped_column(String(32), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    parameters: Mapped[dict] = mapped_column(JSON, nullable=False)
+    associated_model_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    associated_model_version: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_locked: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+
+class ResearchExperimentRecordDB(Base):
+    __tablename__ = "research_experiments"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    experiment_name: Mapped[str] = mapped_column(String(128), nullable=False)
+    hypothesis: Mapped[str] = mapped_column(Text, nullable=False)
+    dataset_manifest_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    strategy_key: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    model_key: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    status: Mapped[str] = mapped_column(String(32), default="configured")
+    in_sample_report: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    out_of_sample_report: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    backtest_report: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    execution_notes: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    tags: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class PromotionAuditRecordDB(Base):
+    __tablename__ = "promotion_audit_records"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    candidate_id: Mapped[str] = mapped_column(String(64), nullable=False)
+    candidate_version: Mapped[str] = mapped_column(String(32), nullable=False)
+    prior_champion_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    prior_champion_version: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    approval_reason: Mapped[str] = mapped_column(Text, nullable=False)
+    approved_by: Mapped[str] = mapped_column(String(64), nullable=False)
+    evaluation_summary: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+
+
