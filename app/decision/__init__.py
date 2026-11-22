@@ -44,6 +44,9 @@ from app.decision.reassessment import (
     ReassessmentDecision,
     ReassessmentManager,
 )
+from app.decision.replay import (
+    HistoricalReplayEngine,
+)
 
 __all__ = [
     "DecisionAuditTracer",
@@ -58,6 +61,7 @@ __all__ = [
     "FreshnessValidationResult",
     "HardRiskRuleConfig",
     "HardRiskViolation",
+    "HistoricalReplayEngine",
     "OpportunityWeightsConfig",
     "OutcomeThresholdsConfig",
     "RankedTokenOpportunity",
