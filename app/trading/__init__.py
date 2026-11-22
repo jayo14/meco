@@ -27,6 +27,9 @@ from app.trading.models import (
     TakeProfitStage,
     TradeProposal,
 )
+from app.trading.proposal import (
+    ProposalGenerator,
+)
 from app.trading.risk_gateway import (
     PreTradeRiskGateway,
     RiskGatewayConfig,
@@ -53,6 +56,7 @@ __all__ = [
     "PositionSizingConfig",
     "PositionStatus",
     "PreTradeRiskGateway",
+    "ProposalGenerator",
     "ProposalStatus",
     "RiskGatewayConfig",
     "RiskGatewayDecision",
