@@ -45,8 +45,8 @@ async def execute_operator_command(cmd: OperatorControlCommand):
             "timestamp": now.isoformat(),
         }
 
-    # 2. Reset Emergency Stop
-    if action == "reset_emergency_stop":
+    # 2. Reset Emergency Stop / Resume Operations
+    if action in ("reset_emergency_stop", "resume_operations"):
         if not cmd.confirmation:
             raise HTTPException(status_code=400, detail="Confirmation required to reset emergency stop.")
         system_state.paper_engine.reset_emergency_stop()
@@ -86,7 +86,8 @@ async def execute_operator_command(cmd: OperatorControlCommand):
         strat_id = cmd.target_id
         if not strat_id or strat_id not in system_state.active_strategies:
             raise HTTPException(status_code=404, detail=f"Strategy '{strat_id}' not found.")
-        new_state = cmd.parameters.get("enabled", not system_state.active_strategies[strat_id])
+        params = cmd.parameters or {}
+        new_state = params.get("enabled", not system_state.active_strategies[strat_id])
         system_state.active_strategies[strat_id] = new_state
         system_state.log_event("INFO", f"Strategy '{strat_id}' toggled to {'ENABLED' if new_state else 'DISABLED'}.")
         return {"success": True, "strategy_id": strat_id, "enabled": new_state}
@@ -101,13 +102,7 @@ async def execute_operator_command(cmd: OperatorControlCommand):
 
         pos = system_state.paper_engine.position_manager.open_positions.get(pos_id)
         if not pos:
-            # Check mock positions or return simulated close
-            return {
-                "success": True,
-                "position_id": pos_id,
-                "message": f"Position {pos_id} closed manually at current mark price.",
-                "closed_at": now.isoformat(),
-            }
+            raise HTTPException(status_code=404, detail=f"Position '{pos_id}' not found or already closed.")
 
         # Simulate execution on exit order
         order_res = system_state.paper_engine.execution_simulator.simulate_order(
@@ -119,53 +114,29 @@ async def execute_operator_command(cmd: OperatorControlCommand):
             execution_timestamp=now,
         )
 
-        realised = (order_res.executed_size_usd - pos.capital_committed)
-        system_state.paper_engine.account.record_exit(
-            capital_returned=pos.capital_committed,
-            realised_pnl=realised,
-            fee=order_res.total_fee_usd,
-            as_of=now,
-        )
-        pos.realised_pnl_usd = realised
-        pos.total_fees_paid_usd += order_res.total_fee_usd
-        pos.exit_reason = ExitReason.MANUAL_EXIT
-        pos.closed_at = now
-        system_state.paper_engine.position_manager.open_positions.pop(pos_id, None)
-        system_state.paper_engine.position_manager.positions_history.append(pos)
+        close_price = order_res.executed_price if order_res.success else pos.current_mark_price
+        fee = order_res.total_fee_usd if order_res.success else Decimal("0.05")
 
-        system_state.log_event("INFO", f"Position {pos_id} ({pos.mint_address}) manually closed by operator.")
+        closed_pos = system_state.paper_engine.position_manager.close_position(
+            position_id=pos_id,
+            exit_price=close_price,
+            exit_time=now,
+            exit_reason=ExitReason.MANUAL_EXIT,
+            fee_usd=fee,
+        )
+
+        system_state.log_event(
+            "INFO",
+            f"Manual liquidation of simulated position {pos_id} at ${close_price:.6f} (fee: ${fee:.4f}).",
+        )
         return {
             "success": True,
+            "action": action,
             "position_id": pos_id,
-            "realised_pnl_usd": float(realised),
-            "fees_paid_usd": float(order_res.total_fee_usd),
+            "exit_price": float(close_price),
+            "fees_paid_usd": float(fee),
+            "realised_pnl_usd": float(closed_pos.realised_pnl_usd),
             "closed_at": now.isoformat(),
         }
 
-    # 7. Trigger Token Investigation
-    if action == "trigger_investigation":
-        mint = cmd.target_id
-        if not mint:
-            raise HTTPException(status_code=400, detail="Token mint address required.")
-        system_state.log_event("INFO", f"Operator triggered manual specialist investigation for {mint}.")
-        return {
-            "success": True,
-            "action": action,
-            "token_mint": mint,
-            "status": "investigation_queued",
-            "queued_at": now.isoformat(),
-        }
-
-    # 8. Trigger Research Evaluation / Backtest
-    if action == "trigger_backtest":
-        strat_id = cmd.target_id or "momentum_breakout"
-        system_state.log_event("INFO", f"Operator triggered research evaluation for strategy '{strat_id}'.")
-        return {
-            "success": True,
-            "action": action,
-            "strategy_id": strat_id,
-            "status": "backtest_completed",
-            "completed_at": now.isoformat(),
-        }
-
-    raise HTTPException(status_code=400, detail=f"Unknown operator action '{action}'.")
+    raise HTTPException(status_code=400, detail=f"Unknown or unsupported operator action: '{action}'.")

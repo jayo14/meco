@@ -178,7 +178,7 @@ class SystemHealthResponse(BaseModel):
     agent_engine_status: str
     paper_engine_status: str
     emergency_stop_engaged: bool
-    recent_errors: list[dict[str, Any]] = Field(default_factory=list)
+    recent_errors: list[dict[str, Any] | str] = Field(default_factory=list)
     as_of: datetime
 
 

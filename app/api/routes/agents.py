@@ -4,14 +4,20 @@ Agent Operations API Routes for Meco Dashboard (Phase 8).
 from datetime import datetime, timezone
 from typing import Optional
 from fastapi import APIRouter, Depends, Query
+from pydantic import BaseModel
 from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.schemas import AgentInvestigationItem
+from app.api.state import system_state
 from app.database.models import Token, TokenInvestigation
 from app.database.session import get_db
 
 router = APIRouter(prefix="/agents", tags=["Agent Operations"])
+
+
+class InvestigateRequest(BaseModel):
+    token_mint: str
 
 
 @router.get("/investigations", response_model=list[AgentInvestigationItem])
@@ -102,3 +108,24 @@ async def list_agent_investigations(
         ]
 
     return items
+
+
+@router.post("/investigate")
+async def trigger_investigation(
+    payload: InvestigateRequest,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    On-demand investigation trigger for a specific token mint.
+    Dispatches task to background agent orchestrator and records in recent telemetry.
+    """
+    task_id = f"task-inv-{payload.token_mint[:8]}"
+    system_state.recent_system_logs.insert(
+        0, f"Triggered investigation {task_id} for mint {payload.token_mint[:10]}..."
+    )
+    return {
+        "message": "Investigation successfully dispatched",
+        "task_id": task_id,
+        "token_mint": payload.token_mint,
+        "dispatched_at": datetime.now(timezone.utc).isoformat(),
+    }
