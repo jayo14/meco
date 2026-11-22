@@ -23,6 +23,12 @@ from app.trading.models import (
     TakeProfitStage,
     TradeProposal,
 )
+from app.trading.sizing import (
+    PositionSizer,
+    PositionSizingConfig,
+    SizingDecision,
+    SizingMethod,
+)
 
 __all__ = [
     "ExitConditions",
@@ -33,10 +39,14 @@ __all__ = [
     "PaperPosition",
     "PortfolioAccount",
     "PortfolioSnapshot",
+    "PositionSizer",
+    "PositionSizingConfig",
     "PositionStatus",
     "ProposalStatus",
     "RiskGatewayDecision",
     "SimulatedExecutionResult",
+    "SizingDecision",
+    "SizingMethod",
     "StopLossConfig",
     "TakeProfitConfig",
     "TakeProfitStage",
