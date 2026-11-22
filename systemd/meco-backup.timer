@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily Meco Database Backup Timer
+Requires=meco-backup.service
+
+[Timer]
+OnCalendar=*-*-* 03:00:00 UTC
+RandomizedDelaySec=1800
+Persistent=true
+
+[Install]
+WantedBy=timers.target

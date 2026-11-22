@@ -1,0 +1,30 @@
+[Unit]
+Description=Meco Telegram Signal Listener Daemon
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=meco
+Group=meco
+WorkingDirectory=/home/meco/meco
+EnvironmentFile=/home/meco/meco/.env
+ExecStart=/home/meco/meco/.venv/bin/python -m app.telegram.client
+Restart=always
+RestartSec=5s
+KillSignal=SIGTERM
+TimeoutStopSec=30s
+
+# Sandboxing and security
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/home/meco/meco
+LimitNOFILE=65535
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=meco-telegram
+
+[Install]
+WantedBy=multi-user.target

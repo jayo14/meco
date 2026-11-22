@@ -1,5 +1,5 @@
 [Unit]
-Description=Meco Solana Meme Coin Research Engine
+Description=Meco Autonomous Intelligence & Discovery Daemon (Phase 9 Hardened)
 After=network.target postgresql.service
 Wants=postgresql.service
 
@@ -9,16 +9,17 @@ User=meco
 Group=meco
 WorkingDirectory=/home/meco/meco
 EnvironmentFile=/home/meco/meco/.env
-ExecStart=/home/meco/meco/.venv/bin/python -m app.telegram.client
+ExecStart=/home/meco/meco/.venv/bin/python -m app.runner
 Restart=always
 RestartSec=5s
 KillSignal=SIGTERM
 TimeoutStopSec=30s
 
-# Sandboxing and security
+# Sandboxing and resource isolation
 ProtectSystem=full
 ProtectHome=read-only
-ReadWritePaths=/home/meco/meco
+ReadWritePaths=/home/meco/meco /home/meco/meco/backups
+LimitNOFILE=65535
 
 # Logging
 StandardOutput=journal

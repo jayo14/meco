@@ -1,0 +1,15 @@
+[Unit]
+Description=Meco Automated Database Backup & Archive Rotation
+After=postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=oneshot
+User=meco
+Group=meco
+WorkingDirectory=/home/meco/meco
+EnvironmentFile=/home/meco/meco/.env
+ExecStart=/home/meco/meco/.venv/bin/python -m scripts.backup_db --create --rotate --retention-days 14 --dir /home/meco/meco/backups
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=meco-backup
