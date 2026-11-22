@@ -343,6 +343,11 @@ class Token(Base):
         back_populates="token",
         cascade="all, delete-orphan",
     )
+    decisions: Mapped[list["TokenDecisionRecord"]] = relationship(
+        "TokenDecisionRecord",
+        back_populates="token",
+        cascade="all, delete-orphan",
+    )
 
 
 class DiscoveryEvent(Base):
@@ -1151,6 +1156,11 @@ class TokenInvestigation(Base):
         back_populates="investigation",
         cascade="all, delete-orphan",
     )
+    decisions: Mapped[list["TokenDecisionRecord"]] = relationship(
+        "TokenDecisionRecord",
+        back_populates="investigation",
+        cascade="all, delete-orphan",
+    )
 
 
 class AgentInvestigationResult(Base):
@@ -1196,4 +1206,91 @@ class AgentInvestigationResult(Base):
         "TokenInvestigation",
         back_populates="agent_results",
     )
+
+
+class TokenDecisionRecord(Base):
+    __tablename__ = "token_decisions"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    token_id: Mapped[int | None] = mapped_column(
+        ForeignKey("tokens.id", ondelete="CASCADE"),
+        index=True,
+        nullable=True,
+    )
+    mint_address: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    investigation_id: Mapped[str | None] = mapped_column(
+        ForeignKey("token_investigations.id", ondelete="SET NULL"),
+        index=True,
+        nullable=True,
+    )
+    outcome: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    reasoning_summary: Mapped[str] = mapped_column(Text, nullable=False)
+    dimension_scores: Mapped[dict] = mapped_column(JSON, nullable=False)
+    hard_risk_violations: Mapped[list] = mapped_column(JSON, default=list)
+    supporting_evidence: Mapped[list] = mapped_column(JSON, default=list)
+    contradictory_evidence: Mapped[list] = mapped_column(JSON, default=list)
+    risk_factors: Mapped[list] = mapped_column(JSON, default=list)
+    missing_information: Mapped[list] = mapped_column(JSON, default=list)
+    confidence: Mapped[float] = mapped_column(Float, nullable=False)
+    decision_timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True, nullable=False)
+    expiration_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True, nullable=False)
+    engine_version: Mapped[str] = mapped_column(String(32), nullable=False, default="1.0.0")
+    scoring_config_version: Mapped[str] = mapped_column(String(32), nullable=False, default="1.0.0")
+    explanation: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+    __table_args__ = (
+        Index("ix_token_decisions_mint_outcome", "mint_address", "outcome"),
+        Index("ix_token_decisions_active_exp", "is_active", "expiration_time"),
+    )
+
+    token: Mapped[Token | None] = relationship(
+        "Token",
+        back_populates="decisions",
+    )
+    investigation: Mapped[TokenInvestigation | None] = relationship(
+        "TokenInvestigation",
+        back_populates="decisions",
+    )
+
+
+class DecisionScoringConfigRecord(Base):
+    __tablename__ = "decision_scoring_configs"
+
+    version: Mapped[str] = mapped_column(String(32), primary_key=True)
+    name: Mapped[str] = mapped_column(String(128), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    config_hash: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    parameters: Mapped[dict] = mapped_column(JSON, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+
+class DecisionReassessmentRecord(Base):
+    __tablename__ = "decision_reassessments"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    mint_address: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    trigger_type: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    detected_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    delta_metrics: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    is_emergency: Mapped[bool] = mapped_column(Boolean, default=False)
+    should_reassess: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    reason: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
 
