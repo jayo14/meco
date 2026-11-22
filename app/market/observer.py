@@ -1,8 +1,9 @@
 import asyncio
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
-from app.database.models import Signal
+from sqlalchemy import or_, select
+from app.database.models import MarketObservation, Signal
 from app.database.observation_repository import save_market_observation
 from app.database.pair_observation_repository import (
     save_market_pair_observations,
@@ -212,3 +213,47 @@ async def observe_signal(signal: Signal) -> None:
     ]
 
     await asyncio.gather(*tasks)
+
+
+async def recover_pending_observations(
+    session_factory=SessionLocal,
+    lookback_hours: int = 25,
+) -> int:
+    """
+    Durable Task Recovery (Phase 9):
+    Inspects database for signals created in the last 24h+ and recovers any
+    unrecorded observation checkpoints, scheduling upcoming ones and
+    marking severely expired ones as 'missed_offline'.
+    Returns count of recovered/re-enqueued checkpoints.
+    """
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=lookback_hours)
+    recovered_count = 0
+
+    async with session_factory() as session:
+        stmt = (
+            select(Signal)
+            .where(
+                or_(
+                    Signal.received_at >= cutoff,
+                    Signal.message_created_at >= cutoff,
+                )
+            )
+            .order_by(Signal.id.desc())
+        )
+        res = await session.execute(stmt)
+        signals = res.scalars().all()
+
+        for sig in signals:
+            obs_stmt = select(MarketObservation.target_seconds).where(
+                MarketObservation.signal_id == sig.id
+            )
+            obs_res = await session.execute(obs_stmt)
+            existing_targets = set(obs_res.scalars().all())
+
+            missing_targets = [t for t in OBSERVATION_INTERVALS if t not in existing_targets]
+            for target_sec in missing_targets:
+                asyncio.create_task(wait_and_capture(sig, target_sec))
+                recovered_count += 1
+
+    logger.info("Durable observation recovery completed: %d tasks resumed/handled.", recovered_count)
+    return recovered_count
