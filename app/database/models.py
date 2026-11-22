@@ -348,6 +348,16 @@ class Token(Base):
         back_populates="token",
         cascade="all, delete-orphan",
     )
+    paper_positions: Mapped[list["PaperPositionRecord"]] = relationship(
+        "PaperPositionRecord",
+        back_populates="token",
+        cascade="all, delete-orphan",
+    )
+    paper_proposals: Mapped[list["PaperProposalRecord"]] = relationship(
+        "PaperProposalRecord",
+        back_populates="token",
+        cascade="all, delete-orphan",
+    )
 
 
 class DiscoveryEvent(Base):
@@ -1288,6 +1298,147 @@ class DecisionReassessmentRecord(Base):
     is_emergency: Mapped[bool] = mapped_column(Boolean, default=False)
     should_reassess: Mapped[bool] = mapped_column(Boolean, nullable=False)
     reason: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+
+class PaperPositionRecord(Base):
+    __tablename__ = "paper_positions"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    proposal_id: Mapped[str] = mapped_column(String(36), index=True, nullable=False)
+    mint_address: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    token_id: Mapped[int | None] = mapped_column(
+        ForeignKey("tokens.id", ondelete="CASCADE"),
+        index=True,
+        nullable=True,
+    )
+    strategy_id: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    status: Mapped[str] = mapped_column(String(32), index=True, default="open")
+    entry_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True, nullable=False)
+    entry_price: Mapped[float] = mapped_column(Float, nullable=False)
+    quantity: Mapped[float] = mapped_column(Float, nullable=False)
+    capital_committed: Mapped[float] = mapped_column(Float, nullable=False)
+    current_mark_price: Mapped[float] = mapped_column(Float, nullable=False)
+    unrealised_pnl_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    realised_pnl_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    total_fees_paid_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    exit_conditions: Mapped[dict] = mapped_column(JSON, nullable=False)
+    peak_price: Mapped[float] = mapped_column(Float, nullable=False)
+    max_favourable_excursion_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    max_adverse_excursion_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    exit_reason: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    closed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+    token: Mapped[Token | None] = relationship(
+        "Token",
+        back_populates="paper_positions",
+    )
+    orders: Mapped[list["PaperOrderRecord"]] = relationship(
+        "PaperOrderRecord",
+        back_populates="position",
+        cascade="all, delete-orphan",
+    )
+
+
+class PaperOrderRecord(Base):
+    __tablename__ = "paper_orders"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    position_id: Mapped[str] = mapped_column(
+        ForeignKey("paper_positions.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+    )
+    mint_address: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    side: Mapped[str] = mapped_column(String(16), index=True, nullable=False)
+    order_type: Mapped[str] = mapped_column(String(32), nullable=False, default="market")
+    requested_size_usd: Mapped[float] = mapped_column(Float, nullable=False)
+    executed_size_usd: Mapped[float] = mapped_column(Float, nullable=False)
+    executed_price: Mapped[float] = mapped_column(Float, nullable=False)
+    executed_quantity: Mapped[float] = mapped_column(Float, nullable=False)
+    total_fees_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    status: Mapped[str] = mapped_column(String(32), default="completed")
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+    executed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    details: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+
+    position: Mapped[PaperPositionRecord] = relationship(
+        "PaperPositionRecord",
+        back_populates="orders",
+    )
+
+
+class PaperProposalRecord(Base):
+    __tablename__ = "paper_proposals"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    mint_address: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    token_id: Mapped[int | None] = mapped_column(
+        ForeignKey("tokens.id", ondelete="CASCADE"),
+        index=True,
+        nullable=True,
+    )
+    strategy_id: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    strategy_version: Mapped[str] = mapped_column(String(32), default="1.0.0")
+    decision_id: Mapped[str | None] = mapped_column(
+        ForeignKey("token_decisions.id", ondelete="SET NULL"),
+        index=True,
+        nullable=True,
+    )
+    proposed_entry_price: Mapped[float] = mapped_column(Float, nullable=False)
+    proposed_position_size_usd: Mapped[float] = mapped_column(Float, nullable=False)
+    expected_slippage_pct: Mapped[float] = mapped_column(Float, default=1.5)
+    max_acceptable_price_impact_pct: Mapped[float] = mapped_column(Float, default=3.0)
+    exit_conditions: Mapped[dict] = mapped_column(JSON, nullable=False)
+    risk_assessment: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    status: Mapped[str] = mapped_column(String(32), index=True, default="pending")
+    rejection_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    proposal_timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    proposal_expiration: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    token: Mapped[Token | None] = relationship(
+        "Token",
+        back_populates="paper_proposals",
+    )
+
+
+class PortfolioSnapshotRecord(Base):
+    __tablename__ = "portfolio_snapshots"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True, nullable=False)
+    starting_capital: Mapped[float] = mapped_column(Float, nullable=False)
+    available_capital: Mapped[float] = mapped_column(Float, nullable=False)
+    reserved_capital: Mapped[float] = mapped_column(Float, nullable=False)
+    open_positions_value: Mapped[float] = mapped_column(Float, nullable=False)
+    realised_pnl: Mapped[float] = mapped_column(Float, default=0.0)
+    unrealised_pnl: Mapped[float] = mapped_column(Float, default=0.0)
+    total_fees: Mapped[float] = mapped_column(Float, default=0.0)
+    net_equity: Mapped[float] = mapped_column(Float, nullable=False)
+    peak_equity: Mapped[float] = mapped_column(Float, nullable=False)
+    current_drawdown_pct: Mapped[float] = mapped_column(Float, default=0.0)
+    open_positions_count: Mapped[int] = mapped_column(Integer, default=0)
+    exposure_by_token: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    exposure_by_strategy: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
