@@ -14,6 +14,9 @@ from app.decision.config import (
 from app.decision.engine import (
     DecisionEngine,
 )
+from app.decision.explain import (
+    DecisionAuditTracer,
+)
 from app.decision.freshness import (
     FreshnessValidationResult,
     evaluate_input_freshness,
@@ -35,6 +38,7 @@ from app.decision.models import (
 )
 
 __all__ = [
+    "DecisionAuditTracer",
     "DecisionDimension",
     "DecisionEngine",
     "DecisionEngineConfig",
