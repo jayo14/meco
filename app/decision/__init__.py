@@ -40,6 +40,10 @@ from app.decision.ranking import (
     OpportunityRanker,
     RankedTokenOpportunity,
 )
+from app.decision.reassessment import (
+    ReassessmentDecision,
+    ReassessmentManager,
+)
 
 __all__ = [
     "DecisionAuditTracer",
@@ -58,6 +62,8 @@ __all__ = [
     "OutcomeThresholdsConfig",
     "RankedTokenOpportunity",
     "ReassessmentConfig",
+    "ReassessmentDecision",
+    "ReassessmentManager",
     "OpportunityRanker",
     "ReassessmentTriggerEvent",
     "ReassessmentTriggerType",
