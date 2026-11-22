@@ -62,8 +62,20 @@ from app.trading.strategy import (
     MomentumBreakoutStrategy,
     StrategyRegistry,
 )
+from app.trading.wallet_spec import (
+    DEFAULT_ALLOWED_PROGRAMS,
+    LiveReadinessStatus,
+    LiveTradingReadinessEvaluator,
+    MecoWalletPolicy,
+    ReadinessEvaluationReport,
+    ReadinessGateCriteria,
+    TransactionPolicyValidator,
+    TransactionValidationResult,
+    ValidationCode,
+)
 
 __all__ = [
+    "DEFAULT_ALLOWED_PROGRAMS",
     "BaseTradingStrategy",
     "ExecutionSimulatorConfig",
     "ExitConditions",
@@ -71,6 +83,9 @@ __all__ = [
     "ExitReason",
     "ExitSignal",
     "LiquiditySurgeStrategy",
+    "LiveReadinessStatus",
+    "LiveTradingReadinessEvaluator",
+    "MecoWalletPolicy",
     "MomentumBreakoutStrategy",
     "OrderSide",
     "OrderType",
@@ -89,6 +104,8 @@ __all__ = [
     "PreTradeRiskGateway",
     "ProposalGenerator",
     "ProposalStatus",
+    "ReadinessEvaluationReport",
+    "ReadinessGateCriteria",
     "RiskGatewayConfig",
     "RiskGatewayDecision",
     "SimulatedExecutionResult",
@@ -101,5 +118,8 @@ __all__ = [
     "TakeProfitStage",
     "TradeProposal",
     "TradingPerformanceReport",
+    "TransactionPolicyValidator",
+    "TransactionValidationResult",
+    "ValidationCode",
     "quantize_usd",
 ]

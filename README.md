@@ -166,6 +166,16 @@ Meco is hardened for continuous 24/7 VPS operation on resource-constrained Linux
 
 ---
 
+## Live Trading Readiness & Wallet Architecture
+
+Meco strictly prohibits unverified live capital deployment. A formal quantitative readiness assessment and isolated wallet architecture specification is documented in [`docs/LIVE_TRADING_READINESS.md`](file:///home/codegallantx/moi/meco/docs/LIVE_TRADING_READINESS.md).
+
+- **Current Status:** `READY FOR EXTENDED PAPER TRADING` (Live real-money trading is strictly disabled).
+- **Wallet Architecture Policy:** Proposes an isolated `meco-signer` microservice with strict transaction validation, maximum transaction caps (0.5 SOL), exposure ceilings (2.0 SOL), daily loss circuit breakers, program whitelists (Raydium, Pump.fun, Jupiter), and zero private key exposure to Python/LLMs.
+- **Pilot Prerequisites:** Requires 30-60 days continuous forward paper trading, 500+ trades on independent on-chain discovery, positive net expectancy after realistic friction ($\ge +\$0.50$ per trade, $t \ge 2.0$), and explicit human written sign-off.
+
+---
+
 ## Testing
 
 Meco uses `pytest` for unit testing. To run the test suite:
