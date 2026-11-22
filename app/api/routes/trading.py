@@ -29,7 +29,7 @@ async def list_paper_positions(
 
     # 1. Fetch live in-memory positions from PaperTradingEngine
     live_open = list(system_state.paper_engine.position_manager.open_positions.values())
-    live_closed = list(system_state.paper_engine.position_manager.closed_positions.values())
+    live_closed = system_state.paper_engine.position_manager.all_closed_positions()
     all_live = live_open + live_closed
 
     for p in all_live:

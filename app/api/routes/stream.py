@@ -19,7 +19,7 @@ async def event_generator():
     while True:
         now = datetime.now(timezone.utc)
         open_pos_count = len(system_state.paper_engine.position_manager.open_positions)
-        emergency_stop = system_state.paper_engine.risk_gateway.is_emergency_stopped
+        emergency_stop = system_state.paper_engine.risk_gateway.is_emergency_stop_active
 
         payload = {
             "timestamp": now.isoformat(),

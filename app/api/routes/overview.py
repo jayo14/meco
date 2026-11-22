@@ -63,19 +63,19 @@ async def get_system_overview(db: AsyncSession = Depends(get_db)):
     # 4. Paper Portfolio Snapshot from Accounting Engine
     acc = system_state.paper_engine.account
     positions = list(system_state.paper_engine.position_manager.open_positions.values())
-    closed_positions = list(system_state.paper_engine.position_manager.closed_positions.values())
+    closed_positions = system_state.paper_engine.position_manager.all_closed_positions()
 
     net_equity = float(acc.get_net_equity(positions))
     realised_pnl = float(acc.realised_pnl)
     unrealised_pnl = float(acc.get_unrealised_pnl(positions))
     total_fees = float(acc.total_fees_paid)
-    drawdown = float(acc.get_current_drawdown(positions))
+    drawdown = float(acc.get_drawdown_pct(positions))
 
     # Active strategies
     active_strats = [s for s, is_on in system_state.active_strategies.items() if is_on]
 
     return SystemOverviewResponse(
-        system_status="operational" if not system_state.paper_engine.risk_gateway.is_emergency_stopped else "emergency_halt",
+        system_status="operational" if not system_state.paper_engine.risk_gateway.is_emergency_stop_active else "emergency_halt",
         total_tokens_discovered=max(total_tokens, 45),
         new_tokens_last_24h=max(new_24h, 14),
         tokens_enriching_count=enriching_count,
@@ -94,6 +94,6 @@ async def get_system_overview(db: AsyncSession = Depends(get_db)):
         current_drawdown_pct=drawdown,
         active_strategies_count=len(active_strats),
         active_strategies=active_strats,
-        emergency_stop_active=system_state.paper_engine.risk_gateway.is_emergency_stopped,
+        emergency_stop_active=system_state.paper_engine.risk_gateway.is_emergency_stop_active,
         as_of=now,
     )

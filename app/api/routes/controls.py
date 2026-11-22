@@ -131,7 +131,7 @@ async def execute_operator_command(cmd: OperatorControlCommand):
         pos.exit_reason = ExitReason.MANUAL_EXIT
         pos.closed_at = now
         system_state.paper_engine.position_manager.open_positions.pop(pos_id, None)
-        system_state.paper_engine.position_manager.closed_positions[pos_id] = pos
+        system_state.paper_engine.position_manager.positions_history.append(pos)
 
         system_state.log_event("INFO", f"Position {pos_id} ({pos.mint_address}) manually closed by operator.")
         return {

@@ -16,7 +16,7 @@ async def get_system_health():
     queue backlogs, and execution gateway state.
     """
     now = datetime.now(timezone.utc)
-    emergency_on = system_state.paper_engine.risk_gateway.is_emergency_stopped
+    emergency_on = system_state.paper_engine.risk_gateway.is_emergency_stop_active
 
     sources = [
         {
